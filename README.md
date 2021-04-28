@@ -1,2 +1,17 @@
 # Unlighter
-Small and free software to reduce screens brightness lower than the minimum. Works on every screens
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
