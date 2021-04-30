@@ -1,7 +1,7 @@
 <template>
-  <div class="preferences">
-    <h1>Preferences</h1>
-  </div>
+  <main class="preferences">
+    <h4>Preferences</h4>
+  </main>
 </template>
 
 <script>

@@ -1,19 +1,22 @@
 <template>
-	<div class="monitors">
+	<div class="monitors-controller">
 		<div 
 			v-for="(screen, index) in monitors"
 			:key="index"
 			class="monitor-container"
 			:class="{active: screen.isActive}"
+			:style="{'border-width': `0 ${win.borderMargin}px`}"
 			@click="updateScreen(screen)"
 			@mousedown="mdown(screen)"
-			@mouseenter="menter(screen)">
+			@mouseenter="menter(screen)"
+		
+		>
 
-			<div class="progressbar" v-bind:style="{ width: screen.barPosition + 'px' }"></div>
-			<div class="monitor-name">{{ screen.name ? screen.name : `Monitor ${index + 1}` }}</div>
-			<div class="pourcentage">{{Math.round(screen.pourc)}}</div>
+			<div class="progressbar" v-bind:style="{ width: screen.barPosition + 'px', left: `-${win.borderMargin}px` }"></div>
+			<div class="monitor-name">{{ screen.name ? `${screen.name}` : `Monitor ${index + 1}` }}</div>
+			<div class="pourcentage">{{Math.round(screen.str)}}</div>
 		</div>
-
+		
 	</div>
 </template>
 
@@ -27,19 +30,33 @@ export default {
 				y: 0,
 			},
 			win: {
-				w: window.innerWidth,
-				h: window.innerHeight,
+				w: 320,
+				h: 400,
 				deadMargin: 12,
+				borderMargin: 5,
 			},
 			monitors: [
-				{ id: 1, pourc: 0, barPosition: 0, name: '', isActive: false },
-				{ id: 2, pourc: 0, barPosition: 0, isActive: false },
-				{ id: 3, pourc: 0, barPosition: 0, isActive: false },
+				{ id: 1, str: 0, barPosition: 0, name: 'Loading...', isActive: false },
 			],
 			showDebug: true,
 		}
 	},
 	methods: {
+		init(monitors) {
+			this.monitors = monitors.map((monitor, index) => {
+				return {
+					id: index,
+					str: monitor.str,
+					barPosition: this.barPositionFromStr(monitor.str),
+					name: monitor.name,
+					isActive: false,
+				}
+			})
+		},
+		barPositionFromStr(str) {
+			const interval = this.win.w - 2 * this.win.deadMargin
+			return this.round(interval / 100 * str + this.win.deadMargin, 1)
+		},
 		mdown(screen) {
 			screen.isActive = true
 			this.updateScreen(screen)
@@ -57,12 +74,13 @@ export default {
 			this.mouse.y = event.clientY
 			if (this.isSomeoneActive) {
 				this.monitors.forEach((screen) => this.updateScreen(screen))
+				window.unlighter.sendToMain({msg: 'monitors-str-changed', monitorsStr: this.monitorsStr})
 			}
 		},
 		updateScreen(screen) {
 			if (screen.isActive) {
-				screen.pourc = this.xRelative
-				screen.barPosition = this.xRelative <= 0 ? 0 : this.xRelative >= 100 ? this.win.w : this.mouse.x
+				screen.str = this.xRelative
+				screen.barPosition = this.xRelative < 1 ? this.win.borderMargin : this.xRelative > 99 ? this.win.w - this.win.borderMargin : this.mouse.x
 			}
 		},
 		close() {
@@ -86,6 +104,13 @@ export default {
 		howManyActives() {
 			return this.monitors.reduce((acc, curr) => acc + (curr.isActive ? 1 : 0), 0)
 		},
+		monitorsStr() {
+			const now = new Date()
+			return this.monitors.map(monitor => ({
+				str: monitor.str,
+				time: now
+			}))
+		}
 	},
 	mounted() {
 		window.addEventListener("mouseup", () => {
@@ -94,16 +119,20 @@ export default {
 		window.addEventListener("mousemove", (event) => {
 			this.mmove(event)
 		})
+		window.unlighter.fromMain('init-pcc', (event, data) => {
+			this.init(data)
+		})
+		window.unlighter.sendToMain({msg: 'ask-for-init-pcc'})
 	}
 }
 </script>
 
 <style lang="sass" scoped>
 
-.monitors
+.monitors-controller
 	display: flex
 	flex-direction: column
-	gap: 4px
+	gap: 6px
 	.monitor-container
 		position: relative
 		display: flex
@@ -113,7 +142,8 @@ export default {
 		height: 80px
 		font-weight: 500
 		cursor: url('./../assets/cursor_hover.svg') 13.5 6, pointer
-		background-color: rgba(255,255,255,0.02)
+		border-color: rgba(255,255,255,0.2)
+		border-style: solid
 		.progressbar
 			position: absolute
 			top: 0

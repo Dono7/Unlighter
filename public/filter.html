@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Filter</title>
+	<style>
+		html, body {
+			width: 100%;
+			height: 100vh;
+			margin: 0;
+			height: 0;
+			background-color: transparent;
+			overflow: hidden;
+		}
+		body {
+			background: rgba(0,0,0,0.1)
+		}
+	</style>
+</head>
+<body>
+	<div class="filter"></div>
+	<h1>Hello :)</h1>
+	<div id="debug"></div>
+
+	<script>
+		window.unlighter.on('update-str', (str) => {
+			document.body.style.background = `rgba(0,0,0,${str / 100 * 0.95})`
+		})
+	</script>
+</body>
+</html>

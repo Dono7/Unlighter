@@ -57,7 +57,7 @@ body, html
 #window
   width: 320px
   min-height: 400px
-  background: linear-gradient(150deg, rgba(32,32,32,1) 0%, rgba(17,17,17,1) 48%)
+  background: linear-gradient(150deg, rgba(28,28,28,1) 0%, rgba(17,17,17,1) 42%)
   color: white
 
 h1
@@ -65,14 +65,17 @@ h1
   font-weight: 500
   font-size: 20px
 
+main
+  padding: 0 15px
+
 // Animation on views change
 .slide-left-enter-active,
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active
-  width: 100%
+  width: 320px
   position: fixed
-  transition: transform 0.15s ease-out
+  transition: transform 0.3s cubic-bezier(0.18,0.53,0.2,1)
 
 .slide-left-enter-to,
 .slide-left-leave-from,

@@ -2,8 +2,8 @@
 	<div class="title-bar">
 		<div class="title">Unlighter</div>
 		<div class="actions">
-			<div class="minimize"><img src="./../assets/minimize.svg"></div>
-			<div class="close"><img src="./../assets/close.svg"></div>
+			<div class="minimize" @click="minimize"><img src="./../assets/minimize.svg"></div>
+			<div class="close" @click="quit"><img src="./../assets/close.svg"></div>
 		</div>
 	</div>
 	
@@ -11,7 +11,14 @@
 
 <script>
 export default {
-
+	methods: {
+		quit() {
+			window.unlighter.sendToMain({msg:'quit'})
+		},
+		minimize() {
+			window.unlighter.sendToMain({msg:'minimize'})
+		}
+	}
 }
 </script>
 
