@@ -16,7 +16,6 @@
     },
     {
       "name": "Electron: Renderer",
-      "type": "chrome",
       "request": "attach",
       "port": 9223,
       "urlFilter": "http://localhost:*",

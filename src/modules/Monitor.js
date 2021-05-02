@@ -1,8 +1,9 @@
-const { BrowserWindow } = require("electron")
-const path = require("path")
+import { BrowserWindow } from "electron"
+import path from "path"
 
-class Monitor {
-	constructor(display) {
+export default class Monitor {
+	constructor(unlighterApp, display) {
+		this.app = unlighterApp
 		this.str = 10
 		this.lastStrUpdate = new Date()
 		this.name = ""
@@ -14,7 +15,7 @@ class Monitor {
 			title: "Unlighter Filter Window",
 			transparent: true,
 			frame: false,
-			fullscreen: true,
+			fullscreen: !this.app.config.showFilterDevTools,
 			alwaysOnTop: true,
 			skipTaskbar: true,
 			webPreferences: {
@@ -27,17 +28,20 @@ class Monitor {
 	initWindow() {
 		this.win = new BrowserWindow(this.options)
 		this.win.loadFile("./../public/filter.html")
-		this.win.setIgnoreMouseEvents(true)
-		this.win.setAlwaysOnTop(true, "screen")
-		// this.win.webContents.openDevTools()
+		if (this.app.config.showFilterDevTools) {
+			this.win.webContents.openDevTools()
+		} else {
+			this.win.setIgnoreMouseEvents(true)
+			this.win.setAlwaysOnTop(true, "screen")
+		}
 	}
 
 	updateStr(payload) {
 		const { str, time } = payload
-		if (time > this.lastStrUpdate) {
-			this.str = str
-			this.win.webContents.send("update-str", str)
-		}
+		if (time <= this.lastStrUpdate) return
+
+		this.str = str
+		this.win.webContents.send("update-str", str)
 	}
 
 	serialize() {
@@ -47,5 +51,3 @@ class Monitor {
 		}
 	}
 }
-
-module.exports = Monitor

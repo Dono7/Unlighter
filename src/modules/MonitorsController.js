@@ -1,8 +1,9 @@
-const Monitor = require("./Monitor")
+import Monitor from "./Monitor"
 
-class MonitorsController {
-	constructor(displays) {
-		this.monitors = displays.map((display) => new Monitor(display))
+export default class MonitorsController {
+	constructor(unlighterApp, displays) {
+		this.app = unlighterApp
+		this.monitors = displays.map((display) => new Monitor(unlighterApp, display))
 		this.lastErrorTime = 0
 	}
 
@@ -34,5 +35,3 @@ class MonitorsController {
 		})
 	}
 }
-
-module.exports = MonitorsController

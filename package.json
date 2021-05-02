@@ -14,6 +14,7 @@
   "main": "app.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "electron-json-storage": "^4.5.0",
     "vue": "3.0.11",
     "vue-router": "^4.0.0-0"
   },

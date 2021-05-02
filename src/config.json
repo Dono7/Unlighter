@@ -1,3 +1,17 @@
 {
-	"isDevelopment": true
+	"isDevelopment": true,
+	"loadVueExtension": false,
+	"showFilterDevTools": false,
+	"defaultConfig": {
+		"initialWindowPosition": {
+			"bottom": 50,
+			"right": 50
+		},
+		"rememberLastScreenStr": false,
+		"screenStrength": 10,
+		"pccOnTop": true,
+		"minimizeOnBlur": true,
+		"showScreenNumber": true,
+		"enableShortcuts": true
+	}
 }
