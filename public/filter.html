@@ -8,25 +8,45 @@
 	<style>
 		html, body {
 			width: 100%;
-			height: 100vh;
+			min-height: 100vh;
 			margin: 0;
 			height: 0;
 			background-color: transparent;
 			overflow: hidden;
 		}
 		body {
-			background: rgba(0,0,0,0.1)
+			background: rgba(0,0,0,0.1);
+			color: rgba(150,150,150,0.9);
+		}
+		h1 {
+			font-size: 250px;
+			font-weight: bold;
+			font-family: monospace;
+			margin: 25px 50px;
+			text-shadow: 3px ​3px 8px black;
+		}
+		.hide {
+			display: none;
 		}
 	</style>
 </head>
 <body>
-	<div class="filter"></div>
-	<h1>Hello :)</h1>
-	<div id="debug"></div>
+	<h1 id="index" class="hide">1</h1>
 
 	<script>
 		window.unlighter.on('update-str', (str) => {
+			const textColor = Math.max(0.3, Math.min(1 - str / 100, 1))
 			document.body.style.background = `rgba(0,0,0,${str / 100 * 0.95})`
+			document.body.style.color = `rgba(150,150,150,${textColor})`
+		})
+		window.unlighter.on('update-index', (index) => {
+			document.getElementById('index').innerText = index + 1
+		})
+		window.unlighter.on('show-index', () => {
+			document.getElementById('index').classList.remove('hide')
+		})
+		window.unlighter.on('hide-index', () => {
+			document.getElementById('index').classList.add('hide')
 		})
 	</script>
 </body>

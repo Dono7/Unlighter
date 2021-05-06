@@ -2,11 +2,12 @@ import { BrowserWindow } from "electron"
 import path from "path"
 
 export default class Monitor {
-	constructor(unlighterApp, display) {
+	constructor(unlighterApp, display, index) {
 		this.app = unlighterApp
 		this.str = 10
 		this.lastStrUpdate = new Date()
 		this.name = ""
+		this.index = index
 		this.display = display
 		this.win = null
 
@@ -16,7 +17,7 @@ export default class Monitor {
 			transparent: true,
 			frame: false,
 			fullscreen: !this.app.config.showFilterDevTools,
-			alwaysOnTop: true,
+			alwaysOnTop: !this.app.config.showFilterDevTools,
 			skipTaskbar: true,
 			webPreferences: {
 				devTools: true,
@@ -28,6 +29,7 @@ export default class Monitor {
 	initWindow() {
 		this.win = new BrowserWindow(this.options)
 		this.win.loadFile("./../public/filter.html")
+		this.win.webContents.send("update-index", this.index)
 		if (this.app.config.showFilterDevTools) {
 			this.win.webContents.openDevTools()
 		} else {
@@ -48,6 +50,7 @@ export default class Monitor {
 		return {
 			str: this.str,
 			name: this.name,
+			id: this.display.id,
 		}
 	}
 }

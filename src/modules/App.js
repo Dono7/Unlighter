@@ -122,6 +122,18 @@ export default class UnlighterApp {
 					break
 			}
 		})
+
+		ipcMain.on("pcc-to-monitors", (event, data) => {
+			const { msg, action, index } = data
+			switch (msg) {
+				case "index":
+					this.monitors.index(index, action)
+					break
+
+				default:
+					break
+			}
+		})
 	}
 
 	initEvents() {

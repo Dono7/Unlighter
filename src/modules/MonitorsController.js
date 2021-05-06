@@ -3,7 +3,7 @@ import Monitor from "./Monitor"
 export default class MonitorsController {
 	constructor(unlighterApp, displays) {
 		this.app = unlighterApp
-		this.monitors = displays.map((display) => new Monitor(unlighterApp, display))
+		this.monitors = displays.map((display, index) => new Monitor(unlighterApp, display, index))
 		this.lastErrorTime = 0
 	}
 
@@ -29,9 +29,12 @@ export default class MonitorsController {
 		})
 	}
 
-	log() {
-		this.monitors.forEach((monitor) => {
-			console.log(monitor)
-		})
+	index(index, action) {
+		if (index > this.monitors.length) {
+			throw new Error("Try to show screen index but screen not found.")
+		}
+		if (action !== "show" || (action === "show" && this.app.getPref("showScreenNumber"))) {
+			this.monitors[index].win.webContents.send(`${action}-index`)
+		}
 	}
 }

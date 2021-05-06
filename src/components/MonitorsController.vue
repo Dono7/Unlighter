@@ -9,7 +9,7 @@
 			@click="updateScreen(screen)"
 			@mousedown="mdown(screen)"
 			@mouseenter="menter(screen)"
-		
+			@mouseleave="mleave(screen)"
 		>
 
 			<div class="progressbar" v-bind:style="{ width: screen.barPosition + 'px', left: `-${win.borderMargin}px` }"></div>
@@ -36,7 +36,7 @@ export default {
 				borderMargin: 5,
 			},
 			monitors: [
-				{ id: 1, str: 0, barPosition: 0, name: 'Loading...', isActive: false },
+				{ id: 1, index: 0, str: 0, barPosition: 0, name: 'Loading...', isActive: false },
 			],
 			showDebug: true,
 		}
@@ -45,7 +45,8 @@ export default {
 		init(monitors) {
 			this.monitors = monitors.map((monitor, index) => {
 				return {
-					id: index,
+					id: monitor.id,
+					index: index,
 					str: monitor.str,
 					barPosition: this.barPositionFromStr(monitor.str),
 					name: monitor.name,
@@ -68,19 +69,23 @@ export default {
 			if (this.isSomeoneActive) {
 				screen.isActive = true
 			}
+			window.unlighter.sendToMonitors({msg: "index", action: "show", index: screen.index})
+		},
+		mleave(screen) {
+			window.unlighter.sendToMonitors({msg: "index", action: "hide", index: screen.index})
 		},
 		mmove(event) {
 			this.mouse.x = event.clientX
 			this.mouse.y = event.clientY
 			if (this.isSomeoneActive) {
 				this.monitors.forEach((screen) => this.updateScreen(screen))
-				window.unlighter.sendToMain({msg: 'monitors-str-changed', monitorsStr: this.monitorsStr})
 			}
 		},
 		updateScreen(screen) {
 			if (screen.isActive) {
 				screen.str = this.xRelative
 				screen.barPosition = this.xRelative < 1 ? this.win.borderMargin : this.xRelative > 99 ? this.win.w - this.win.borderMargin : this.mouse.x
+				window.unlighter.sendToMain({msg: 'monitors-str-changed', monitorsStr: this.monitorsStr})
 			}
 		},
 		close() {
