@@ -117,8 +117,16 @@ export default class UnlighterApp {
 					this.monitors.updateMonitorsStr(data.monitorsStr)
 					break
 
+				case "preferences-set":
+					this.setPref(data.key, data.value)
+					break
+
+				case "preferences-get":
+					this.sendToPcc("preferences-get", this.getPref())
+					break
+
 				default:
-					console.log("default")
+					console.log("default", msg)
 					break
 			}
 		})
@@ -187,5 +195,11 @@ export default class UnlighterApp {
 
 	getPref(key = "") {
 		return key == "" ? this.getData("preferences") : this.getData("preferences")[key]
+	}
+
+	setPref(key, value) {
+		let newPref = this.getPref()
+		newPref[key] = value
+		storage.set("preferences", newPref)
 	}
 }

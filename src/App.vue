@@ -59,6 +59,9 @@ body, html
   min-height: 400px
   background: linear-gradient(150deg, rgba(28,28,28,1) 0%, rgba(17,17,17,1) 42%)
   color: white
+  > main
+    padding: 10px 20px
+    width: 100%
 
 h1
   padding-left: 20px
