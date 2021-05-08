@@ -20,6 +20,7 @@ export default class UnlighterApp {
 		} else {
 			this.launched = true
 		}
+		this.loadUserPref()
 		this.createPcc()
 		this.createMonitors()
 		this.createLocalServer()
@@ -28,6 +29,15 @@ export default class UnlighterApp {
 		this.initPcc()
 		this.initIPC()
 		this.initEvents()
+	}
+
+	loadUserPref() {
+		this.config = {
+			...this.config,
+			preferences: {
+				...this.getPref(),
+			},
+		}
 	}
 
 	createPcc() {
@@ -68,10 +78,10 @@ export default class UnlighterApp {
 	}
 
 	initDefaultPreferences() {
-		if (storage.has("preferences")) {
-			const userPref = this.getPref()
+		const userPref = this.getPref()
+		if (userPref !== undefined) {
 			for (const [key, value] of Object.entries(this.config.defaultConfig)) {
-				if (!userPref.hasOwnPreperty(key)) {
+				if (userPref[key] === undefined) {
 					userPref[key] = value
 					storage.set("preferences", userPref)
 				}
@@ -199,7 +209,9 @@ export default class UnlighterApp {
 
 	setPref(key, value) {
 		let newPref = this.getPref()
-		newPref[key] = value
+		if (key && value) {
+			newPref[key] = value
+		}
 		storage.set("preferences", newPref)
 	}
 }

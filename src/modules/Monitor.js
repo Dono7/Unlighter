@@ -4,7 +4,7 @@ import path from "path"
 export default class Monitor {
 	constructor(unlighterApp, display, index) {
 		this.app = unlighterApp
-		this.str = 10
+		this.str = unlighterApp.getPref("screenStrength")
 		this.lastStrUpdate = new Date()
 		this.name = ""
 		this.index = index
