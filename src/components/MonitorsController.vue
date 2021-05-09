@@ -9,7 +9,6 @@
 			@click="updateScreen(screen)"
 			@mousedown="mdown(screen)"
 			@mouseenter="menter(screen)"
-			@mouseleave="mleave(screen)"
 		>
 
 			<div class="progressbar" v-bind:style="{ width: screen.barPosition + 'px', left: `-${win.borderMargin}px` }"></div>
@@ -69,10 +68,6 @@ export default {
 			if (this.isSomeoneActive) {
 				screen.isActive = true
 			}
-			window.unlighter.sendToMonitors({msg: "index", action: "show", index: screen.index})
-		},
-		mleave(screen) {
-			window.unlighter.sendToMonitors({msg: "index", action: "hide", index: screen.index})
 		},
 		mmove(event) {
 			this.mouse.x = event.clientX

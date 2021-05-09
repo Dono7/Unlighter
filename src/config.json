@@ -1,5 +1,5 @@
 {
-	"isDevelopment": true,
+	"isDevelopment": false,
 	"loadVueExtension": false,
 	"showFilterDevTools": false,
 	"defaultConfig": {

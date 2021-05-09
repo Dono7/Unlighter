@@ -12,6 +12,8 @@ export default class UnlighterApp {
 		this.pcc = null
 		this.config = config
 		this.launched = false
+		this.lastMinimize = 0
+		this.initialised = false
 	}
 
 	launch() {
@@ -29,6 +31,7 @@ export default class UnlighterApp {
 		this.initPcc()
 		this.initIPC()
 		this.initEvents()
+		this.initialised = true
 	}
 
 	loadUserPref() {
@@ -142,12 +145,8 @@ export default class UnlighterApp {
 		})
 
 		ipcMain.on("pcc-to-monitors", (event, data) => {
-			const { msg, action, index } = data
+			const { msg } = data
 			switch (msg) {
-				case "index":
-					this.monitors.index(index, action)
-					break
-
 				default:
 					break
 			}
@@ -161,15 +160,6 @@ export default class UnlighterApp {
 			}
 		})
 
-		this.app.on("browser-window-blur", (event, sender) => {
-			if (sender.id == this.pcc.id) {
-				// pcc.setAlwaysOnTop(false, "screen")
-				if (this.getPref("minimizeOnBlur")) {
-					this.pcc.minimize()
-				}
-			}
-		})
-
 		this.app.on("window-all-closed", () => {
 			if (process.platform !== "darwin") {
 				this.app.quit()
@@ -178,6 +168,34 @@ export default class UnlighterApp {
 
 		this.app.on("activate", () => {
 			if (BrowserWindow.getAllWindows().length === 0) createWindow()
+		})
+
+		this.pcc.on("blur", () => {
+			this.monitors.showOrHideMonitorIndex("hide")
+			if (!this.getPref("pccOnTop")) {
+				this.pcc.setAlwaysOnTop(false, "normal")
+			}
+			if (this.getPref("minimizeOnBlur") && this.initialised) {
+				this.pcc.minimize()
+			}
+		})
+
+		this.pcc.on("focus", () => {
+			this.monitors.showOrHideMonitorIndex("show")
+			this.pcc.setAlwaysOnTop(true, "screen")
+		})
+
+		this.pcc.on("minimize", () => {
+			this.monitors.showOrHideMonitorIndex("hide")
+			this.lastMinimize = new Date()
+		})
+
+		this.pcc.on("restore", () => {
+			this.monitors.showOrHideMonitorIndex("show")
+			const now = new Date()
+			if (Math.abs(now - this.lastMinimize) <= 180) {
+				this.pcc.minimize()
+			}
 		})
 
 		if (this.config.isDevelopment) {
@@ -214,6 +232,15 @@ export default class UnlighterApp {
 		if (key !== undefined && value !== undefined) {
 			newPref[key] = value
 		}
-		storage.set("preferences", newPref)
+		storage.set("preferences", newPref, (error) => {
+			switch (key) {
+				case "showScreenNumber":
+					this.monitors.showOrHideMonitorIndex(value ? "show" : "hide")
+					break
+
+				default:
+					break
+			}
+		})
 	}
 }

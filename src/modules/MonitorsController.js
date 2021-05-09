@@ -29,12 +29,11 @@ export default class MonitorsController {
 		})
 	}
 
-	index(index, action) {
-		if (index > this.monitors.length) {
-			throw new Error("Try to show screen index but screen not found.")
-		}
+	showOrHideMonitorIndex(action) {
 		if (action !== "show" || (action === "show" && this.app.getPref("showScreenNumber"))) {
-			this.monitors[index].win.webContents.send(`${action}-index`)
+			this.monitors.forEach((monitor) => {
+				monitor.win.webContents.send(`${action}-index`)
+			})
 		}
 	}
 }
