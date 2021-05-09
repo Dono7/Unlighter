@@ -42,6 +42,7 @@ export default {
   box-sizing: border-box
   letter-spacing: 0.6px
   user-select: none
+  font-family: 'Poppins'
 
 body, html
   margin: 0
@@ -70,6 +71,10 @@ h1
 
 main
   padding: 0 15px
+  p
+    font-size: 12px
+  a
+    color: white
 
 // Animation on views change
 .slide-left-enter-active,

@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, screen } from "electron"
+import { BrowserWindow, ipcMain, screen, shell } from "electron"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import MonitorsController from "./MonitorsController"
 import path from "path"
@@ -138,6 +138,10 @@ export default class UnlighterApp {
 					this.sendToPcc("preferences-get", this.getPref())
 					break
 
+				case "open-url":
+					this.openUrl(data.url)
+					break
+
 				default:
 					console.log("default", msg)
 					break
@@ -242,5 +246,9 @@ export default class UnlighterApp {
 					break
 			}
 		})
+	}
+
+	openUrl(url) {
+		shell.openExternal(url)
 	}
 }

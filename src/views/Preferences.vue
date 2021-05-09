@@ -11,16 +11,16 @@
       :max="p.max"
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
-    <button @click="getPref">Get Preferences</button>
   </main>
 </template>
 
 <script>
 import { onBeforeMount, ref } from 'vue'
 import InputBlock from './../components/InputBlock'
+import Button from './../components/Button'
 
 export default {
-  components: { InputBlock },
+  components: { InputBlock, Button },
   name: 'Preferences',
   setup(props) {
     const changePref = (key, value) => {
@@ -34,10 +34,6 @@ export default {
       {key: 'minimizeOnBlur', label: 'Automatically minimize', value: true, inputType: 'switch'},
     ])
 
-    function getPref() {
-      window.unlighter.sendToMain({msg: 'preferences-get'})
-    }
-
     onBeforeMount(() => {
       window.unlighter.fromMain('preferences-get', (event, userPref) => {
         pref.value.forEach(p => { 
@@ -50,7 +46,7 @@ export default {
       window.unlighter.sendToMain({msg: 'preferences-get'})
     })
 
-    return { pref, changePref, getPref }
+    return { pref, changePref }
   }
 }
 </script>

@@ -15,7 +15,7 @@ export default {
 			{label: 'Monitors', to: 'Monitors'},
 			{label: 'Preferences', to: 'Preferences'},
 			{label: 'About', to: 'About'},
-			{label: 'Contact', to: 'Contact'},
+			// {label: 'Contact', to: 'Contact'},
 		])
 		return { tabs }
 	}
