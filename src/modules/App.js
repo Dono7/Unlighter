@@ -164,7 +164,9 @@ export default class UnlighterApp {
 		this.app.on("browser-window-blur", (event, sender) => {
 			if (sender.id == this.pcc.id) {
 				// pcc.setAlwaysOnTop(false, "screen")
-				// this.pcc.minimize()
+				if (this.getPref("minimizeOnBlur")) {
+					this.pcc.minimize()
+				}
 			}
 		})
 
@@ -209,7 +211,7 @@ export default class UnlighterApp {
 
 	setPref(key, value) {
 		let newPref = this.getPref()
-		if (key && value) {
+		if (key !== undefined && value !== undefined) {
 			newPref[key] = value
 		}
 		storage.set("preferences", newPref)

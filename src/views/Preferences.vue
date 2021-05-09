@@ -30,6 +30,7 @@ export default {
     const pref = ref([
       {key: 'screenStrength', label: 'Default screen strength on start', value: 9, inputType: 'number', min: 0, max: 100},
       {key: 'showScreenNumber', label: 'Show screen number on hover', value: true, inputType: 'switch'},
+      {key: 'minimizeOnBlur', label: 'Automatically minimize', value: true, inputType: 'switch'},
     ])
 
     function getPref() {
