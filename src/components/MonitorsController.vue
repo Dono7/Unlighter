@@ -1,17 +1,16 @@
 <template>
-	<div class="monitors-controller">
+	<div class="monitors-controller" :style="{ padding: `0 ${win.deadMargin}px` }">
 		<div 
 			v-for="(screen, index) in monitors"
 			:key="index"
 			class="monitor-container"
 			:class="{active: screen.isActive}"
-			:style="{'border-width': `0 ${win.borderMargin}px`}"
 			@click="updateScreen(screen)"
 			@mousedown="mdown(screen)"
 			@mouseenter="menter(screen)"
 		>
 
-			<div class="progressbar" v-bind:style="{ width: screen.barPosition + 'px', left: `-${win.borderMargin}px` }"></div>
+			<div class="progressbar" v-bind:style="{ width: screen.str + '%' }"></div>
 			<div class="monitor-name">{{ screen.name ? `${screen.name}` : `Monitor ${index + 1}` }}</div>
 			<div class="pourcentage">{{Math.round(screen.str)}}</div>
 		</div>
@@ -31,13 +30,11 @@ export default {
 			win: {
 				w: 320,
 				h: 400,
-				deadMargin: 12,
-				borderMargin: 5,
+				deadMargin: 30,
 			},
 			monitors: [
 				{ id: 1, index: 0, str: 0, barPosition: 0, name: 'Loading...', isActive: false },
 			],
-			showDebug: true,
 		}
 	},
 	methods: {
@@ -78,8 +75,9 @@ export default {
 		},
 		updateScreen(screen) {
 			if (screen.isActive) {
-				screen.str = this.xRelative
-				screen.barPosition = this.xRelative < 1 ? this.win.borderMargin : this.xRelative > 99 ? this.win.w - this.win.borderMargin : this.mouse.x
+				const relative = this.xRelative
+				screen.str = relative
+				screen.barPosition = relative < 1 ? 0 : relative > 99 ? this.win.w - this.win.deadMargin : this.mouse.x
 				window.unlighter.sendToMain({msg: 'monitors-str-changed', monitorsStr: this.monitorsStr})
 			}
 		},
@@ -95,8 +93,8 @@ export default {
 		xRelative() {
 			const intervalLength = this.win.w - 2 * this.win.deadMargin
 			const factor = intervalLength / 100
-			const position = Math.min(Math.max(this.win.deadMargin, this.mouse.x), this.win.w - this.win.deadMargin)
-			return this.round((position - this.win.deadMargin) / factor, 2)
+			const x = this.round( ( this.mouse.x - this.win.deadMargin ) / factor ,2)
+			return x < 1 ? 0 : x > 99 ? 100 : x
 		},
 		isSomeoneActive() {
 			return this.monitors.some((screen) => screen.isActive)
@@ -139,11 +137,13 @@ export default {
 		justify-content: space-between
 		align-items: center
 		padding: 0 30px
-		height: 80px
+		height: 75px
 		font-weight: 500
 		cursor: url('./../assets/cursor_hover.svg') 13.5 6, pointer
 		border-color: rgba(255,255,255,0.2)
 		border-style: solid
+		border-width: 0
+		border-radius: 10px
 		.progressbar
 			position: absolute
 			top: 0
@@ -151,8 +151,17 @@ export default {
 			left: 0
 			width: 0%
 			background-color: rgba(255,255,255,0.10)
+			border-radius: 10px
 		&.active
 			.progressbar
-				border-right: 2px solid white
+				border-right: 1px solid rgba(255,255,255,0.7)
+		&::before
+			content: ''
+			position: absolute
+			left: 0
+			width: 100%
+			height: 1px
+			background: linear-gradient(90deg, rgba(117,135,255,0.25) 0%, rgba(117,135,255,0.50) 48%, rgba(117,135,255,0.25) 100%)
+			top: 50%
 
 </style>

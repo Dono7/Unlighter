@@ -47,7 +47,7 @@ export default class UnlighterApp {
 		this.pcc = new BrowserWindow({
 			title: "Unlighter",
 			width: this.config.isDevelopment ? 820 : 320,
-			height: 440,
+			height: 400,
 			frame: false,
 			maximizable: false,
 			closable: true,

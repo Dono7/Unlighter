@@ -36,15 +36,20 @@ export default {
 		-webkit-app-region: no-drag
 		display: flex
 		> div 
+			position: relative
 			display: flex
 			justify-content: center
 			align-items: center
-			height: 60px
-			width: 60px
+			height: 38px
+			width: 38px
 			transition: all 0.15s
 			cursor: pointer
+			margin-right: 11px
+			border-radius: 5px
 			&:hover
 				background-color: rgba(255,255,255,0.10)
 			&.close:hover
 				background-color: rgba(255,100,100,0.20)
+
+
 </style>

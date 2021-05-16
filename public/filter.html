@@ -16,7 +16,7 @@
 		}
 		body {
 			background: rgba(0,0,0,0.1);
-			color: rgba(150,150,150,0.9);
+			color: rgba(250,250,250,0.9);
 		}
 		h1 {
 			font-size: 250px;
@@ -37,7 +37,7 @@
 		window.unlighter.on('update-str', (str) => {
 			const textColor = Math.max(0.3, Math.min(1 - str / 100, 1))
 			document.body.style.background = `rgba(0,0,0,${str / 100 * 0.95})`
-			document.body.style.color = `rgba(150,150,150,${textColor})`
+			document.body.style.color = `rgba(250,250,250,${textColor})`
 		})
 		window.unlighter.on('update-index', (index) => {
 			document.getElementById('index').innerText = index + 1

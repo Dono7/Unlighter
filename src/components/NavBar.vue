@@ -29,18 +29,31 @@ export default {
 	align-items: center
 	width: 100%
 	height: 65px
-	border-width: 1px 0
-	border-color: rgba(255,255,255,0.2)
-	border-style: solid
 	margin-bottom: 24px
 	a 
 		text-decoration: none
-		color: #666
+		color: white
 		transition: all 0.1s
 		font-weight: 500
 		letter-spacing: 0
 		font-size: 12px
-		&:hover, &.router-link-exact-active
-			color: #fff
+		position: relative
+		&:hover
+			color: #7587FF
+		&::before
+			content: ''
+			width: 5px
+			height: 5px
+			border-radius: 5px
+			background-color: #7587FF
+			position: absolute
+			bottom: -12px
+			left: 50%
+			transition: transform 0.25s
+			transform: translateX(-50%) scale(0)
+		&.router-link-exact-active
+			color: #7587FF
+			&::before
+				transform: translateX(-50%) scale(1)
 
 </style>

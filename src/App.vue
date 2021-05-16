@@ -58,23 +58,20 @@ body, html
 #window
   width: 320px
   min-height: 400px
-  background: linear-gradient(150deg, rgba(28,28,28,1) 0%, rgba(17,17,17,1) 42%)
+  background: linear-gradient(180deg, #1A1937 0%, rgba(15,15,15,1) 42%)
   color: white
   > main
-    padding: 10px 20px
+    padding: 10px 30px
     width: 100%
+    p
+      font-size: 12px
+    a
+      color: white
 
 h1
   padding-left: 20px
   font-weight: 500
   font-size: 20px
-
-main
-  padding: 0 15px
-  p
-    font-size: 12px
-  a
-    color: white
 
 // Animation on views change
 .slide-left-enter-active,
