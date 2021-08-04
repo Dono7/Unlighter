@@ -1,5 +1,15 @@
 # Unlighter
 
+![Unlighter App Screenshot](doc/img/unlighter-screenshot.jpg)
+
+Unlighter is a small and free software made to reduce the screens brightness lower than the minimum possible. It works with every type of screens.
+
+## Download
+
+You can download the latest version of Unlighter in the [Github Release tab](https://github.com/Dono7/Unlighter/releases).
+
+---
+
 ## Development Setup
 
 ### Compiles and hot-reloads for development
@@ -18,18 +28,10 @@ yarn install
 yarn electron:serve
 ```
 
-Or with NPM : 
-
-```bash
-npm install
-npm run electron:serve
-```
 
 ### Compiles and minifies for production
 
 ```bash
-npm run build
-# or
 yarn build
 ```
 
