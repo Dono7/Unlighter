@@ -1,19 +1,19 @@
 <template>
   <main class="about">
-    <p>Unlighter is a free and open-source project. You can download the latest version</p>
+    <p>Unlighter is a free and open-source project. You can download the latest version on Github :</p>
 
-    <p><a href="https://github.com/Dono7/Unlighter/releases" target="_blank">Download from Github</a></p>
+    <p><Link href="https://github.com/Dono7/Unlighter/releases" label="Download from Github"/></p>
 
-    <p>This application is developped by <a href="">Donovan T.</a> (developper) and <a href="">Walid B.</a> (UI/UX Designer).</p>
+    <p>This application is developped by <Link href="https://github.com/Dono7" label="Donovan T."/> (developper) and <Link href="https://www.behance.net/bourhanewac933" label="Walid B" /> (UI/UX Designer).</p>
 
   </main>
 </template>
 
 <script>
-import Button from './../components/Button'
+import Link from './../components/Link'
 
 export default {
-  components: { Button },
+  components: { Link },
 }
 </script>
 

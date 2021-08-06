@@ -61,7 +61,7 @@ body, html
   background: linear-gradient(180deg, #1A1937 0%, rgba(15,15,15,1) 42%)
   color: white
   > main
-    padding: 10px 30px
+    padding: 0 30px 10px 30px
     width: 100%
     p
       font-size: 12px
