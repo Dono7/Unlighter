@@ -17,6 +17,11 @@ module.exports = {
 				directories: {
 				  buildResources: "resources"
 				},
+				publish: {
+					provider: "github",
+					owner: "Dono7",
+					releaseType: "draft",
+				},
 			}
 		},
 	},
