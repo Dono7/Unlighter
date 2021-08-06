@@ -23,9 +23,11 @@ export default {
 </script>
 
 <style lang="sass">
+$purple: #7587FF
+
 button
 	background-color: rgba(255,255,255,0.1)
-	border: 1px solid #D85A00
+	border: 1px solid $purple
 	border-radius: 8px
 	color: white
 	padding: 6px 12px
@@ -33,7 +35,7 @@ button
 	cursor: pointer
 	transition: all 0.2s ease-in-out
 	&:hover
-		background-color: #D85A00
+		background-color: $purple
 	&:focus
 		outline: none
 	&.centered

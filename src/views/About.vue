@@ -1,13 +1,11 @@
 <template>
   <main class="about">
-    <p>This software is open-source, and free to use. Version beta v0.1.0</p>
+    <p>Unlighter is a free and open-source project. You can download the latest version</p>
 
-    <p>If you want to contribute, please go to the unlighter github repository.</p>
-    <Button label="Github repo" url="https://github.com/Dono7/Unlighter" small></Button>
+    <p><a href="https://github.com/Dono7/Unlighter/releases" target="_blank">Download from Github</a></p>
 
-    <p>If you want to contact the developper or the UI/UX designer, please the form below.</p>
+    <p>This application is developped by <a href="">Donovan T.</a> (developper) and <a href="">Walid B.</a> (UI/UX Designer).</p>
 
-    <Button label="Contact form" url="https://forms.gle/8mULUL5qfR5AVJi19" small></Button>
   </main>
 </template>
 
@@ -23,5 +21,7 @@ export default {
 .about
   display: flex
   flex-direction: column
-  gap: 15px
+  gap: 12px
+  p
+    font-size: 12px
 </style>

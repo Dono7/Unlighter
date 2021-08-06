@@ -14,3 +14,7 @@ contextBridge.exposeInMainWorld("unlighter", {
 		ipcRenderer.send("pcc-to-main", { msg: "open-url", url })
 	},
 })
+
+ipcRenderer.on('log', (event, data) => {
+	console.log(data)
+})

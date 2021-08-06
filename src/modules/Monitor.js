@@ -28,7 +28,6 @@ export default class Monitor {
 
 	initWindow() {
 		this.win = new BrowserWindow(this.options)
-		this.win.loadFile("./../public/filter.html")
 		this.win.webContents.send("update-index", this.index)
 		if (this.app.config.showFilterDevTools) {
 			this.win.webContents.openDevTools()
