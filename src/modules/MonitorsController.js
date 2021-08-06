@@ -13,6 +13,14 @@ export default class MonitorsController {
 		})
 	}
 
+	loadFilterPage(isProd) {
+		this.monitors.forEach((monitor) => {
+			isProd
+			? monitor.win.loadURL("app://./filter.html")
+			: monitor.win.loadFile("./../public/filter.html")
+		})
+	}
+
 	serializeForPcc() {
 		return this.monitors.map((monitor) => monitor.serialize())
 	}

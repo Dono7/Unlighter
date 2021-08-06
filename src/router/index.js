@@ -29,6 +29,10 @@ const routes = [
 		component: Contact,
 		meta: { transitionIndex: 4 },
 	},
+	{
+		path: "/index.html",
+		redirect: "/"
+	}
 ]
 
 const router = createRouter({
