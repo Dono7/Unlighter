@@ -1,6 +1,6 @@
 <template>
 	<div class="title-bar">
-		<div class="title">Unlighter</div>
+		<div class="title"><img id="icon" src="./../assets/icon.svg" alt="Unlighter logo icno">Unlighter</div>
 		<div class="actions">
 			<div class="minimize" @click="minimize"><img src="./../assets/minimize.svg"></div>
 			<div class="close" @click="quit"><img src="./../assets/close.svg"></div>
@@ -32,6 +32,12 @@ export default {
 	-webkit-app-region: drag
 	.title
 		padding-left: 30px
+		display: flex
+		align-items: center
+		#icon
+			height: 30px
+			width: 30px
+			margin-right: 5px
 	.actions
 		-webkit-app-region: no-drag
 		display: flex
