@@ -1,5 +1,8 @@
 import { BrowserWindow } from "electron"
 import { openFileInWindow } from "./utils"
+import { autoUpdater } from "electron-updater"
+import path from "path"
+import logger from "electron-log"
 
 export default class Updater {
 	constructor(unlighterApp) {
@@ -11,7 +14,25 @@ export default class Updater {
 			height: 60 + (this.app.config.isDevelopment ? 130 : 0),
 			margin: 5,
 		}
-		console.log("Updater created")
+
+		this.configureAutoUpdater()
+	}
+
+	configureAutoUpdater() {
+		autoUpdater.autoDownload = true
+		autoUpdater.autoInstallOnAppQuit = true
+		autoUpdater.allowPrerelease = true
+		autoUpdater.allowDowngrade = false
+		autoUpdater.logger = logger
+
+		logger.log("Starting the Updater module.")
+
+		autoUpdater.on("checking-for-update", (e) => this.updateStatus("fetching"))
+		autoUpdater.on("update-available", (e) => this.updateStatus("available"))
+		autoUpdater.on("update-not-available", (e) => this.updateStatus("uptodate"))
+		autoUpdater.on("download-progress", (e) => this.updateStatus("downloading", e.percent))
+		autoUpdater.on("update-downloaded", (e) => this.updateStatus("downloaded"))
+		autoUpdater.on("error", (e) => this.updateStatus("error"))
 	}
 
 	openWindow() {
@@ -19,7 +40,7 @@ export default class Updater {
 
 		this.win = new BrowserWindow({
 			...this.getRefreshedBounds(),
-			resizable: false,
+			resizable: this.app.config.isDevelopment,
 			movable: false,
 			maximizable: false,
 			skipTaskbar: true,
@@ -27,6 +48,10 @@ export default class Updater {
 			frame: false,
 			parent: this.app.pcc,
 			backgroundColor: "#1A1937",
+			webPreferences: {
+				devTools: true,
+				preload: path.join(__dirname, "ipcFilter.js"),
+			},
 		})
 
 		openFileInWindow(this.win, "updater", this.app.config.isDevelopment)
@@ -34,6 +59,23 @@ export default class Updater {
 		this.app.pcc.on("move", () => {
 			this.win.setBounds(this.getRefreshedBounds())
 		})
+		autoUpdater.checkForUpdates()
+	}
+
+	closeWindow() {
+		if (this.win === null) return
+
+		this.win.close()
+		this.win = null
+	}
+
+	iconClicked(status) {
+		if (status == "error" || status == "uptodate") {
+			this.closeWindow()
+		}
+		if (status == "downloaded") {
+			this.quitAndInstall()
+		}
 	}
 
 	getRefreshedBounds() {
@@ -48,5 +90,14 @@ export default class Updater {
 					? pccBounds.y - this.pos.height - this.pos.margin
 					: pccBounds.y + pccBounds.height + this.pos.margin,
 		}
+	}
+
+	updateStatus(status, percent) {
+		logger.log("UpdateStatus : " + status)
+		this.win.webContents.send("update-status", { status, percent })
+	}
+
+	quitAndInstall() {
+		autoUpdater.quitAndInstall()
 	}
 }

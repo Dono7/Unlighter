@@ -28,17 +28,13 @@ export default class UnlighterApp {
 		this.createPcc()
 		this.createMonitors()
 		this.createLocalServer()
+		this.createUpdater()
 		this.initDefaultPreferences()
 		// this.installVueExtension()
 		this.initPcc()
 		this.initIPC()
 		this.initEvents()
 		this.initialised = true
-
-		setTimeout(() => {
-			this.updater = new Updater(this)
-			this.updater.openWindow()
-		}, 3000)
 	}
 
 	loadUserPref() {
@@ -89,6 +85,10 @@ export default class UnlighterApp {
 		if (this.monitors) this.monitors.loadFilterPage()
 	}
 
+	createUpdater() {
+		this.updater = new Updater(this)
+	}
+
 	initDefaultPreferences() {
 		const userPref = this.getPref()
 		if (userPref !== undefined) {
@@ -126,6 +126,15 @@ export default class UnlighterApp {
 	}
 
 	initIPC() {
+		ipcMain.on("exec-module", (event, data) => {
+			const { module, method, args } = data
+			if (this[module][method]) {
+				this[module][method](...args)
+			} else {
+				console.log(`Method ${method} not found in the module ${module}. Args: ${args}`)
+			}
+		})
+
 		ipcMain.on("pcc-to-main", (event, data) => {
 			const { msg } = data
 			switch (msg) {
@@ -155,6 +164,10 @@ export default class UnlighterApp {
 
 				case "open-url":
 					this.openUrl(data.url)
+					break
+
+				case "open-updater-window":
+					this.updater.openWindow()
 					break
 
 				default:

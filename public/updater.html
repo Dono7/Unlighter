@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet">
+	<script src="./js/fontawesome-all.min.js"></script>
+	<title>Filter</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		html, body {
+			width: 100%;
+			min-height: 100vh;
+			color: white;
+			overflow: hidden;
+			font-family: 'Poppins';
+		}
+		.content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			height: 100vh;
+			padding: 0 30px;
+			font-weight: 500;
+			font-size: 14px;
+		}
+		.spin {
+			animation: spin 5000ms infinite linear;
+		}
+		.hide {
+			display: none;
+		}
+		#progressbar-container {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			opacity: 0.15;
+			padding-left: 5%;
+		}
+		#progressbar-container::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			width: 5%;
+			background-color: #fff;
+		}
+		#progressbar {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			width: 25%;
+			background-color: #fff;
+		}
+		.pointer {
+			cursor: pointer;
+		}
+		@keyframes spin {
+			from { transform: rotate(0deg); }
+			to { transform: rotate(720deg); }
+		}
+	</style>
+</head>
+<body>
+	<div class="content">
+		<p id="text">Looking for an update...</p>
+
+		<i id="icon" class="fas fa-spinner spin" onclick="iconClicked()"></i>
+	</div>
+
+	<div id="barContainer" class="hide">
+		<div id="bar" style="width: 0%"></div>
+	</div>
+
+	<script>
+		const data = {
+			fetching: {
+				text: 'Looking for an update...',
+				iconClass: 'fas fa-spinner spin',
+				barClass: 'hide',
+			},
+			available: {
+				text: 'New version found. Downloading...',
+				iconClass: 'fas fa-spinner spin',
+				barClass: '',
+			},
+			downloading: {
+				text: 'Downloading the update... (%i)',
+				iconClass: 'hide',
+				barClass: ''
+			},
+			downloaded: {
+				text: 'Update ready to be installed.',
+				iconClass: 'fas fa-download pointer',
+				barClass: 'hide',
+			},
+			uptodate: {
+				text: 'Already up to date.',
+				iconClass: 'fas fa-times pointer',
+				barClass: 'hide'
+			},
+			error: {
+				text: 'Unable to find an update.',
+				iconClass: 'fas fa-times pointer',
+				barClass: 'hide'
+			},
+			status: 'not-initialised'
+		}
+		const $text = document.getElementById('text')
+		const $icon = document.getElementById('icon')
+		const $barContainer = document.getElementById('barContainer')
+		const $bar = document.getElementById('bar')
+
+		window.unlighter.on('update-status', (updateData) => {
+			const { status, percent } = updateData
+			$text.innerText = data[status].text.replace('%i', percent)
+			$icon.className = data[status].iconClass
+			$barContainer.className = data[status].barClass
+			$bar.style.width = `${percent ?? 0}%`
+			data.status = status
+		})
+
+		const iconClicked = () => {
+			window.unlighter.send('exec-module', {
+				module: 'updater',
+				method: 'iconClicked',
+				args: [data.status]
+			})
+		}
+	</script>
+</body>
+</html>

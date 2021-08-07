@@ -1,6 +1,6 @@
 {
   "name": "unlighter",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Small and free software to reduce screens brightness lower than the minimum. Works with every type of screens.",
   "author": "Donovan Trinh",
   "scripts": {
@@ -16,6 +16,8 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "electron-json-storage": "^4.5.0",
+    "electron-log": "^4.4.1",
+    "electron-updater": "^4.3.9",
     "vue": "^3.1.5",
     "vue-router": "^4.0.10"
   },
