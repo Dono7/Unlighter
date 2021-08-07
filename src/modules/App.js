@@ -170,6 +170,9 @@ export default class UnlighterApp {
 					this.updater.openWindow()
 					break
 
+				case "ask-for-versions":
+					this.updater.sendVersion(this.app.getVersion())
+
 				default:
 					console.log("default", msg)
 					break

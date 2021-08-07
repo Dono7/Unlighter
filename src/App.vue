@@ -65,6 +65,9 @@ body, html
     width: 100%
     p
       font-size: 12px
+      &.minor
+        font-size: 11px
+        color: #CCC
     a
       color: white
 
