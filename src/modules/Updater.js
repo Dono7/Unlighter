@@ -36,7 +36,11 @@ export default class Updater {
 	}
 
 	openWindow() {
-		if (this.win !== null || this.app.pcc === null) return
+		if (this.app.pcc === null) return
+		if (this.win !== null) {
+			this.closeWindow()
+			return
+		}
 
 		this.win = new BrowserWindow({
 			...this.getRefreshedBounds(),
@@ -59,7 +63,10 @@ export default class Updater {
 		this.app.pcc.on("move", () => {
 			this.win.setBounds(this.getRefreshedBounds())
 		})
-		autoUpdater.checkForUpdates()
+
+		this.win.once("ready-to-show", () => {
+			autoUpdater.checkForUpdates()
+		})
 	}
 
 	closeWindow() {
