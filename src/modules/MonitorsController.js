@@ -1,4 +1,5 @@
 import Monitor from "./Monitor"
+import { openFileInWindow } from "./utils"
 
 export default class MonitorsController {
 	constructor(unlighterApp, displays) {
@@ -13,11 +14,9 @@ export default class MonitorsController {
 		})
 	}
 
-	loadFilterPage(isProd) {
+	loadFilterPage() {
 		this.monitors.forEach((monitor) => {
-			isProd
-			? monitor.win.loadURL("app://./filter.html")
-			: monitor.win.loadFile("./../public/filter.html")
+			openFileInWindow(monitor.win, "filter")
 		})
 	}
 

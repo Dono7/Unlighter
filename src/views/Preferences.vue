@@ -11,6 +11,8 @@
       :max="p.max"
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
+
+    <Button label="Search for update" small/>
   </main>
 </template>
 
