@@ -16,6 +16,12 @@ export default class Updater {
 		}
 
 		this.configureAutoUpdater()
+
+		this.app.pcc.on("move", () => {
+			if (this.win !== null) {
+				this.win.setBounds(this.getRefreshedBounds())
+			}
+		})
 	}
 
 	configureAutoUpdater() {
@@ -60,10 +66,6 @@ export default class Updater {
 
 		openFileInWindow(this.win, "updater", this.app.config.isDevelopment)
 
-		this.app.pcc.on("move", () => {
-			this.win.setBounds(this.getRefreshedBounds())
-		})
-
 		this.win.once("ready-to-show", () => {
 			autoUpdater.checkForUpdates()
 		})
@@ -100,7 +102,7 @@ export default class Updater {
 	}
 
 	updateStatus(status, percent) {
-		logger.log("UpdateStatus : " + status)
+		if (this.win === null) return
 		this.win.webContents.send("update-status", { status, percent })
 	}
 
