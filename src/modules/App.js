@@ -1,6 +1,7 @@
 import { BrowserWindow, ipcMain, screen, shell } from "electron"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import MonitorsController from "./MonitorsController"
+import Updater from "./Updater"
 import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import storage from "electron-json-storage"
@@ -10,6 +11,7 @@ export default class UnlighterApp {
 		this.app = electronApp
 		this.monitors = null
 		this.pcc = null
+		this.updater = null
 		this.config = config
 		this.launched = false
 		this.lastMinimize = 0
@@ -26,9 +28,11 @@ export default class UnlighterApp {
 		this.createPcc()
 		this.createMonitors()
 		this.createLocalServer()
+		this.createUpdater()
 		this.initDefaultPreferences()
 		// this.installVueExtension()
-		this.initPcc()
+		this.initPccEvents()
+		this.initPccMonitorsTab()
 		this.initIPC()
 		this.initEvents()
 		this.initialised = true
@@ -70,7 +74,6 @@ export default class UnlighterApp {
 			throw new Error("The local server cannot run before PCC is created.")
 		}
 		if (process.env.WEBPACK_DEV_SERVER_URL) {
-			if(this.monitors) this.monitors.loadFilterPage()
 			await this.pcc.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
 			if (!process.env.IS_TEST && this.config.isDevelopment) {
 				this.pcc.webContents.openDevTools({ mode: "right" })
@@ -78,8 +81,13 @@ export default class UnlighterApp {
 		} else {
 			createProtocol("app")
 			this.pcc.loadURL("app://./index.html")
-			if(this.monitors) this.monitors.loadFilterPage(true)
 		}
+
+		if (this.monitors) this.monitors.loadFilterPage()
+	}
+
+	createUpdater() {
+		this.updater = new Updater(this)
 	}
 
 	initDefaultPreferences() {
@@ -107,18 +115,30 @@ export default class UnlighterApp {
 		// }
 	}
 
-	initPcc() {
+	initPccEvents() {
 		this.pcc.setAlwaysOnTop(true, "screen")
-		this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
-		this.pcc.on('close', () => {
+		this.pcc.on("close", () => {
 			this.monitors.monitors.forEach((monitor) => {
 				monitor.win.close()
-			});
+			})
 			this.app.quit()
 		})
 	}
 
+	initPccMonitorsTab() {
+		this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
+	}
+
 	initIPC() {
+		ipcMain.on("exec-module", (event, data) => {
+			const { module, method, args } = data
+			if (this[module][method]) {
+				this[module][method](...args)
+			} else {
+				console.log(`Method ${method} not found in the module ${module}. Args: ${args}`)
+			}
+		})
+
 		ipcMain.on("pcc-to-main", (event, data) => {
 			const { msg } = data
 			switch (msg) {
@@ -148,6 +168,14 @@ export default class UnlighterApp {
 
 				case "open-url":
 					this.openUrl(data.url)
+					break
+
+				case "open-updater-window":
+					this.updater.openWindow()
+					break
+
+				case "ask-for-versions":
+					this.updater.sendVersion(this.app.getVersion())
 					break
 
 				default:
@@ -183,7 +211,6 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("blur", () => {
-			this.monitors.showOrHideMonitorIndex("hide")
 			if (!this.getPref("pccOnTop")) {
 				this.pcc.setAlwaysOnTop(false, "normal")
 			}
@@ -193,7 +220,6 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("focus", () => {
-			this.monitors.showOrHideMonitorIndex("show")
 			this.pcc.setAlwaysOnTop(true, "screen")
 		})
 
@@ -261,8 +287,8 @@ export default class UnlighterApp {
 	}
 
 	pccLog(msg) {
-		if(this.pcc !== null) {
-			this.pcc.webContents.send('log',msg)
+		if (this.pcc !== null) {
+			this.pcc.webContents.send("log", msg)
 		}
 	}
 }

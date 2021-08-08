@@ -26,7 +26,7 @@ export default {
 $purple: #7587FF
 
 button
-	background-color: rgba(255,255,255,0.1)
+	background-color: transparent
 	border: 1px solid $purple
 	border-radius: 8px
 	color: white

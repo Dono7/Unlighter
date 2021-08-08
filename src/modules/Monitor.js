@@ -4,7 +4,7 @@ import path from "path"
 export default class Monitor {
 	constructor(unlighterApp, display, index) {
 		this.app = unlighterApp
-		this.str = unlighterApp.getPref("screenStrength")
+		this.str = this.app.getPref("screenStrength")
 		this.lastStrUpdate = new Date()
 		this.name = ""
 		this.index = index
@@ -27,6 +27,8 @@ export default class Monitor {
 	}
 
 	initWindow() {
+		if (this.win !== null) return
+
 		this.win = new BrowserWindow(this.options)
 		this.win.webContents.send("update-index", this.index)
 		if (this.app.config.showFilterDevTools) {
@@ -35,6 +37,9 @@ export default class Monitor {
 			this.win.setIgnoreMouseEvents(true)
 			this.win.setAlwaysOnTop(true, "screen")
 		}
+		this.win.once("ready-to-show", () => {
+			this.app.monitors.updateShowOrHideIndex()
+		})
 	}
 
 	updateStr(payload) {
@@ -51,5 +56,10 @@ export default class Monitor {
 			name: this.name,
 			id: this.display.id,
 		}
+	}
+
+	close() {
+		this.win.close()
+		this.win = null
 	}
 }
