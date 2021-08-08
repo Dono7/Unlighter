@@ -31,7 +31,8 @@ export default class UnlighterApp {
 		this.createUpdater()
 		this.initDefaultPreferences()
 		// this.installVueExtension()
-		this.initPcc()
+		this.initPccEvents()
+		this.initPccMonitorsTab()
 		this.initIPC()
 		this.initEvents()
 		this.initialised = true
@@ -114,15 +115,18 @@ export default class UnlighterApp {
 		// }
 	}
 
-	initPcc() {
+	initPccEvents() {
 		this.pcc.setAlwaysOnTop(true, "screen")
-		this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
 		this.pcc.on("close", () => {
 			this.monitors.monitors.forEach((monitor) => {
 				monitor.win.close()
 			})
 			this.app.quit()
 		})
+	}
+
+	initPccMonitorsTab() {
+		this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
 	}
 
 	initIPC() {
@@ -172,6 +176,7 @@ export default class UnlighterApp {
 
 				case "ask-for-versions":
 					this.updater.sendVersion(this.app.getVersion())
+					break
 
 				default:
 					console.log("default", msg)
@@ -206,7 +211,6 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("blur", () => {
-			this.monitors.showOrHideMonitorIndex("hide")
 			if (!this.getPref("pccOnTop")) {
 				this.pcc.setAlwaysOnTop(false, "normal")
 			}
@@ -216,7 +220,6 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("focus", () => {
-			this.monitors.showOrHideMonitorIndex("show")
 			this.pcc.setAlwaysOnTop(true, "screen")
 		})
 

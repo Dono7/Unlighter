@@ -1,16 +1,27 @@
 import Monitor from "./Monitor"
 import { openFileInWindow } from "./utils"
+import { screen } from "electron"
 
 export default class MonitorsController {
 	constructor(unlighterApp, displays) {
 		this.app = unlighterApp
-		this.monitors = displays.map((display, index) => new Monitor(unlighterApp, display, index))
+		this.monitors = displays.map((display, index) => new Monitor(this.app, display, index))
 		this.lastErrorTime = 0
 	}
 
 	initWindows() {
 		this.monitors.forEach((monitor) => {
 			monitor.initWindow()
+		})
+
+		screen.on("display-added", () => {
+			this.reloadFilters()
+		})
+		screen.on("display-metrics-changed", () => {
+			this.reloadFilters()
+		})
+		screen.on("display-removed", () => {
+			this.reloadFilters()
 		})
 	}
 
@@ -42,5 +53,31 @@ export default class MonitorsController {
 				monitor.win.webContents.send(`${action}-index`)
 			})
 		}
+	}
+
+	updateShowOrHideIndex() {
+		const action = this.app.getPref("showScreenNumber") ? "show" : "hide"
+		this.showOrHideMonitorIndex(action)
+	}
+
+	killMonitors() {
+		this.monitors.forEach((monitor) => {
+			monitor.close()
+		})
+		this.monitors = []
+	}
+
+	reloadFilters() {
+		screen.removeAllListeners()
+
+		this.killMonitors()
+
+		setTimeout(() => {
+			const displays = screen.getAllDisplays()
+			this.monitors = displays.map((display, index) => new Monitor(this.app, display, index))
+			this.initWindows()
+			this.loadFilterPage()
+			this.app.initPccMonitorsTab()
+		}, 2000)
 	}
 }
