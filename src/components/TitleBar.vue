@@ -13,10 +13,10 @@
 export default {
 	methods: {
 		quit() {
-			window.unlighter.sendToMain({msg:'quit'})
+			window.unlighter.execModuleMethod({module: 'app', method: 'exit'})
 		},
 		minimize() {
-			window.unlighter.sendToMain({msg:'minimize'})
+			window.unlighter.execModuleMethod({module: 'pcc', method: 'minimize'})
 		}
 	}
 }

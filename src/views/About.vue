@@ -23,7 +23,7 @@ export default {
 		window.unlighter.fromMain('app-version', (event, v) => {
 			version.value = v
 		})
-		window.unlighter.sendToMain({msg: 'ask-for-versions'})
+		window.unlighter.execModuleMethod({module: "updater", method: 'sendVersion'})
 
     return { version }
   }

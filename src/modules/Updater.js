@@ -104,7 +104,8 @@ export default class Updater {
 		this.win.webContents.send("update-status", { status, percent })
 	}
 
-	sendVersion(version) {
+	sendVersion() {
+		const version = this.app.app.getVersion()
 		this.app.pcc.webContents.send("app-version", version)
 	}
 

@@ -78,7 +78,7 @@ export default {
 				const relative = this.xRelative
 				screen.str = relative
 				screen.barPosition = relative < 1 ? 0 : relative > 99 ? this.win.w - this.win.deadMargin : this.mouse.x
-				window.unlighter.sendToMain({msg: 'monitors-str-changed', monitorsStr: this.monitorsStr})
+				window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr]})
 			}
 		},
 		close() {
@@ -120,7 +120,7 @@ export default {
 		window.unlighter.fromMain('init-pcc', (event, data) => {
 			this.init(data)
 		})
-		window.unlighter.sendToMain({msg: 'ask-for-init-pcc'})
+		window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['ask-for-init-pcc']})
 	}
 }
 </script>

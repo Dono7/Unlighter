@@ -130,65 +130,20 @@ export default class UnlighterApp {
 	}
 
 	initIPC() {
-		ipcMain.on("exec-module", (event, data) => {
-			const { module, method, args } = data
+		ipcMain.on("exec-module-method", (event, data) => {
+			const { module, method, args = [] } = data
 			if (this[module][method]) {
 				this[module][method](...args)
 			} else {
-				console.log(`Method ${method} not found in the module ${module}. Args: ${args}`)
+				console.log(`exec-module-method: Method ${method} not found in the module ${module}. Args: ${args}`)
 			}
 		})
-
-		ipcMain.on("pcc-to-main", (event, data) => {
-			const { msg } = data
-			switch (msg) {
-				case "quit":
-					this.app.exit()
-					break
-
-				case "minimize":
-					this.pcc.minimize()
-					break
-
-				case "ask-for-init-pcc":
-					this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
-					break
-
-				case "monitors-str-changed":
-					this.monitors.updateMonitorsStr(data.monitorsStr)
-					break
-
-				case "preferences-set":
-					this.setPref(data.key, data.value)
-					break
-
-				case "preferences-get":
-					this.sendToPcc("preferences-get", this.getPref())
-					break
-
-				case "open-url":
-					this.openUrl(data.url)
-					break
-
-				case "open-updater-window":
-					this.updater.openWindow()
-					break
-
-				case "ask-for-versions":
-					this.updater.sendVersion(this.app.getVersion())
-					break
-
-				default:
-					console.log("default", msg)
-					break
-			}
-		})
-
-		ipcMain.on("pcc-to-monitors", (event, data) => {
-			const { msg } = data
-			switch (msg) {
-				default:
-					break
+		ipcMain.on("exec-app-method", (event, data) => {
+			const { method, args } = data
+			if (this[method]) {
+				this[method](...args)
+			} else {
+				console.log(`exec-app-method: Method ${method} not found in the app. Args: ${args}`)
 			}
 		})
 	}
@@ -249,6 +204,12 @@ export default class UnlighterApp {
 				})
 			}
 		}
+	}
+
+	sendToPccFromCode(code) {
+		if (code == "ask-for-init-pcc") this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
+
+		if (code == "preferences-get") this.sendToPcc("preferences-get", this.getPref())
 	}
 
 	sendToPcc(channel, data) {

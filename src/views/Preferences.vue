@@ -27,11 +27,11 @@ export default {
   name: 'Preferences',
   setup(props) {
     const changePref = (key, value) => {
-      window.unlighter.sendToMain({msg: 'preferences-set', key, value})
+			window.unlighter.execAppMethod({method: 'setPref', args: [key, value]})
     }
 
     const openUpdaterWindow = () => {
-      window.unlighter.sendToMain({msg: 'open-updater-window'})
+			window.unlighter.execModuleMethod({module: 'updater', method: 'openWindow'})
     }
 
     const pref = ref([
@@ -50,7 +50,7 @@ export default {
         })
       })
       
-      window.unlighter.sendToMain({msg: 'preferences-get'})
+		  window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['preferences-get']})
     })
 
     return { pref, changePref, openUpdaterWindow }
