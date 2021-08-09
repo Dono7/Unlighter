@@ -9,6 +9,7 @@
       :inputType="p.inputType"
       :min="p.min"
       :max="p.max"
+      :labelMaxWidth="p.labelMaxWidth"
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
 
@@ -34,10 +35,10 @@ export default {
     }
 
     const pref = ref([
-      {key: 'screenStrength', label: 'Default screen strength on start', value: 9, inputType: 'number', min: 0, max: 100},
+      {key: 'screenStrength', label: 'Default filters strength on start', value: 9, inputType: 'number', min: 0, max: 100},
       {key: 'showScreenNumber', label: 'Show screen number', value: true, inputType: 'switch'},
       // {key: 'pccOnTop', label: 'Always on top (not affected by filters)', value: true, inputType: 'switch'},
-      {key: 'minimizeOnBlur', label: 'Automatically minimize', value: true, inputType: 'switch'},
+      {key: 'minimizeOnBlur', label: 'Automatically minimize (off recommaded)', value: true, inputType: 'switch', labelMaxWidth: 155},
     ])
 
     onBeforeMount(() => {

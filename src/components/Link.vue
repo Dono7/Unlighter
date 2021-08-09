@@ -19,3 +19,11 @@ export default {
 	}
 }
 </script>
+
+
+<style scoped lang="sass">
+@import '@/assets/sass/variables.sass'
+
+a
+	color: $primary
+</style>

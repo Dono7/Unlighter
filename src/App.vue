@@ -36,11 +36,12 @@ export default {
 </script>
 
 <style lang="sass">
+@import '@/assets/sass/variables.sass'
+
 * 
   margin: 0
   padding: 0
   box-sizing: border-box
-  letter-spacing: 0.6px
   user-select: none
   font-family: 'Poppins'
 
@@ -58,7 +59,7 @@ body, html
 #window
   width: 320px
   min-height: 400px
-  background: linear-gradient(180deg, #1A1937 0%, rgba(15,15,15,1) 42%)
+  background: linear-gradient(180deg, $background 0%, rgba(15,15,15,1) 42%)
   color: white
   > main
     padding: 0 30px 10px 30px
@@ -68,8 +69,6 @@ body, html
       &.minor
         font-size: 11px
         color: #CCC
-    a
-      color: white
 
 h1
   padding-left: 20px

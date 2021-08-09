@@ -7,13 +7,13 @@ export default {
 	props: {
 		label: { type: String, required: false, default: ''},
 		centered: { type: Boolean, required: false, default: false},
-		url: { type: String, required: false},
+		href: { type: String, required: false},
 		small: { type : Boolean, required: false}
 	},
 	setup(props) {
 		const openUrl = () => {
-			if(props.url) {
-				window.unlighter.openUrl(props.url)
+			if(props.href) {
+				window.unlighter.openUrl(props.href)
 			}
 		}
 
@@ -26,20 +26,18 @@ export default {
 $purple: #7587FF
 
 button
-	background-color: transparent
-	border: 1px solid $purple
-	border-radius: 8px
-	color: white
-	padding: 6px 12px
+	background-color: white
+	border-radius: 100px
+	color: black
+	padding: 10px 20px
+	margin: 10px 0
 	width: fit-content
 	cursor: pointer
 	transition: all 0.2s ease-in-out
-	&:hover
-		background-color: $purple
-	&:focus
-		outline: none
+	font-weight: 500
+	font-size: 12px
+	border: none
+	outline: none
 	&.centered
 		margin: auto
-	&.small
-		padding: 4px 8px
 </style>

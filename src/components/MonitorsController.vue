@@ -30,7 +30,7 @@ export default {
 			win: {
 				w: 320,
 				h: 400,
-				deadMargin: 30,
+				deadMargin: 0,
 			},
 			monitors: [
 				{ id: 1, index: 0, str: 0, barPosition: 0, name: 'Loading...', isActive: false },
@@ -126,11 +126,12 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
+@import '@/assets/sass/variables.sass'
+$border-size: 2px
 .monitors-controller
 	display: flex
 	flex-direction: column
-	gap: 6px
+	gap: 8px
 	.monitor-container
 		position: relative
 		display: flex
@@ -143,15 +144,22 @@ export default {
 		border-color: rgba(255,255,255,0.2)
 		border-style: solid
 		border-width: 0
-		border-radius: 10px
+		font-size: 12px
 		.progressbar
 			position: absolute
 			top: 0
 			bottom: 0
 			left: 0
 			width: 0%
-			background-color: rgba(255,255,255,0.10)
-			border-radius: 10px
+			background-color: $secondary
+			&::before
+				content: ''
+				position: absolute
+				left: 0
+				bottom: 0
+				width: 100%
+				height: $border-size
+				background: $primary
 		&.active
 			.progressbar
 				border-right: 1px solid rgba(255,255,255,0.7)
@@ -159,9 +167,9 @@ export default {
 			content: ''
 			position: absolute
 			left: 0
+			bottom: 0
 			width: 100%
-			height: 1px
-			background: linear-gradient(90deg, rgba(117,135,255,0.25) 0%, rgba(117,135,255,0.50) 48%, rgba(117,135,255,0.25) 100%)
-			top: 50%
+			height: $border-size
+			background: rgba(255,255,255,0.1)
 
 </style>

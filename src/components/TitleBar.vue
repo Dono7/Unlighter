@@ -23,12 +23,16 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+$height: 60px
+$btnHeight: 40px
+
 .title-bar
-	height: 60px
+	height: $height
 	width: 100%
 	display: flex
 	justify-content: space-between
 	align-items: center
+  letter-spacing: 0.6px
 	-webkit-app-region: drag
 	.title
 		padding-left: 30px
@@ -41,17 +45,16 @@ export default {
 	.actions
 		-webkit-app-region: no-drag
 		display: flex
+		margin-right: ($height - $btnHeight) / 2
 		> div 
 			position: relative
 			display: flex
 			justify-content: center
 			align-items: center
-			height: 38px
-			width: 38px
+			height: $btnHeight
+			width: $btnHeight
 			transition: all 0.15s
 			cursor: pointer
-			margin-right: 11px
-			border-radius: 5px
 			&:hover
 				background-color: rgba(255,255,255,0.10)
 			&.close:hover

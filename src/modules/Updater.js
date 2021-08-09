@@ -11,7 +11,7 @@ export default class Updater {
 
 		this.pos = {
 			width: 320 + (this.app.config.isDevelopment ? 500 : 0),
-			height: 60 + (this.app.config.isDevelopment ? 130 : 0),
+			height: 80 + (this.app.config.isDevelopment ? 130 : 0),
 			margin: 5,
 		}
 
