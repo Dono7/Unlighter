@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router"
-import Monitors from "../views/Monitors.vue"
-import Preferences from "../views/Preferences.vue"
-import About from "../views/About.vue"
-import Contact from "../views/Contact.vue"
+import Monitors from "@/views/Monitors.vue"
+import Preferences from "@/views/Preferences.vue"
+import About from "@/views/About.vue"
+import Contact from "@/views/Contact.vue"
+import Updater from "@/views/Updater.vue"
 
 const routes = [
 	{
@@ -30,9 +31,15 @@ const routes = [
 		meta: { transitionIndex: 4 },
 	},
 	{
+		path: "/updater",
+		name: "Updater",
+		component: Updater,
+		meta: { hideNavigation: true },
+	},
+	{
 		path: "/index.html",
-		redirect: "/"
-	}
+		redirect: "/",
+	},
 ]
 
 const router = createRouter({

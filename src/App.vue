@@ -1,7 +1,7 @@
 <template>
-  <div id="window">
-    <TitleBar />
-    <NavBar />
+  <div id="window" :class="{ 'purple-bg': ['Updater'].includes($route.name) }">
+    <TitleBar v-if="!$route.meta.hideNavigation"/>
+    <NavBar v-if="!$route.meta.hideNavigation"/>
       <router-view v-slot="{ Component }"  >
         <transition :name="direction">
           <component :is="Component"/>
@@ -61,6 +61,8 @@ body, html
   min-height: 400px
   background: linear-gradient(180deg, $background 0%, rgba(15,15,15,1) 42%)
   color: white
+  &.purple-bg
+    background: $background
   > main
     padding: 0 30px 10px 30px
     width: 100%

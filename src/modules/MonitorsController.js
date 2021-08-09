@@ -27,7 +27,7 @@ export default class MonitorsController {
 
 	loadFilterPage() {
 		this.monitors.forEach((monitor) => {
-			openFileInWindow(monitor.win, "filter")
+			openFileInWindow(monitor.win, "filter.html")
 		})
 	}
 

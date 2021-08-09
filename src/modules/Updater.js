@@ -31,8 +31,6 @@ export default class Updater {
 		autoUpdater.allowDowngrade = false
 		autoUpdater.logger = logger
 
-		logger.log("Starting the Updater module.")
-
 		autoUpdater.on("checking-for-update", (e) => this.updateStatus("fetching"))
 		autoUpdater.on("update-available", (e) => this.updateStatus("available"))
 		autoUpdater.on("update-not-available", (e) => this.updateStatus("uptodate"))
