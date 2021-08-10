@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onUnmounted, ref } from 'vue'
 import InputBlock from './../components/InputBlock'
 import Button from './../components/Button'
 
@@ -42,7 +42,7 @@ export default {
     ])
 
     onBeforeMount(() => {
-      window.unlighter.fromMain('preferences-get', (event, userPref) => {
+      window.unlighter.on('preferences-get', (event, userPref) => {
         pref.value.forEach(p => { 
           if(userPref[p.key] !== undefined) {
             p.value = userPref[p.key]
@@ -51,6 +51,10 @@ export default {
       })
       
 		  window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['preferences-get']})
+    })
+
+    onUnmounted(() => {
+      window.unlighter.removeListener('preferences-get')
     })
 
     return { pref, changePref, openUpdaterWindow }

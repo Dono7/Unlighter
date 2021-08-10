@@ -7,8 +7,14 @@ contextBridge.exposeInMainWorld("unlighter", {
 	execModuleMethod(data) {
 		ipcRenderer.send("exec-module-method", data)
 	},
-	fromMain(channel, callback) {
+	on(channel, callback) {
 		ipcRenderer.on(channel, callback)
+	},
+	once(channel, callback) {
+		ipcRenderer.once(channel, callback)
+	},
+	removeListener(channel) {
+		ipcRenderer.removeAllListeners(channel)
 	},
 	openUrl(url) {
 		ipcRenderer.send("exec-app-method", { method: "openUrl", args: [url] })

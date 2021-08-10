@@ -35,6 +35,7 @@ export default {
 			monitors: [
 				{ id: 1, index: 0, str: 0, barPosition: 0, name: 'Loading...', isActive: false },
 			],
+			initialised: false
 		}
 	},
 	methods: {
@@ -49,6 +50,7 @@ export default {
 					isActive: false,
 				}
 			})
+			this.initialised = true
 		},
 		barPositionFromStr(str) {
 			const interval = this.win.w - 2 * this.win.deadMargin
@@ -78,7 +80,9 @@ export default {
 				const relative = this.xRelative
 				screen.str = relative
 				screen.barPosition = relative < 1 ? 0 : relative > 99 ? this.win.w - this.win.deadMargin : this.mouse.x
-				window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr]})
+				if(this.initialised) {
+					window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr]})
+				}
 			}
 		},
 		close() {
@@ -111,16 +115,20 @@ export default {
 		}
 	},
 	mounted() {
-		window.addEventListener("mouseup", () => {
-			this.mup()
-		})
-		window.addEventListener("mousemove", (event) => {
-			this.mmove(event)
-		})
-		window.unlighter.fromMain('init-pcc', (event, data) => {
+		window.unlighter.on('init-pcc', (event, data) => {
 			this.init(data)
 		})
+
 		window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['ask-for-init-pcc']})
+		
+		window.addEventListener("mouseup", this.mup)
+		
+		window.addEventListener("mousemove", this.mmove)
+	},
+	unmounted() {
+		window.unlighter.removeListener('init-pcc')
+		window.removeEventListener("mouseup", this.mup)
+		window.removeEventListener("mousemove", this.mmove)
 	}
 }
 </script>

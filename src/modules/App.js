@@ -208,7 +208,10 @@ export default class UnlighterApp {
 	}
 
 	sendToPccFromCode(code) {
-		if (code == "ask-for-init-pcc") this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
+		if (code == "ask-for-init-pcc") {
+			const serializedMonitors = this.monitors.serializeForPcc()
+			if (serializedMonitors.length) this.sendToPcc("init-pcc", serializedMonitors)
+		}
 
 		if (code == "preferences-get") this.sendToPcc("preferences-get", this.getPref())
 	}
