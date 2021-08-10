@@ -119,10 +119,7 @@ export default class UnlighterApp {
 	initPccEvents() {
 		this.pcc.setAlwaysOnTop(true, "screen")
 		this.pcc.on("close", () => {
-			this.monitors.monitors.forEach((monitor) => {
-				monitor.win.close()
-			})
-			this.app.quit()
+			this.app.exit()
 		})
 	}
 
