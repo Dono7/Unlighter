@@ -80,9 +80,12 @@ export default {
 				const relative = this.xRelative
 				screen.str = relative
 				screen.barPosition = relative < 1 ? 0 : relative > 99 ? this.win.w - this.win.deadMargin : this.mouse.x
-				if(this.initialised) {
-					window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr]})
-				}
+				this.sendStrToMonitors()
+			}
+		},
+		sendStrToMonitors() {
+			if(this.initialised) {
+				window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr]})
 			}
 		},
 		close() {
@@ -118,6 +121,9 @@ export default {
 		window.unlighter.on('init-pcc', (event, data) => {
 			this.init(data)
 		})
+		window.unlighter.on('ask-for-monitors-str', () => {
+			this.sendStrToMonitors()
+		})
 
 		window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['ask-for-init-pcc']})
 		
@@ -127,6 +133,7 @@ export default {
 	},
 	unmounted() {
 		window.unlighter.removeListener('init-pcc')
+		window.unlighter.removeListener('ask-for-monitors-str')
 		window.removeEventListener("mouseup", this.mup)
 		window.removeEventListener("mousemove", this.mmove)
 	}

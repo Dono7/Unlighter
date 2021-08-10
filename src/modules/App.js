@@ -250,7 +250,7 @@ export default class UnlighterApp {
 
 	pccLog(msg) {
 		if (this.pcc !== null) {
-			this.pcc.webContents.send("log", msg)
+			this.sendToPcc("log", msg)
 		}
 	}
 }
