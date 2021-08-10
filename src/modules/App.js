@@ -6,6 +6,7 @@ import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import storage from "electron-json-storage"
 import { openFileInWindow } from "./utils"
+import logger from "electron-log"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
@@ -135,7 +136,7 @@ export default class UnlighterApp {
 			if (this[module][method]) {
 				this[module][method](...args)
 			} else {
-				console.log(`exec-module-method: Method ${method} not found in the module ${module}. Args: ${args}`)
+				logger.log(`exec-module-method: Method ${method} not found in the module ${module}. Args: ${args}`)
 			}
 		})
 		ipcMain.on("exec-app-method", (event, data) => {
@@ -143,7 +144,7 @@ export default class UnlighterApp {
 			if (this[method]) {
 				this[method](...args)
 			} else {
-				console.log(`exec-app-method: Method ${method} not found in the app. Args: ${args}`)
+				logger.log(`exec-app-method: Method ${method} not found in the app. Args: ${args}`)
 			}
 		})
 	}

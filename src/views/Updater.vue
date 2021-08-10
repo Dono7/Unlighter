@@ -68,7 +68,6 @@ export default {
 		}
 		
 		window.unlighter.fromMain('update-status', (e, updateData) => {
-			console.log(updateData)
 			percent.value = updateData.percent
 			status.value = updateData.status
 		})

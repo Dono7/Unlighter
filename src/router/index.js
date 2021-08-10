@@ -47,7 +47,6 @@ const routes = [
 		path: "/index.html",
 		beforeEnter: (to, from, next) => {
 			const redirect = to?.query?.redirect
-			console.log(redirect)
 			if (redirect) {
 				next({ path: "/" + redirect })
 			} else {
