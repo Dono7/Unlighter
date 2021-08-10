@@ -26,7 +26,7 @@ export default class Updater {
 
 	configureAutoUpdater() {
 		autoUpdater.autoDownload = true
-		autoUpdater.autoInstallOnAppQuit = true
+		autoUpdater.autoInstallOnAppQuit = false
 		autoUpdater.allowPrerelease = true
 		autoUpdater.allowDowngrade = false
 		autoUpdater.logger = logger
