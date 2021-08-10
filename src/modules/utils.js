@@ -1,14 +1,12 @@
 /* This method should never be called before the local server is created in the UnlighterApp */
-export const openFileInWindow = (browserWindow, htmlFilename, openDetachedDevTools = false) => {
+export const openFileInWindow = (browserWindow, path = "") => {
 	if (!browserWindow) {
-		throw new Error(`Cannot open the file ${htmlFilename} in the window because the window does not exist.`)
+		throw new Error(`Cannot open the path ${path} in the window because the window does not exist.`)
 	}
 
-	process.env.WEBPACK_DEV_SERVER_URL
-		? browserWindow.loadFile(`./../public/${htmlFilename}.html`)
-		: browserWindow.loadURL(`app://./${htmlFilename}.html`)
+	const url = process.env.WEBPACK_DEV_SERVER_URL
+		? `${process.env.WEBPACK_DEV_SERVER_URL}${path}`
+		: `app://./index.html?redirect=${path}`
 
-	if (openDetachedDevTools) {
-		browserWindow.webContents.openDevTools({ mode: "detached" })
-	}
+	browserWindow.loadURL(url)
 }

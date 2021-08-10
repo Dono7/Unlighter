@@ -1,20 +1,22 @@
 const { ipcRenderer, contextBridge } = require("electron")
 
 contextBridge.exposeInMainWorld("unlighter", {
-	sendToMonitors(data) {
-		ipcRenderer.send("pcc-to-monitors", data)
+	execAppMethod(data) {
+		ipcRenderer.send("exec-app-method", data)
 	},
-	sendToMain(data) {
-		ipcRenderer.send("pcc-to-main", data)
+	execModuleMethod(data) {
+		ipcRenderer.send("exec-module-method", data)
 	},
 	fromMain(channel, callback) {
 		ipcRenderer.on(channel, callback)
 	},
 	openUrl(url) {
-		ipcRenderer.send("pcc-to-main", { msg: "open-url", url })
+		ipcRenderer.send("exec-app-method", { method: "openUrl", args: [url] })
 	},
 })
 
-ipcRenderer.on('log', (event, data) => {
+ipcRenderer.on("log", (event, data) => {
 	console.log(data)
 })
+
+console.log("Ipc PCC running...")

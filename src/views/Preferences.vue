@@ -9,10 +9,11 @@
       :inputType="p.inputType"
       :min="p.min"
       :max="p.max"
+      :labelMaxWidth="p.labelMaxWidth"
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
 
-    <Button label="Search for update" small @click="openUpdaterWindow"/>
+    <Button label="Search for update" @click="openUpdaterWindow"/>
   </main>
 </template>
 
@@ -26,18 +27,18 @@ export default {
   name: 'Preferences',
   setup(props) {
     const changePref = (key, value) => {
-      window.unlighter.sendToMain({msg: 'preferences-set', key, value})
+			window.unlighter.execAppMethod({method: 'setPref', args: [key, value]})
     }
 
     const openUpdaterWindow = () => {
-      window.unlighter.sendToMain({msg: 'open-updater-window'})
+			window.unlighter.execModuleMethod({module: 'updater', method: 'openWindow'})
     }
 
     const pref = ref([
-      {key: 'screenStrength', label: 'Default screen strength on start', value: 9, inputType: 'number', min: 0, max: 100},
+      {key: 'screenStrength', label: 'Default filters strength on start', value: 9, inputType: 'number', min: 0, max: 100},
       {key: 'showScreenNumber', label: 'Show screen number', value: true, inputType: 'switch'},
       // {key: 'pccOnTop', label: 'Always on top (not affected by filters)', value: true, inputType: 'switch'},
-      {key: 'minimizeOnBlur', label: 'Automatically minimize', value: true, inputType: 'switch'},
+      {key: 'minimizeOnBlur', label: 'Automatically minimize (off recommaded)', value: true, inputType: 'switch', labelMaxWidth: 155},
     ])
 
     onBeforeMount(() => {
@@ -49,7 +50,7 @@ export default {
         })
       })
       
-      window.unlighter.sendToMain({msg: 'preferences-get'})
+		  window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['preferences-get']})
     })
 
     return { pref, changePref, openUpdaterWindow }

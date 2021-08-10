@@ -11,7 +11,7 @@ export default class Updater {
 
 		this.pos = {
 			width: 320 + (this.app.config.isDevelopment ? 500 : 0),
-			height: 60 + (this.app.config.isDevelopment ? 130 : 0),
+			height: 80 + (this.app.config.isDevelopment ? 130 : 0),
 			margin: 5,
 		}
 
@@ -26,17 +26,15 @@ export default class Updater {
 
 	configureAutoUpdater() {
 		autoUpdater.autoDownload = true
-		autoUpdater.autoInstallOnAppQuit = true
+		autoUpdater.autoInstallOnAppQuit = false
 		autoUpdater.allowPrerelease = true
 		autoUpdater.allowDowngrade = false
 		autoUpdater.logger = logger
 
-		logger.log("Starting the Updater module.")
-
 		autoUpdater.on("checking-for-update", (e) => this.updateStatus("fetching"))
 		autoUpdater.on("update-available", (e) => this.updateStatus("available"))
 		autoUpdater.on("update-not-available", (e) => this.updateStatus("uptodate"))
-		autoUpdater.on("download-progress", (e) => this.updateStatus("downloading", e.percent))
+		autoUpdater.on("download-progress", (e) => this.updateStatus("downloading", e.transferred == 0 ? 0 : e.percent))
 		autoUpdater.on("update-downloaded", (e) => this.updateStatus("downloaded"))
 		autoUpdater.on("error", (e) => this.updateStatus("error"))
 	}
@@ -57,14 +55,16 @@ export default class Updater {
 			title: "Unlighter Updater",
 			frame: false,
 			parent: this.app.pcc,
-			backgroundColor: "#1A1937",
 			webPreferences: {
-				devTools: true,
-				preload: path.join(__dirname, "ipcFilter.js"),
+				devTools: this.app.config.isDevelopment,
+				nodeIntegration: true,
+				preload: path.join(__dirname, "ipcPcc.js"),
 			},
 		})
 
-		openFileInWindow(this.win, "updater", this.app.config.isDevelopment)
+		openFileInWindow(this.win, "updater")
+
+		if (this.app.config.isDevelopment) this.win.webContents.openDevTools()
 
 		this.win.once("ready-to-show", () => {
 			autoUpdater.checkForUpdates()
@@ -74,7 +74,7 @@ export default class Updater {
 	closeWindow() {
 		if (this.win === null) return
 
-		this.win.close()
+		this.win.destroy() // Bug: Should be this.win.close() but it does not work...
 		this.win = null
 	}
 
@@ -106,7 +106,8 @@ export default class Updater {
 		this.win.webContents.send("update-status", { status, percent })
 	}
 
-	sendVersion(version) {
+	sendVersion() {
+		const version = this.app.app.getVersion()
 		this.app.pcc.webContents.send("app-version", version)
 	}
 

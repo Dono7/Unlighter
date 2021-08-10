@@ -1,8 +1,8 @@
 <template>
   <main class="about">
-    <p>Unlighter is a free and open-source project. You can download the latest version on Github :</p>
+    <p>Unlighter is a free and open-source project. You can download the latest version on Github</p>
 
-    <p><Link href="https://github.com/Dono7/Unlighter/releases" label="Download from Github"/></p>
+    <p><Button href="https://github.com/Dono7/Unlighter/releases" label="Download from Github"/></p>
 
     <p>This application is developped by <Link href="https://github.com/Dono7" label="Donovan T."/> (developper) and <Link href="https://www.behance.net/bourhanewac933" label="Walid B" /> (UI/UX Designer).</p>
 
@@ -12,17 +12,18 @@
 
 <script>
 import Link from './../components/Link'
+import Button from './../components/Button'
 import { ref } from 'vue'
 
 export default {
-  components: { Link },
+  components: { Link, Button },
   setup() {
     const version = ref(null)
 
 		window.unlighter.fromMain('app-version', (event, v) => {
 			version.value = v
 		})
-		window.unlighter.sendToMain({msg: 'ask-for-versions'})
+		window.unlighter.execModuleMethod({module: "updater", method: 'sendVersion'})
 
     return { version }
   }

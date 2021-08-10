@@ -28,7 +28,14 @@ export default class MonitorsController {
 	loadFilterPage() {
 		this.monitors.forEach((monitor) => {
 			openFileInWindow(monitor.win, "filter")
+			monitor.win.webContents.once("did-finish-load", () => {
+				this.onFilterLoad(monitor)
+			})
 		})
+	}
+
+	onFilterLoad(monitor) {
+		monitor.loadIndex()
 	}
 
 	serializeForPcc() {
