@@ -127,6 +127,7 @@ export default {
 
 <style lang="sass" scoped>
 @import '@/assets/sass/variables.sass'
+
 $border-size: 2px
 .monitors-controller
 	display: flex

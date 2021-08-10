@@ -5,6 +5,7 @@ import Updater from "./Updater"
 import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import storage from "electron-json-storage"
+import { openFileInWindow } from "./utils"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
@@ -73,15 +74,14 @@ export default class UnlighterApp {
 		if (this.pcc === null) {
 			throw new Error("The local server cannot run before PCC is created.")
 		}
-		if (process.env.WEBPACK_DEV_SERVER_URL) {
-			await this.pcc.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-			if (!process.env.IS_TEST && this.config.isDevelopment) {
-				this.pcc.webContents.openDevTools({ mode: "right" })
-			}
-		} else {
+
+		if (!process.env.WEBPACK_DEV_SERVER_URL) {
 			createProtocol("app")
-			this.pcc.loadURL("app://./index.html")
 		}
+
+		openFileInWindow(this.pcc)
+
+		if (this.config.isDevelopment) this.pcc.webContents.openDevTools({ mode: "right" })
 
 		if (this.monitors) this.monitors.loadFilterPage()
 	}

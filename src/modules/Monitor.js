@@ -30,7 +30,6 @@ export default class Monitor {
 		if (this.win !== null) return
 
 		this.win = new BrowserWindow(this.options)
-		this.win.webContents.send("update-index", this.index)
 		if (this.app.config.showFilterDevTools) {
 			this.win.webContents.openDevTools()
 		} else {
@@ -48,6 +47,10 @@ export default class Monitor {
 
 		this.str = str
 		this.win.webContents.send("update-str", str)
+	}
+
+	loadIndex() {
+		this.win.webContents.send("update-index", this.index)
 	}
 
 	serialize() {

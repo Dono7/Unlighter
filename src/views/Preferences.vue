@@ -13,7 +13,7 @@
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
 
-    <Button label="Search for update" small @click="openUpdaterWindow"/>
+    <Button label="Search for update" @click="openUpdaterWindow"/>
   </main>
 </template>
 

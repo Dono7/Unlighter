@@ -34,7 +34,7 @@ export default class Updater {
 		autoUpdater.on("checking-for-update", (e) => this.updateStatus("fetching"))
 		autoUpdater.on("update-available", (e) => this.updateStatus("available"))
 		autoUpdater.on("update-not-available", (e) => this.updateStatus("uptodate"))
-		autoUpdater.on("download-progress", (e) => this.updateStatus("downloading", e.percent))
+		autoUpdater.on("download-progress", (e) => this.updateStatus("downloading", e.transferred == 0 ? 0 : e.percent))
 		autoUpdater.on("update-downloaded", (e) => this.updateStatus("downloaded"))
 		autoUpdater.on("error", (e) => this.updateStatus("error"))
 	}
@@ -55,14 +55,16 @@ export default class Updater {
 			title: "Unlighter Updater",
 			frame: false,
 			parent: this.app.pcc,
-			backgroundColor: "#1A1937",
 			webPreferences: {
-				devTools: true,
-				preload: path.join(__dirname, "ipcFilter.js"),
+				devTools: this.app.config.isDevelopment,
+				nodeIntegration: true,
+				preload: path.join(__dirname, "ipcPcc.js"),
 			},
 		})
 
-		openFileInWindow(this.win, "updater", this.app.config.isDevelopment)
+		openFileInWindow(this.win, "updater")
+
+		if (this.app.config.isDevelopment) this.win.webContents.openDevTools()
 
 		this.win.once("ready-to-show", () => {
 			autoUpdater.checkForUpdates()
@@ -72,7 +74,7 @@ export default class Updater {
 	closeWindow() {
 		if (this.win === null) return
 
-		this.win.close()
+		this.win.destroy() // Bug: Should be this.win.close() but it does not work...
 		this.win = null
 	}
 

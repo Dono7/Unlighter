@@ -1,11 +1,15 @@
 <template>
-	<button :class="{centered, small}" @click="openUrl">{{label}}</button>
+	<button :class="{centered, small}" @click="openUrl">
+		{{label}}
+		<i v-if="iconClass" :class="iconClass"></i>	
+	</button>
 </template>
 
 <script>
 export default {
 	props: {
 		label: { type: String, required: false, default: ''},
+		iconClass: { type: String, required: false, default: ''},
 		centered: { type: Boolean, required: false, default: false},
 		href: { type: String, required: false},
 		small: { type : Boolean, required: false}
@@ -40,4 +44,6 @@ button
 	outline: none
 	&.centered
 		margin: auto
+	&.small
+		padding: 4px 20px
 </style>

@@ -18,3 +18,5 @@ contextBridge.exposeInMainWorld("unlighter", {
 ipcRenderer.on("log", (event, data) => {
 	console.log(data)
 })
+
+console.log("Ipc PCC running...")

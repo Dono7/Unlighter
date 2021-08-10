@@ -45,9 +45,8 @@ export default {
   user-select: none
   font-family: 'Poppins'
 
-body, html
+body
   margin: 0
-  background-color: #888
   position: relative
   width: 100%
   height: 100vh
