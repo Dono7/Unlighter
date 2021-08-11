@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, onBeforeMount, onUnmounted, ref } from 'vue'
 import Button from '@/components/Button'
 
 export default {
@@ -66,11 +66,16 @@ export default {
 		const closeUpdateWindow = () => {
 			window.unlighter.execModuleMethod({module: 'updater', method: 'closeWindow'})
 		}
-		
-		window.unlighter.fromMain('update-status', (e, updateData) => {
-			console.log(updateData)
-			percent.value = updateData.percent
-			status.value = updateData.status
+
+		onBeforeMount(() => {
+			window.unlighter.on('update-status', (e, updateData) => {
+				percent.value = updateData.percent
+				status.value = updateData.status
+			})
+		})
+
+		onUnmounted(() => {
+			window.unlighter.removeListener('update-status')
 		})
 
 		return { percent, text, iconClass, states, status, closeUpdateWindow }

@@ -20,7 +20,7 @@ export default {
 			name: { type: String, required: true },
 			label: { type: String, required: true },
 			inputType: {type: String, required: true },
-			labelMaxWidth: {type: Number, required: false, default: 135},
+			labelMaxWidth: {type: Number, required: false, default: 145},
 	}
 }
 </script>

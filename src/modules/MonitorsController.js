@@ -26,16 +26,24 @@ export default class MonitorsController {
 	}
 
 	loadFilterPage() {
+		let filterLoaded = 0
 		this.monitors.forEach((monitor) => {
 			openFileInWindow(monitor.win, "filter")
 			monitor.win.webContents.once("did-finish-load", () => {
 				this.onFilterLoad(monitor)
+				if (filterLoaded++ == this.monitors.length - 1) {
+					this.onAllFiltersLoad()
+				}
 			})
 		})
 	}
 
 	onFilterLoad(monitor) {
 		monitor.loadIndex()
+	}
+
+	onAllFiltersLoad() {
+		this.app.sendToPcc("ask-for-monitors-str")
 	}
 
 	serializeForPcc() {

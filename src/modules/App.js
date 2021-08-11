@@ -6,6 +6,7 @@ import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import storage from "electron-json-storage"
 import { openFileInWindow } from "./utils"
+import logger from "electron-log"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
@@ -36,7 +37,6 @@ export default class UnlighterApp {
 		this.initPccMonitorsTab()
 		this.initIPC()
 		this.initEvents()
-		this.initialised = true
 	}
 
 	loadUserPref() {
@@ -118,10 +118,7 @@ export default class UnlighterApp {
 	initPccEvents() {
 		this.pcc.setAlwaysOnTop(true, "screen")
 		this.pcc.on("close", () => {
-			this.monitors.monitors.forEach((monitor) => {
-				monitor.win.close()
-			})
-			this.app.quit()
+			this.app.exit()
 		})
 	}
 
@@ -135,7 +132,7 @@ export default class UnlighterApp {
 			if (this[module][method]) {
 				this[module][method](...args)
 			} else {
-				console.log(`exec-module-method: Method ${method} not found in the module ${module}. Args: ${args}`)
+				logger.log(`exec-module-method: Method ${method} not found in the module ${module}. Args: ${args}`)
 			}
 		})
 		ipcMain.on("exec-app-method", (event, data) => {
@@ -143,18 +140,12 @@ export default class UnlighterApp {
 			if (this[method]) {
 				this[method](...args)
 			} else {
-				console.log(`exec-app-method: Method ${method} not found in the app. Args: ${args}`)
+				logger.log(`exec-app-method: Method ${method} not found in the app. Args: ${args}`)
 			}
 		})
 	}
 
 	initEvents() {
-		this.app.on("browser-window-focus", (event, sender) => {
-			if (sender.id == this.pcc.id) {
-				// pcc.setAlwaysOnTop(true, "screen")
-			}
-		})
-
 		this.app.on("window-all-closed", () => {
 			if (process.platform !== "darwin") {
 				this.app.quit()
@@ -163,6 +154,10 @@ export default class UnlighterApp {
 
 		this.app.on("activate", () => {
 			if (BrowserWindow.getAllWindows().length === 0) createWindow()
+		})
+
+		this.pcc.on("ready-to-show", () => {
+			this.initialised = true
 		})
 
 		this.pcc.on("blur", () => {
@@ -207,7 +202,10 @@ export default class UnlighterApp {
 	}
 
 	sendToPccFromCode(code) {
-		if (code == "ask-for-init-pcc") this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
+		if (code == "ask-for-init-pcc") {
+			const serializedMonitors = this.monitors.serializeForPcc()
+			if (serializedMonitors.length) this.sendToPcc("init-pcc", serializedMonitors)
+		}
 
 		if (code == "preferences-get") this.sendToPcc("preferences-get", this.getPref())
 	}
@@ -249,7 +247,7 @@ export default class UnlighterApp {
 
 	pccLog(msg) {
 		if (this.pcc !== null) {
-			this.pcc.webContents.send("log", msg)
+			this.sendToPcc("log", msg)
 		}
 	}
 }

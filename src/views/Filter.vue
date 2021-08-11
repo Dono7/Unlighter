@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { onBeforeMount } from '@vue/runtime-core'
+import { onBeforeMount, onUnmounted } from '@vue/runtime-core'
 import { ref } from 'vue'
 
 export default {
@@ -34,6 +34,13 @@ export default {
 			window.unlighter.on('hide-index', () => {
 				showIndex.value = false
 			})
+		})
+
+		onUnmounted(() => {
+      window.unlighter.removeListener('update-str')
+      window.unlighter.removeListener('update-index')
+      window.unlighter.removeListener('show-index')
+      window.unlighter.removeListener('hide-index')
 		})
 
 		return { monitorIndex, showIndex, color }

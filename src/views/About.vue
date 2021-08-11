@@ -13,17 +13,24 @@
 <script>
 import Link from './../components/Link'
 import Button from './../components/Button'
-import { ref } from 'vue'
+import { onBeforeMount, onUnmounted, ref } from 'vue'
 
 export default {
   components: { Link, Button },
   setup() {
     const version = ref(null)
 
-		window.unlighter.fromMain('app-version', (event, v) => {
-			version.value = v
-		})
-		window.unlighter.execModuleMethod({module: "updater", method: 'sendVersion'})
+    onBeforeMount(() => {
+      window.unlighter.on('app-version', (event, v) => {
+        version.value = v
+      })
+
+      window.unlighter.execModuleMethod({module: "updater", method: 'sendVersion'})
+    })
+
+    onUnmounted(() => {
+      window.unlighter.removeListener('app-version')
+    })
 
     return { version }
   }

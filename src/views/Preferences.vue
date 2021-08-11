@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onUnmounted, ref } from 'vue'
 import InputBlock from './../components/InputBlock'
 import Button from './../components/Button'
 
@@ -38,11 +38,11 @@ export default {
       {key: 'screenStrength', label: 'Default filters strength on start', value: 9, inputType: 'number', min: 0, max: 100},
       {key: 'showScreenNumber', label: 'Show screen number', value: true, inputType: 'switch'},
       // {key: 'pccOnTop', label: 'Always on top (not affected by filters)', value: true, inputType: 'switch'},
-      {key: 'minimizeOnBlur', label: 'Automatically minimize (off recommaded)', value: true, inputType: 'switch', labelMaxWidth: 155},
+      {key: 'minimizeOnBlur', label: 'Automatically minimize', value: true, inputType: 'switch'},
     ])
 
     onBeforeMount(() => {
-      window.unlighter.fromMain('preferences-get', (event, userPref) => {
+      window.unlighter.on('preferences-get', (event, userPref) => {
         pref.value.forEach(p => { 
           if(userPref[p.key] !== undefined) {
             p.value = userPref[p.key]
@@ -51,6 +51,10 @@ export default {
       })
       
 		  window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['preferences-get']})
+    })
+
+    onUnmounted(() => {
+      window.unlighter.removeListener('preferences-get')
     })
 
     return { pref, changePref, openUpdaterWindow }

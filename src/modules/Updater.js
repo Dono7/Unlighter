@@ -55,6 +55,7 @@ export default class Updater {
 			title: "Unlighter Updater",
 			frame: false,
 			parent: this.app.pcc,
+			focusable: false,
 			webPreferences: {
 				devTools: this.app.config.isDevelopment,
 				nodeIntegration: true,
