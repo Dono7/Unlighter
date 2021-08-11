@@ -7,7 +7,7 @@
 			<i v-if="states[status].showSpinner" class="fas fa-spinner fa-pulse"></i>
 			<p v-if="states[status].showBar" class="percent">{{Math.round(percent)}}%</p>
 			<div class="close"  @click="closeUpdateWindow">
-				<img src="@/assets/close.svg">
+				<img src="@/assets/svg/close.svg">
 			</div>
 		</div>
 	</div>

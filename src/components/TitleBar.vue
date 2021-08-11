@@ -1,9 +1,9 @@
 <template>
 	<div class="title-bar">
-		<div class="title"><img id="icon" src="@/assets/icon.svg" alt="Unlighter logo icno">Unlighter</div>
+		<div class="title"><img id="icon" src="@/assets/svg/icon.svg" alt="Unlighter logo icno">Unlighter</div>
 		<div class="actions">
-			<div class="minimize" @click="minimize"><img src="@/assets/minimize.svg"></div>
-			<div class="close" @click="quit"><img src="@/assets/close.svg"></div>
+			<div class="minimize" @click="minimize"><img src="@/assets/svg/minimize.svg"></div>
+			<div class="close" @click="quit"><img src="@/assets/svg/close.svg"></div>
 		</div>
 	</div>
 	
