@@ -19,6 +19,7 @@ export default class Monitor {
 			fullscreen: !this.app.config.showFilterDevTools,
 			alwaysOnTop: !this.app.config.showFilterDevTools,
 			skipTaskbar: true,
+			focusable: false,
 			webPreferences: {
 				devTools: true,
 				preload: path.join(__dirname, "ipcFilter.js"),

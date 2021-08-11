@@ -37,7 +37,6 @@ export default class UnlighterApp {
 		this.initPccMonitorsTab()
 		this.initIPC()
 		this.initEvents()
-		this.initialised = true
 	}
 
 	loadUserPref() {
@@ -147,12 +146,6 @@ export default class UnlighterApp {
 	}
 
 	initEvents() {
-		this.app.on("browser-window-focus", (event, sender) => {
-			if (sender.id == this.pcc.id) {
-				// pcc.setAlwaysOnTop(true, "screen")
-			}
-		})
-
 		this.app.on("window-all-closed", () => {
 			if (process.platform !== "darwin") {
 				this.app.quit()
@@ -161,6 +154,10 @@ export default class UnlighterApp {
 
 		this.app.on("activate", () => {
 			if (BrowserWindow.getAllWindows().length === 0) createWindow()
+		})
+
+		this.pcc.on("ready-to-show", () => {
+			this.initialised = true
 		})
 
 		this.pcc.on("blur", () => {

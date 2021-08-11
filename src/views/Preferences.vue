@@ -38,7 +38,7 @@ export default {
       {key: 'screenStrength', label: 'Default filters strength on start', value: 9, inputType: 'number', min: 0, max: 100},
       {key: 'showScreenNumber', label: 'Show screen number', value: true, inputType: 'switch'},
       // {key: 'pccOnTop', label: 'Always on top (not affected by filters)', value: true, inputType: 'switch'},
-      {key: 'minimizeOnBlur', label: 'Automatically minimize (off recommaded)', value: true, inputType: 'switch', labelMaxWidth: 155},
+      {key: 'minimizeOnBlur', label: 'Automatically minimize', value: true, inputType: 'switch'},
     ])
 
     onBeforeMount(() => {
