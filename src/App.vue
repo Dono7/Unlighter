@@ -1,5 +1,5 @@
 <template>
-  <div id="window" :class="{ 'purple-bg': ['Updater'].includes($route.name) }">
+  <div id="window" :class="{ 'purple-bg': $route.meta.purpleBg, 'no-bg': $route.meta.noBg }">
     <TitleBar v-if="!$route.meta.hideNavigation"/>
     <NavBar v-if="!$route.meta.hideNavigation"/>
       <router-view v-slot="{ Component }"  >
@@ -62,9 +62,15 @@ body
   color: white
   &.purple-bg
     background: $background
+  &.no-bg
+    background: transparent
   > main
     padding: 0 30px 10px 30px
     width: 100%
+    max-height: 251px
+    overflow: auto
+    &::-webkit-scrollbar
+      display: none
     p
       font-size: 12px
       &.minor

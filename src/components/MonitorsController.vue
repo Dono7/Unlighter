@@ -120,6 +120,7 @@ export default {
 	mounted() {
 		window.unlighter.on('init-pcc', (event, data) => {
 			this.init(data)
+			window.unlighter.execAppMethod({method: 'closeLoader'})
 		})
 		window.unlighter.on('ask-for-monitors-str', () => {
 			this.sendStrToMonitors()

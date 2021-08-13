@@ -109,7 +109,8 @@ export default class Updater {
 
 	sendVersion() {
 		const version = this.app.app.getVersion()
-		this.app.pcc.webContents.send("app-version", version)
+		if (this.app.pcc) this.app.pcc.webContents.send("app-version", version)
+		if (this.app.loader) this.app.loader.webContents.send("app-version", version)
 	}
 
 	quitAndInstall() {

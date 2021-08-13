@@ -13,6 +13,8 @@ export default class UnlighterApp {
 		this.app = electronApp
 		this.monitors = null
 		this.pcc = null
+		this.loader = null
+		this.loaderCanBeClosed = false
 		this.updater = null
 		this.config = config
 		this.launched = false
@@ -63,6 +65,25 @@ export default class UnlighterApp {
 				preload: path.join(__dirname, "ipcPcc.js"),
 			},
 		})
+
+		const pccBounds = this.pcc.getBounds()
+		this.loader = new BrowserWindow({
+			...pccBounds,
+			width: 320,
+			title: "Unlighter - Loader",
+			frame: false,
+			maximizable: false,
+			closable: true,
+			focusable: false,
+			resizable: false,
+			backgroundColor: "#111",
+			parent: this.pcc,
+			webPreferences: {
+				devTools: true,
+				nodeIntegration: true,
+				preload: path.join(__dirname, "ipcPcc.js"),
+			},
+		})
 	}
 
 	createMonitors() {
@@ -79,6 +100,7 @@ export default class UnlighterApp {
 			createProtocol("app")
 		}
 
+		openFileInWindow(this.loader, "loading")
 		openFileInWindow(this.pcc)
 
 		if (this.config.isDevelopment) this.pcc.webContents.openDevTools({ mode: "right" })
@@ -117,6 +139,7 @@ export default class UnlighterApp {
 
 	initPccEvents() {
 		this.pcc.setAlwaysOnTop(true, "screen")
+		if (this.loader) this.loader.setAlwaysOnTop(true, "screen")
 		this.pcc.on("close", () => {
 			this.app.exit()
 		})
@@ -136,7 +159,7 @@ export default class UnlighterApp {
 			}
 		})
 		ipcMain.on("exec-app-method", (event, data) => {
-			const { method, args } = data
+			const { method, args = [] } = data
 			if (this[method]) {
 				this[method](...args)
 			} else {
@@ -170,6 +193,7 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("focus", () => {
+			if (this.loader) this.loader.setAlwaysOnTop(true, "screen")
 			this.pcc.setAlwaysOnTop(true, "screen")
 		})
 
@@ -198,6 +222,18 @@ export default class UnlighterApp {
 					this.app.quit()
 				})
 			}
+		}
+	}
+
+	closeLoader() {
+		if (!this.loaderCanBeClosed) {
+			this.loaderCanBeClosed = true
+			return
+		}
+
+		if (this.loader) {
+			this.loader.close()
+			this.loader = null
 		}
 	}
 
