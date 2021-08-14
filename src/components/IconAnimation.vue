@@ -13,7 +13,8 @@
 <script>
 import { onMounted, ref } from 'vue'
 export default {
-	setup() {
+	emits: ['animation-end'],
+	setup(props, { emit }) {
 			const container = ref()
 			const delayBeforeClose = 1000
 
@@ -21,11 +22,10 @@ export default {
 			container.value.addEventListener('animationend', (event) => {
 				if(event.target == container.value) {
 					setTimeout(() => {
-							window.unlighter.execAppMethod({method: 'closeLoader'})
+							emit('animation-end')
 						}, delayBeforeClose)
 					}
 				})
-
 		})
 
 		return { container }

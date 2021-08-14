@@ -1,7 +1,7 @@
 <template>
 	<main>
 		<div class="loading-animation">
-			<IconAnimation />
+			<IconAnimation @animation-end="closeLoader"/>
 		</div>
 		<p class="version">{{version}}</p>
 	</main>
@@ -15,11 +15,21 @@ export default {
 	components: { IconAnimation },
 	setup() {
 		const version = ref(null)
+		const isCloseOrderSent = ref(false)
+
+		const closeLoader = () => {
+			if(isCloseOrderSent.value) return
+
+			isCloseOrderSent.value = true
+			window.unlighter.execAppMethod({method: 'closeLoader'})
+		}
 
     onBeforeMount(() => {
       window.unlighter.on('app-version', (event, v) => {
         version.value = v
       })
+
+			document.body.addEventListener('click', closeLoader)
 
       window.unlighter.execModuleMethod({module: "updater", method: 'sendVersion'})
     })
@@ -28,7 +38,7 @@ export default {
       window.unlighter.removeListener('app-version')
     })
 
-    return { version }
+    return { version, closeLoader }
 	}
 }
 </script>

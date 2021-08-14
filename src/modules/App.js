@@ -74,8 +74,8 @@ export default class UnlighterApp {
 			frame: false,
 			maximizable: false,
 			closable: true,
-			focusable: false,
-			resizable: false,
+			focusable: this.config.isDevelopment,
+			resizable: this.config.isDevelopment,
 			backgroundColor: "#111",
 			parent: this.pcc,
 			webPreferences: {
