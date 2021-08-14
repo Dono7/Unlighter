@@ -9,7 +9,7 @@
 
 <script>
 import IconAnimation from '@/components/IconAnimation.vue'
-import { onBeforeMount, onUnmounted, ref } from 'vue'
+import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -18,6 +18,7 @@ export default {
 		const version = ref(null)
 		const isPccInit = ref(false)
 		const isCloseAsked = ref(false)
+		const isRedirected = ref(false)
 		const router = useRouter()
 
 		const closeLoader = () => {
@@ -35,6 +36,9 @@ export default {
 		}
 
 		const goToHome = () => {
+			if(isRedirected.value) return
+			
+			isRedirected.value = true
 			router.replace({name: 'Monitors'})
 		}
 
@@ -46,6 +50,13 @@ export default {
 			document.body.addEventListener('click', closeLoader)
 			window.unlighter.execAppMethod({method: 'sendVersion'})
     })
+
+		// Security redirection to avoid being blocked in animation
+		onMounted(() => {
+			setTimeout(() => {
+				goToHome()
+			}, 3000)
+		})
 
     return { version, closeLoader }
 	}
