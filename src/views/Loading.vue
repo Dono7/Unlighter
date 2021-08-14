@@ -40,11 +40,11 @@ export default {
 
     onBeforeMount(() => {
       window.unlighter.once('app-version', (event, v) => {
-        version.value = 'v' + v
+        version.value = `v${v}`
       })
-
 			window.unlighter.once('init-pcc', pccInited)
 			document.body.addEventListener('click', closeLoader)
+			window.unlighter.execAppMethod({method: 'sendVersion'})
     })
 
     return { version, closeLoader }

@@ -256,4 +256,9 @@ export default class UnlighterApp {
 			this.sendToPcc("log", msg)
 		}
 	}
+
+	sendVersion() {
+		const version = this.app.getVersion()
+		this.sendToPcc("app-version", version)
+	}
 }
