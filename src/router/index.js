@@ -48,7 +48,7 @@ const routes = [
 		path: "/loading",
 		name: "Loading",
 		component: Loading,
-		meta: { hideNavigation: true, noBg: true },
+		meta: { fadeTransition: true, hideNavigation: true, noBg: true },
 	},
 	{
 		path: "/index.html",

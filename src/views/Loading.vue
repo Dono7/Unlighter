@@ -1,10 +1,10 @@
 <template>
-	<main>
+	<div class="loading-container">
 		<div class="loading-animation">
 			<IconAnimation @animation-end="closeLoader"/>
 		</div>
 		<p class="version">{{version}}</p>
-	</main>
+	</div>
 </template>
 
 <script>
@@ -25,17 +25,18 @@ export default {
 		}
 
     onBeforeMount(() => {
-      window.unlighter.on('app-version', (event, v) => {
-        version.value = v
+      window.unlighter.once('app-version', (event, v) => {
+        version.value = 'v' + v
       })
+
+			window.unlighter.once('init-pcc', (event, data) => {
+				console.log('pcc inited, closeLoader')
+				window.unlighter.execAppMethod({method: 'closeLoader'})
+			})
 
 			document.body.addEventListener('click', closeLoader)
 
       window.unlighter.execModuleMethod({module: "updater", method: 'sendVersion'})
-    })
-
-    onUnmounted(() => {
-      window.unlighter.removeListener('app-version')
     })
 
     return { version, closeLoader }
@@ -44,12 +45,17 @@ export default {
 </script>
 
 <style scoped lang="sass">
-
+.loading-container
+	position: fixed
+	top: 0
+	left: 0
+	height: 100vh
+	width: 100vw
 .loading-animation
 	padding-top: 140px
 .version
 	position: absolute
-	font-size: 100px
+	font-size: 12px
 	bottom: 20px
 	left: 50%
 	transform: translateX(-50%)
