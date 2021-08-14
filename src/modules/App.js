@@ -117,7 +117,7 @@ export default class UnlighterApp {
 	}
 
 	initPccEvents() {
-		this.pcc.setAlwaysOnTop(true, "screen")
+		this.setPccOnTop()
 		this.pcc.on("close", () => {
 			this.app.exit()
 		})
@@ -158,12 +158,13 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("ready-to-show", () => {
+			this.setPccOnTop()
 			this.initialised = true
 		})
 
 		this.pcc.on("blur", () => {
 			if (!this.getPref("pccOnTop")) {
-				this.pcc.setAlwaysOnTop(false, "normal")
+				this.setPccOnTop(false)
 			}
 			if (this.getPref("minimizeOnBlur") && this.initialised) {
 				this.pcc.minimize()
@@ -171,7 +172,7 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("focus", () => {
-			this.pcc.setAlwaysOnTop(true, "screen")
+			this.setPccOnTop()
 		})
 
 		this.pcc.on("minimize", () => {
@@ -200,6 +201,10 @@ export default class UnlighterApp {
 				})
 			}
 		}
+	}
+
+	setPccOnTop(onTop = true) {
+		onTop ? this.pcc.setAlwaysOnTop(true, "screen") : this.pcc.setAlwaysOnTop(false, "normal")
 	}
 
 	sendToPccFromCode(code) {
