@@ -36,6 +36,7 @@ export default class Monitor {
 		} else {
 			this.win.setIgnoreMouseEvents(true)
 			this.win.setAlwaysOnTop(true, "screen")
+			this.app.setPccOnTop()
 		}
 		this.win.once("ready-to-show", () => {
 			this.app.monitors.updateShowOrHideIndex()

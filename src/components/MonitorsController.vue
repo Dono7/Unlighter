@@ -156,7 +156,7 @@ $border-size: 2px
 		padding: 0 30px
 		height: 75px
 		font-weight: 500
-		cursor: url('./../assets/cursor_hover.svg') 13.5 6, pointer
+		cursor: url('./../assets/svg/cursor_hover.svg') 13.5 6, pointer
 		border-color: rgba(255,255,255,0.2)
 		border-style: solid
 		border-width: 0

@@ -1,9 +1,9 @@
 <template>
-  <div id="window" :class="{ 'purple-bg': ['Updater'].includes($route.name) }">
-    <TitleBar v-if="!$route.meta.hideNavigation"/>
-    <NavBar v-if="!$route.meta.hideNavigation"/>
+  <div id="window" :class="{ 'purple-bg': route.meta.purpleBg, 'no-bg': route.meta.noBg }">
+    <TitleBar v-if="!route.meta.hideNavigation"/>
+    <NavBar v-if="!route.meta.hideNavigation"/>
       <router-view v-slot="{ Component }"  >
-        <transition :name="direction">
+        <transition :name="direction" :mode="mode">
           <component :is="Component"/>
         </transition>
       </router-view>
@@ -13,24 +13,35 @@
 <script>
 import TitleBar from './components/TitleBar.vue'
 import NavBar from './components/NavBar.vue'
+import { ref, onBeforeMount } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 export default {
   components: { TitleBar, NavBar },
-  data() {
-    return {
-      direction: 'slide-left',
-      properties: {
-      }
-    }
-  },
-  watch: {
-    '$route' (to, from) {
-      this.direction = from.name === undefined
+  setup() {
+    const direction = ref('slide-left')
+    const mode = ref('')
+    const router = useRouter()
+    const route = useRoute()
+
+    router.beforeEach((to, from) => {
+      direction.value = from.name === undefined
         ? ''
-        : to.meta.transitionIndex < from.meta.transitionIndex
-          ? 'slide-left'
-          : 'slide-right'
-    }
+        : from.meta.fadeTransition || to.meta.fadeTransition
+          ? 'fade'
+          : to.meta.transitionIndex < from.meta.transitionIndex
+            ? 'slide-left'
+            : 'slide-right'
+      mode.value = from.meta.fadeTransition || to.meta.fadeTransition ? '' : ''
+    })
+
+    onBeforeMount(() => {
+      window.unlighter.on('go-to', (event, name) => {
+        router.replace({name})
+      })
+    })
+
+    return { direction, mode, route }
   }
 }
 </script>
@@ -62,9 +73,15 @@ body
   color: white
   &.purple-bg
     background: $background
+  &.no-bg
+    background: transparent
   > main
     padding: 0 30px 10px 30px
     width: 100%
+    max-height: 251px
+    overflow: auto
+    &::-webkit-scrollbar
+      display: none
     p
       font-size: 12px
       &.minor
@@ -97,5 +114,13 @@ h1
 .slide-left-leave-to, .slide-right-enter-from
   transform: translateX(100%)
 
+
+.fade-enter-active,
+.fade-leave-active
+  transition: opacity 0.2s ease-in-out
+
+.fade-enter-from,
+.fade-leave-to
+  opacity: 0
 
 </style>

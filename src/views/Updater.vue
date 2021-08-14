@@ -3,11 +3,11 @@
 		<p>{{states[status].text}}</p>
 
 		<div class="infos">
-			<Button v-if="states[status].showDownloadBtn" iconClass="fas fa-download" small/>
+			<Button v-if="states[status].showDownloadBtn" iconClass="fas fa-download" small @click="quitAndInstall"/>
 			<i v-if="states[status].showSpinner" class="fas fa-spinner fa-pulse"></i>
 			<p v-if="states[status].showBar" class="percent">{{Math.round(percent)}}%</p>
 			<div class="close"  @click="closeUpdateWindow">
-				<img src="@/assets/close.svg">
+				<img src="@/assets/svg/close.svg">
 			</div>
 		</div>
 	</div>
@@ -63,6 +63,10 @@ export default {
 			},
 		})
 
+		const quitAndInstall = () => {
+			window.unlighter.execModuleMethod({module: 'updater', method: 'quitAndInstall'})
+		}
+
 		const closeUpdateWindow = () => {
 			window.unlighter.execModuleMethod({module: 'updater', method: 'closeWindow'})
 		}
@@ -78,7 +82,7 @@ export default {
 			window.unlighter.removeListener('update-status')
 		})
 
-		return { percent, text, iconClass, states, status, closeUpdateWindow }
+		return { percent, text, iconClass, states, status, closeUpdateWindow, quitAndInstall }
 	}
 }
 </script>

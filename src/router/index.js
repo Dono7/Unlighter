@@ -2,9 +2,10 @@ import { createRouter, createWebHistory } from "vue-router"
 import Monitors from "@/views/Monitors.vue"
 import Preferences from "@/views/Preferences.vue"
 import About from "@/views/About.vue"
-import Contact from "@/views/Contact.vue"
 import Updater from "@/views/Updater.vue"
 import Filter from "@/views/Filter.vue"
+import Loading from "@/views/Loading.vue"
+import Help from "@/views/Help.vue"
 
 const routes = [
 	{
@@ -26,22 +27,28 @@ const routes = [
 		meta: { transitionIndex: 3 },
 	},
 	{
-		path: "/contact",
-		name: "Contact",
-		component: Contact,
+		path: "/help",
+		name: "Help",
+		component: Help,
 		meta: { transitionIndex: 4 },
 	},
 	{
 		path: "/updater",
 		name: "Updater",
 		component: Updater,
-		meta: { hideNavigation: true },
+		meta: { hideNavigation: true, purpleBg: true },
 	},
 	{
 		path: "/filter",
 		name: "Filter",
 		component: Filter,
 		meta: { hideNavigation: true },
+	},
+	{
+		path: "/loading",
+		name: "Loading",
+		component: Loading,
+		meta: { fadeTransition: true, hideNavigation: true, noBg: true },
 	},
 	{
 		path: "/index.html",

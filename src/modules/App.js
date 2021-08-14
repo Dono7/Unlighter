@@ -13,6 +13,7 @@ export default class UnlighterApp {
 		this.app = electronApp
 		this.monitors = null
 		this.pcc = null
+		this.loaderCanBeClosed = false
 		this.updater = null
 		this.config = config
 		this.launched = false
@@ -79,7 +80,7 @@ export default class UnlighterApp {
 			createProtocol("app")
 		}
 
-		openFileInWindow(this.pcc)
+		openFileInWindow(this.pcc, "loading")
 
 		if (this.config.isDevelopment) this.pcc.webContents.openDevTools({ mode: "right" })
 
@@ -116,7 +117,7 @@ export default class UnlighterApp {
 	}
 
 	initPccEvents() {
-		this.pcc.setAlwaysOnTop(true, "screen")
+		this.setPccOnTop()
 		this.pcc.on("close", () => {
 			this.app.exit()
 		})
@@ -136,7 +137,7 @@ export default class UnlighterApp {
 			}
 		})
 		ipcMain.on("exec-app-method", (event, data) => {
-			const { method, args } = data
+			const { method, args = [] } = data
 			if (this[method]) {
 				this[method](...args)
 			} else {
@@ -157,12 +158,13 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("ready-to-show", () => {
+			this.setPccOnTop()
 			this.initialised = true
 		})
 
 		this.pcc.on("blur", () => {
 			if (!this.getPref("pccOnTop")) {
-				this.pcc.setAlwaysOnTop(false, "normal")
+				this.setPccOnTop(false)
 			}
 			if (this.getPref("minimizeOnBlur") && this.initialised) {
 				this.pcc.minimize()
@@ -170,7 +172,7 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("focus", () => {
-			this.pcc.setAlwaysOnTop(true, "screen")
+			this.setPccOnTop()
 		})
 
 		this.pcc.on("minimize", () => {
@@ -199,6 +201,10 @@ export default class UnlighterApp {
 				})
 			}
 		}
+	}
+
+	setPccOnTop(onTop = true) {
+		onTop ? this.pcc.setAlwaysOnTop(true, "screen") : this.pcc.setAlwaysOnTop(false, "normal")
 	}
 
 	sendToPccFromCode(code) {
@@ -249,5 +255,10 @@ export default class UnlighterApp {
 		if (this.pcc !== null) {
 			this.sendToPcc("log", msg)
 		}
+	}
+
+	sendVersion() {
+		const version = this.app.getVersion()
+		this.sendToPcc("app-version", version)
 	}
 }
