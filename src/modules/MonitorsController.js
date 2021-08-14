@@ -50,7 +50,7 @@ export default class MonitorsController {
 		return this.monitors.map((monitor) => monitor.serialize())
 	}
 
-	updateMonitorsStr(monitorsStr) {
+	updateMonitorsStr(monitorsStr, init = false) {
 		if (monitorsStr.length !== this.monitors.length) {
 			if (new Date() - this.lastErrorTime > 10000) {
 				this.lastErrorTime = new Date()
@@ -58,7 +58,7 @@ export default class MonitorsController {
 			}
 		}
 		this.monitors.forEach((monitor, index) => {
-			monitor.updateStr(monitorsStr[index])
+			monitor.updateStr(monitorsStr[index], init)
 		})
 	}
 

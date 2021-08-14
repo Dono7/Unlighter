@@ -14,16 +14,26 @@ export default {
 		const showIndex = ref(false)
 		const color = ref('rgba(250,250,250,0.9)')
 
-		onBeforeMount(() => {
-			document.body.classList.add('filter')
-
-			window.unlighter.on('update-str', (str) => {
+		const updateStr = (str) => {
 				const textColor = Math.max(0.3, Math.min(1 - str / 100, 1))
 				document.body.style.background = `rgba(0,0,0,${str / 100 * 0.95})`
 				color.value = `rgba(250,250,250,${textColor})`
+		}
+
+		onBeforeMount(() => {
+			document.body.classList.add('filter')
+			document.body.classList.add('not-init')
+
+			window.unlighter.on('update-str', (e, {str, init}) => {
+				if(init) {
+					setTimeout(() => {
+						document.body.classList.remove('not-init')
+					}, 2000)
+				}
+				updateStr(str)
 			})
 
-			window.unlighter.on('update-index', (index) => {
+			window.unlighter.on('update-index', (e, index) => {
 				monitorIndex.value = index + 1
 			})
 
@@ -56,7 +66,9 @@ body.filter
 	height: 0
 	background: transparent
 	overflow: hidden
-	background: rgba(0,0,0,0.1)
+	background: rgba(0,0,0,0.0)
+	&.not-init
+		transition: all 2000ms
 
 	#window
 		background: transparent

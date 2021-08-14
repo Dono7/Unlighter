@@ -51,6 +51,7 @@ export default {
 				}
 			})
 			this.initialised = true
+			this.sendStrToMonitors(true)
 		},
 		barPositionFromStr(str) {
 			const interval = this.win.w - 2 * this.win.deadMargin
@@ -83,9 +84,9 @@ export default {
 				this.sendStrToMonitors()
 			}
 		},
-		sendStrToMonitors() {
+		sendStrToMonitors(init = false) {
 			if(this.initialised) {
-				window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr]})
+				window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr, init]})
 			}
 		},
 		close() {
