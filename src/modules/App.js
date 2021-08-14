@@ -202,15 +202,6 @@ export default class UnlighterApp {
 		}
 	}
 
-	closeLoader() {
-		if (!this.loaderCanBeClosed) {
-			this.loaderCanBeClosed = true
-			return
-		}
-
-		this.sendToPcc("go-to", "Monitors")
-	}
-
 	sendToPccFromCode(code) {
 		if (code == "ask-for-init-pcc") {
 			const serializedMonitors = this.monitors.serializeForPcc()

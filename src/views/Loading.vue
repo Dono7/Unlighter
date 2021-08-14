@@ -10,18 +10,32 @@
 <script>
 import IconAnimation from '@/components/IconAnimation.vue'
 import { onBeforeMount, onUnmounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default {
 	components: { IconAnimation },
 	setup() {
 		const version = ref(null)
-		const isCloseOrderSent = ref(false)
+		const isPccInit = ref(false)
+		const isCloseAsked = ref(false)
+		const router = useRouter()
 
 		const closeLoader = () => {
-			if(isCloseOrderSent.value) return
+			if(isPccInit.value)
+				goToHome()
+			else
+				isCloseAsked.value = true
+		}
 
-			isCloseOrderSent.value = true
-			window.unlighter.execAppMethod({method: 'closeLoader'})
+		const pccInited = () => {
+				if(isCloseAsked.value)
+					goToHome()
+				else
+					isPccInit.value = true
+		}
+
+		const goToHome = () => {
+			router.replace({name: 'Monitors'})
 		}
 
     onBeforeMount(() => {
@@ -29,14 +43,8 @@ export default {
         version.value = 'v' + v
       })
 
-			window.unlighter.once('init-pcc', (event, data) => {
-				console.log('pcc inited, closeLoader')
-				window.unlighter.execAppMethod({method: 'closeLoader'})
-			})
-
+			window.unlighter.once('init-pcc', pccInited)
 			document.body.addEventListener('click', closeLoader)
-
-      window.unlighter.execModuleMethod({module: "updater", method: 'sendVersion'})
     })
 
     return { version, closeLoader }
