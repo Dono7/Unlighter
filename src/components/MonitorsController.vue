@@ -39,7 +39,7 @@ export default {
 		}
 	},
 	methods: {
-		init(monitors) {
+		init({monitors, sendStrAfterInit}) {
 			this.monitors = monitors.map((monitor, index) => {
 				return {
 					id: monitor.id,
@@ -51,7 +51,7 @@ export default {
 				}
 			})
 			this.initialised = true
-			this.sendStrToMonitors(true)
+			if(sendStrAfterInit) this.sendStrToMonitors(true)
 		},
 		barPositionFromStr(str) {
 			const interval = this.win.w - 2 * this.win.deadMargin
@@ -86,7 +86,7 @@ export default {
 		},
 		sendStrToMonitors(init = false) {
 			if(this.initialised) {
-				window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr, init]})
+				window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr, {init}]})
 			}
 		},
 		close() {

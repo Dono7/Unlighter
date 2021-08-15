@@ -44,12 +44,12 @@ export default class Monitor {
 		})
 	}
 
-	updateStr(payload, init) {
+	updateStr(payload, { init, showStr }) {
 		const { str, time } = payload
 		if (time <= this.lastStrUpdate) return
 
 		this.str = str
-		this.win.webContents.send("update-str", { str, init })
+		this.win.webContents.send("update-str", { str, init, showStr })
 	}
 
 	loadIndex() {

@@ -50,7 +50,7 @@ export default class MonitorsController {
 		return this.monitors.map((monitor) => monitor.serialize())
 	}
 
-	updateMonitorsStr(monitorsStr, init = false) {
+	updateMonitorsStr(monitorsStr, { init = false, showStr = false }) {
 		if (monitorsStr.length !== this.monitors.length) {
 			if (new Date() - this.lastErrorTime > 10000) {
 				this.lastErrorTime = new Date()
@@ -58,8 +58,22 @@ export default class MonitorsController {
 			}
 		}
 		this.monitors.forEach((monitor, index) => {
-			monitor.updateStr(monitorsStr[index], init)
+			monitor.updateStr(monitorsStr[index], { init, showStr })
 		})
+	}
+
+	shortcutTriggered(action, interval) {
+		const monitorsStr = this.monitors.map((m) => ({ str: m.str, time: new Date() }))
+		const newStr = monitorsStr.map((m) => {
+			if (action == "increase") m.str = Math.min(Math.round((m.str + interval) * 100) / 100, 100)
+
+			if (action == "decrease") m.str = Math.max(Math.round((m.str - interval) * 100) / 100, 0)
+
+			return m
+		})
+
+		this.updateMonitorsStr(newStr, { init: false, showStr: true })
+		this.app.initPccMonitorsTab(false)
 	}
 
 	showOrHideMonitorIndex(action) {
