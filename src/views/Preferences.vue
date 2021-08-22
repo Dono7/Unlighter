@@ -7,7 +7,6 @@
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
 
-    <Button label="Search for update" @click="openUpdaterWindow"/>
   </main>
 </template>
 
@@ -22,10 +21,6 @@ export default {
   setup(props) {
     const changePref = (key, value) => {
 			window.unlighter.execAppMethod({method: 'setPref', args: [key, value]})
-    }
-
-    const openUpdaterWindow = () => {
-			window.unlighter.execModuleMethod({module: 'updater', method: 'openWindow'})
     }
 
     const pref = ref([
@@ -51,7 +46,7 @@ export default {
       window.unlighter.removeListener('preferences-get')
     })
 
-    return { pref, changePref, openUpdaterWindow }
+    return { pref, changePref }
   }
 }
 </script>
