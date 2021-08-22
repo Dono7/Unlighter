@@ -63,6 +63,8 @@ export default class MonitorsController {
 	}
 
 	shortcutTriggered(action, interval) {
+		if (!this.app.getPref("enableShortcuts")) return
+
 		const monitorsStr = this.monitors.map((m) => ({ str: m.str, time: new Date() }))
 		const newStr = monitorsStr.map((m) => {
 			if (action == "increase") m.str = Math.min(Math.round((m.str + interval) * 100) / 100, 100)
