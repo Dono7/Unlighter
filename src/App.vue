@@ -89,7 +89,7 @@ body
         color: #CCC
 
 h1
-  padding-left: 20px
+  margin-bottom: 15px
   font-weight: 500
   font-size: 20px
 

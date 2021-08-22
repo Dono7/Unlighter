@@ -2,14 +2,8 @@
   <main class="preferences">
     <InputBlock
       v-for="p in pref"
-      :key="p.key"
       :name="p.key"
-      :label="p.label"
-      :value="p.value"
-      :inputType="p.inputType"
-      :min="p.min"
-      :max="p.max"
-      :labelMaxWidth="p.labelMaxWidth"
+			v-bind="p"
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
 
@@ -63,8 +57,5 @@ export default {
 </script>
 
 <style lang="sass">
-.preferences
-  display: flex
-  flex-direction: column
-  gap: 15px
+
 </style>

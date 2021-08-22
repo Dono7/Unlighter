@@ -44,7 +44,7 @@ input
 	border-radius: 4px
 	transition: all 0.2s ease
 	background-color: rgba(255,255,255,0.1)
-	&:focus
+	&:focus, &:hover
 		background-color: rgba(255,255,255,0.3)
 		outline: none
 
