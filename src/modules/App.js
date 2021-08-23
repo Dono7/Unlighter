@@ -60,6 +60,7 @@ export default class UnlighterApp {
 			maximizable: false,
 			closable: true,
 			backgroundColor: "#111",
+			resizable: this.config.isDevelopment,
 			webPreferences: {
 				devTools: true,
 				nodeIntegration: true,
