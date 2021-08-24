@@ -10,19 +10,20 @@ export default class Monitor {
 		this.index = index
 		this.display = display
 		this.win = null
+		this.dev = this.app.config.showFilterDevTools && index == 0
 
 		this.options = {
 			...display.bounds,
 			title: "Unlighter Filter Window",
 			transparent: true,
 			frame: false,
-			fullscreen: !this.app.config.showFilterDevTools,
-			alwaysOnTop: !this.app.config.showFilterDevTools,
+			fullscreen: !this.dev,
+			alwaysOnTop: !this.dev,
 			skipTaskbar: true,
 			focusable: false,
 			webPreferences: {
 				devTools: true,
-				preload: path.join(__dirname, "ipcFilter.js"),
+				preload: path.join(__dirname, "ipcPcc.js"),
 			},
 		}
 	}
@@ -31,7 +32,7 @@ export default class Monitor {
 		if (this.win !== null) return
 
 		this.win = new BrowserWindow(this.options)
-		if (this.app.config.showFilterDevTools) {
+		if (this.dev) {
 			this.win.webContents.openDevTools()
 		} else {
 			this.win.setIgnoreMouseEvents(true)
@@ -43,12 +44,12 @@ export default class Monitor {
 		})
 	}
 
-	updateStr(payload) {
+	updateStr(payload, { init, showStr }) {
 		const { str, time } = payload
 		if (time <= this.lastStrUpdate) return
 
 		this.str = str
-		this.win.webContents.send("update-str", str)
+		this.win.webContents.send("update-str", { str, init, showStr })
 	}
 
 	loadIndex() {

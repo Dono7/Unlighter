@@ -69,7 +69,7 @@ body
 #window
   width: 320px
   min-height: 400px
-  background: linear-gradient(180deg, $background 0%, rgba(15,15,15,1) 42%)
+  background: $background
   color: white
   &.purple-bg
     background: $background
@@ -89,7 +89,7 @@ body
         color: #CCC
 
 h1
-  padding-left: 20px
+  margin-bottom: 15px
   font-weight: 500
   font-size: 20px
 

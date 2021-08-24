@@ -7,6 +7,7 @@ import path from "path"
 import storage from "electron-json-storage"
 import { openFileInWindow } from "./utils"
 import logger from "electron-log"
+import Shortcuts from "./Shortcuts"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
@@ -19,6 +20,7 @@ export default class UnlighterApp {
 		this.launched = false
 		this.lastMinimize = 0
 		this.initialised = false
+		this.shortcuts = null
 	}
 
 	launch() {
@@ -58,6 +60,7 @@ export default class UnlighterApp {
 			maximizable: false,
 			closable: true,
 			backgroundColor: "#111",
+			resizable: this.config.isDevelopment,
 			webPreferences: {
 				devTools: true,
 				nodeIntegration: true,
@@ -123,8 +126,9 @@ export default class UnlighterApp {
 		})
 	}
 
-	initPccMonitorsTab() {
-		this.sendToPcc("init-pcc", this.monitors.serializeForPcc())
+	initPccMonitorsTab(sendStrAfterInit = true) {
+		const serializedMonitors = this.monitors.serializeForPcc()
+		if (serializedMonitors.length) this.sendToPcc("init-pcc", { monitors: serializedMonitors, sendStrAfterInit })
 	}
 
 	initIPC() {
@@ -160,6 +164,7 @@ export default class UnlighterApp {
 		this.pcc.on("ready-to-show", () => {
 			this.setPccOnTop()
 			this.initialised = true
+			this.initShortcuts()
 		})
 
 		this.pcc.on("blur", () => {
@@ -203,14 +208,18 @@ export default class UnlighterApp {
 		}
 	}
 
+	initShortcuts() {
+		this.shortcuts = new Shortcuts(this)
+		this.shortcuts.bindShortcuts()
+	}
+
 	setPccOnTop(onTop = true) {
 		onTop ? this.pcc.setAlwaysOnTop(true, "screen") : this.pcc.setAlwaysOnTop(false, "normal")
 	}
 
 	sendToPccFromCode(code) {
 		if (code == "ask-for-init-pcc") {
-			const serializedMonitors = this.monitors.serializeForPcc()
-			if (serializedMonitors.length) this.sendToPcc("init-pcc", serializedMonitors)
+			this.initPccMonitorsTab()
 		}
 
 		if (code == "preferences-get") this.sendToPcc("preferences-get", this.getPref())

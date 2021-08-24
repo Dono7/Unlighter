@@ -1,5 +1,9 @@
 <template>
 	<div class="content">
+		<div v-if="states[status].showBar" class="progressbar-container">
+			<div class="progressbar" :style="{width: percent + '%'}"></div>
+		</div>
+
 		<p>{{states[status].text}}</p>
 
 		<div class="infos">
@@ -87,7 +91,9 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style scoped lang="sass">
+@import '@/assets/sass/variables.sass'
+
 .content
 	display: flex
 	justify-content: space-between
@@ -100,6 +106,7 @@ export default {
 	.infos
 		display: flex
 		align-items: center
+		z-index: 10
 		.close
 			display: flex
 			justify-content: center
@@ -116,24 +123,24 @@ export default {
 	top: 0
 	left: 0
 	bottom: 0
-	width: 25%
-	background-color: #fff
+	width: 0%
+	transition: width 0.6s ease
+	background-color: $secondary
 	&-container
 		position: absolute
 		top: 0
 		left: 0
 		bottom: 0
 		right: 0
-		opacity: 0.15
-		padding-left: 5%
+		margin-left: 5%
 		&::before
 			content: ''
 			position: absolute
 			top: 0
-			left: 0
+			left: -5%
 			bottom: 0
 			width: 5%
-			background-color: #fff
+			background-color: $secondary
 
 
 </style>

@@ -2,18 +2,11 @@
   <main class="preferences">
     <InputBlock
       v-for="p in pref"
-      :key="p.key"
       :name="p.key"
-      :label="p.label"
-      :value="p.value"
-      :inputType="p.inputType"
-      :min="p.min"
-      :max="p.max"
-      :labelMaxWidth="p.labelMaxWidth"
+			v-bind="p"
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
 
-    <Button label="Search for update" @click="openUpdaterWindow"/>
   </main>
 </template>
 
@@ -30,15 +23,11 @@ export default {
 			window.unlighter.execAppMethod({method: 'setPref', args: [key, value]})
     }
 
-    const openUpdaterWindow = () => {
-			window.unlighter.execModuleMethod({module: 'updater', method: 'openWindow'})
-    }
-
     const pref = ref([
       {key: 'screenStrength', label: 'Default filters strength on start', value: 9, inputType: 'number', min: 0, max: 100},
       {key: 'showScreenNumber', label: 'Show screen number', value: true, inputType: 'switch'},
-      // {key: 'pccOnTop', label: 'Always on top (not affected by filters)', value: true, inputType: 'switch'},
       {key: 'minimizeOnBlur', label: 'Automatically minimize', value: true, inputType: 'switch'},
+      {key: 'enableShortcuts', label: 'Enable shortcuts', value: true, inputType: 'switch'},
     ])
 
     onBeforeMount(() => {
@@ -57,14 +46,11 @@ export default {
       window.unlighter.removeListener('preferences-get')
     })
 
-    return { pref, changePref, openUpdaterWindow }
+    return { pref, changePref }
   }
 }
 </script>
 
 <style lang="sass">
-.preferences
-  display: flex
-  flex-direction: column
-  gap: 15px
+
 </style>
