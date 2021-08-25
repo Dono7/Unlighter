@@ -52,10 +52,19 @@ export default class UnlighterApp {
 	}
 
 	createPcc() {
-		this.pcc = new BrowserWindow({
-			title: "Unlighter",
+		const marginRight = 120
+		const marginBottom = 100
+		const mainScreen = screen.getPrimaryDisplay().bounds
+		const pccBounds = {
 			width: this.config.isDevelopment ? 820 : 320,
 			height: 400,
+			x: mainScreen.width - (this.config.isDevelopment ? 820 : 320) - marginRight,
+			y: mainScreen.height - 400 - marginBottom,
+		}
+
+		this.pcc = new BrowserWindow({
+			...pccBounds,
+			title: "Unlighter",
 			frame: false,
 			maximizable: false,
 			closable: true,
