@@ -5,16 +5,19 @@
     <p>This application is developped by <Link href="https://github.com/Dono7" label="Donovan T."/> (developper) and <Link href="https://www.behance.net/bourhanewac933" label="Walid B" /> (UI/UX Designer).</p>
     
     <Button label="Search for update" @click="openUpdaterWindow"/>
+
+    <Version />
   </main>
 </template>
 
 <script>
-import Link from './../components/Link'
-import Button from './../components/Button'
 import { onBeforeMount, onUnmounted, ref } from 'vue'
+import Link from '@/components/Link'
+import Button from '@/components/Button'
+import Version from '@/components/Version'
 
 export default {
-  components: { Link, Button },
+  components: { Link, Button, Version },
   setup() {
     const openUpdaterWindow = () => {
 			window.unlighter.execModuleMethod({module: 'updater', method: 'openWindow'})

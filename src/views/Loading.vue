@@ -3,19 +3,19 @@
 		<div class="loading-animation">
 			<IconAnimation @animation-end="closeLoader"/>
 		</div>
-		<p class="version">{{version}}</p>
+		<Version absolute/>
 	</div>
 </template>
 
 <script>
-import IconAnimation from '@/components/IconAnimation.vue'
 import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import IconAnimation from '@/components/IconAnimation'
+import Version from '@/components/Version'
 
 export default {
-	components: { IconAnimation },
+	components: { IconAnimation, Version },
 	setup() {
-		const version = ref(null)
 		const isPccInit = ref(false)
 		const isCloseAsked = ref(false)
 		const isRedirected = ref(false)
@@ -43,12 +43,8 @@ export default {
 		}
 
     onBeforeMount(() => {
-      window.unlighter.once('app-version', (event, v) => {
-        version.value = `v${v}`
-      })
 			window.unlighter.once('init-pcc', pccInited)
 			document.body.addEventListener('click', closeLoader)
-			window.unlighter.execAppMethod({method: 'sendVersion'})
     })
 
 		// Security redirection to avoid being blocked in animation
@@ -58,7 +54,7 @@ export default {
 			}, 3000)
 		})
 
-    return { version, closeLoader }
+    return { closeLoader }
 	}
 }
 </script>
@@ -72,19 +68,4 @@ export default {
 	width: 100vw
 .loading-animation
 	padding-top: 140px
-.version
-	position: absolute
-	font-size: 12px
-	bottom: 20px
-	left: 50%
-	transform: translateX(-50%)
-	color: white
-	padding: 0
-	margin: 0
-	opacity: 0
-	transition: opacity 1s 0.5s
-.version:not(:empty)
-	opacity: 0.7
-
-
 </style>
