@@ -2,6 +2,7 @@ import { BrowserWindow, ipcMain, screen, shell } from "electron"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import MonitorsController from "./MonitorsController"
 import Updater from "./Updater"
+import Devtools from "./Devtools"
 import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import storage from "electron-json-storage"
@@ -21,6 +22,7 @@ export default class UnlighterApp {
 		this.lastMinimize = 0
 		this.initialised = false
 		this.shortcuts = null
+		this.devtools = null
 	}
 
 	launch() {
@@ -29,6 +31,7 @@ export default class UnlighterApp {
 		} else {
 			this.launched = true
 		}
+		this.createDevtools()
 		this.loadUserPref()
 		this.createPcc()
 		this.createMonitors()
@@ -51,14 +54,18 @@ export default class UnlighterApp {
 		}
 	}
 
+	createDevtools() {
+		this.devtools = new Devtools()
+	}
+
 	createPcc() {
-		const marginRight = 120
+		const marginRight = this.config.isDevelopment ? 120 + this.devtools.devtoolsFullWidth() : 120
 		const marginBottom = 100
 		const mainScreen = screen.getPrimaryDisplay().bounds
 		const pccBounds = {
-			width: this.config.isDevelopment ? 820 : 320,
+			width: 320,
 			height: 400,
-			x: mainScreen.width - (this.config.isDevelopment ? 820 : 320) - marginRight,
+			x: mainScreen.width - 320 - marginRight,
 			y: mainScreen.height - 400 - marginBottom,
 		}
 
@@ -69,7 +76,7 @@ export default class UnlighterApp {
 			maximizable: false,
 			closable: true,
 			backgroundColor: "#111",
-			resizable: this.config.isDevelopment,
+			resizable: false,
 			webPreferences: {
 				devTools: true,
 				nodeIntegration: true,
@@ -94,7 +101,7 @@ export default class UnlighterApp {
 
 		openFileInWindow(this.pcc, "loading")
 
-		if (this.config.isDevelopment) this.pcc.webContents.openDevTools({ mode: "right" })
+		if (this.config.isDevelopment) this.devtools.openDetachedDevTools(this.pcc)
 
 		if (this.monitors) this.monitors.loadFilterPage()
 	}

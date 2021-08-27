@@ -10,7 +10,7 @@ export default class Updater {
 		this.win = null
 
 		this.pos = {
-			width: 320 + (this.app.config.isDevelopment ? 500 : 0),
+			width: 320,
 			height: 80 + (this.app.config.isDevelopment ? 130 : 0),
 			margin: 5,
 		}
@@ -65,7 +65,7 @@ export default class Updater {
 
 		openFileInWindow(this.win, "updater")
 
-		if (this.app.config.isDevelopment) this.win.webContents.openDevTools()
+		if (this.app.config.isDevelopment) this.app.devtools.openDetachedDevTools(this.win)
 
 		this.win.once("ready-to-show", () => {
 			autoUpdater.checkForUpdates()
