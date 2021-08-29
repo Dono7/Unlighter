@@ -2,6 +2,7 @@ import { BrowserWindow, ipcMain, screen, shell } from "electron"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import MonitorsController from "./MonitorsController"
 import Updater from "./Updater"
+import Devtools from "./Devtools"
 import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import storage from "electron-json-storage"
@@ -21,6 +22,7 @@ export default class UnlighterApp {
 		this.lastMinimize = 0
 		this.initialised = false
 		this.shortcuts = null
+		this.devtools = null
 	}
 
 	launch() {
@@ -29,6 +31,7 @@ export default class UnlighterApp {
 		} else {
 			this.launched = true
 		}
+		this.createDevtools()
 		this.loadUserPref()
 		this.createPcc()
 		this.createMonitors()
@@ -51,22 +54,44 @@ export default class UnlighterApp {
 		}
 	}
 
+	createDevtools() {
+		this.devtools = new Devtools()
+	}
+
 	createPcc() {
-		this.pcc = new BrowserWindow({
-			title: "Unlighter",
-			width: this.config.isDevelopment ? 820 : 320,
+		const marginRight = this.config.isDevelopment ? 120 + this.devtools.devtoolsFullWidth() : 120
+		const marginBottom = 100
+		const mainScreen = screen.getPrimaryDisplay().bounds
+		const pccBounds = {
+			width: 320,
 			height: 400,
+			x: mainScreen.width - 320 - marginRight,
+			y: mainScreen.height - 400 - marginBottom,
+		}
+
+		this.pcc = new BrowserWindow({
+			...pccBounds,
+			title: "Unlighter",
 			frame: false,
 			maximizable: false,
 			closable: true,
 			backgroundColor: "#111",
-			resizable: this.config.isDevelopment,
+			resizable: true,
 			webPreferences: {
 				devTools: true,
 				nodeIntegration: true,
 				preload: path.join(__dirname, "ipcPcc.js"),
 			},
 		})
+	}
+
+	blockPccResize() {
+		if (!this.pcc) return
+		const b = this.pcc.getBounds()
+		b.width = 320
+		b.height = 400
+		this.pcc.setBounds(b)
+		this.pcc.setResizable(false)
 	}
 
 	createMonitors() {
@@ -85,7 +110,7 @@ export default class UnlighterApp {
 
 		openFileInWindow(this.pcc, "loading")
 
-		if (this.config.isDevelopment) this.pcc.webContents.openDevTools({ mode: "right" })
+		if (this.config.isDevelopment) this.devtools.openDetachedDevTools(this.pcc)
 
 		if (this.monitors) this.monitors.loadFilterPage()
 	}
@@ -162,6 +187,7 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("ready-to-show", () => {
+			this.blockPccResize()
 			this.setPccOnTop()
 			this.initialised = true
 			this.initShortcuts()
@@ -264,6 +290,10 @@ export default class UnlighterApp {
 		if (this.pcc !== null) {
 			this.sendToPcc("log", msg)
 		}
+	}
+
+	log(msg) {
+		console.log(msg)
 	}
 
 	sendVersion() {

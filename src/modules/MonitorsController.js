@@ -43,7 +43,7 @@ export default class MonitorsController {
 	}
 
 	onAllFiltersLoad() {
-		this.app.sendToPcc("ask-for-monitors-str")
+		this.app.initPccMonitorsTab(true)
 	}
 
 	serializeForPcc() {
@@ -108,7 +108,6 @@ export default class MonitorsController {
 			this.monitors = displays.map((display, index) => new Monitor(this.app, display, index))
 			this.initWindows()
 			this.loadFilterPage()
-			this.app.initPccMonitorsTab()
 		}, 2000)
 	}
 }

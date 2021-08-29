@@ -1,22 +1,32 @@
 <template>
 	<div class="navbar">
-		<router-link v-for="tab in tabs" :key="tab" href="#" :to="{ name: tab.to }">
+		<router-link v-for="tab in tabs" :key="tab" href="#" :to="{ name: tab.to }" :class="{notif: tab.notif}">
 			{{tab.label}}
 		</router-link>
 	</div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 
 export default {
 	setup() {
 		const tabs = ref([
 			{label: 'Monitors', to: 'Monitors'},
 			{label: 'Preferences', to: 'Preferences'},
-			{label: 'About', to: 'About'},
+			{label: 'About', to: 'About', notif: false},
 			{label: 'Help', to: 'Help'},
 		])
+
+		onBeforeMount(() => {
+			window.unlighter.once('update-available', () => {
+				tabs.value.forEach(t => {
+					if(t.label == 'About') {
+						t.notif = true
+					}
+				})
+			})
+		})
 		return { tabs }
 	}
 }
@@ -42,22 +52,8 @@ export default {
 		letter-spacing: 0
 		font-size: 12px
 		position: relative
-		&:hover
+		&:hover, &.router-link-exact-active
 			color: $primary
-		&::before
-			content: ''
-			width: 5px
-			height: 5px
-			border-radius: 5px
-			background-color: $primary
-			position: absolute
-			bottom: -12px
-			left: 50%
-			transition: all 0.25s
-			transform: translateX(-50%) scale(0)
-		&.router-link-exact-active
-			color: $primary
-			&::before
-				transform: translateX(-50%) scale(1)
+
 
 </style>

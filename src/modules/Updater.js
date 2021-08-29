@@ -1,5 +1,5 @@
 import { BrowserWindow } from "electron"
-import { openFileInWindow } from "./utils"
+import { openFileInWindow, isServeMode } from "./utils"
 import { autoUpdater } from "electron-updater"
 import path from "path"
 import logger from "electron-log"
@@ -10,12 +10,13 @@ export default class Updater {
 		this.win = null
 
 		this.pos = {
-			width: 320 + (this.app.config.isDevelopment ? 500 : 0),
+			width: 320,
 			height: 80 + (this.app.config.isDevelopment ? 130 : 0),
 			margin: 5,
 		}
 
 		this.configureAutoUpdater()
+		this.autoCheckOnAppStartup()
 
 		this.app.pcc.on("move", () => {
 			if (this.win !== null) {
@@ -25,7 +26,7 @@ export default class Updater {
 	}
 
 	configureAutoUpdater() {
-		autoUpdater.autoDownload = true
+		autoUpdater.autoDownload = false
 		autoUpdater.autoInstallOnAppQuit = false
 		autoUpdater.allowPrerelease = true
 		autoUpdater.allowDowngrade = false
@@ -37,6 +38,14 @@ export default class Updater {
 		autoUpdater.on("download-progress", (e) => this.updateStatus("downloading", e.transferred == 0 ? 0 : e.percent))
 		autoUpdater.on("update-downloaded", (e) => this.updateStatus("downloaded"))
 		autoUpdater.on("error", (e) => this.updateStatus("error"))
+	}
+
+	autoCheckOnAppStartup() {
+		this.app.pcc.on("ready-to-show", () => {
+			setTimeout(() => {
+				this.checkForUpdates()
+			}, 5000)
+		})
 	}
 
 	openWindow() {
@@ -65,11 +74,25 @@ export default class Updater {
 
 		openFileInWindow(this.win, "updater")
 
-		if (this.app.config.isDevelopment) this.win.webContents.openDevTools()
+		if (this.app.config.isDevelopment) this.app.devtools.openDetachedDevTools(this.win)
 
 		this.win.once("ready-to-show", () => {
-			autoUpdater.checkForUpdates()
+			this.allowAutoUpdateAndCheckForUpdate()
 		})
+	}
+
+	allowAutoUpdateAndCheckForUpdate() {
+		autoUpdater.autoDownload = true
+		this.checkForUpdates(true)
+	}
+
+	checkForUpdates(forceCheckEvenInServeMode = false) {
+		if (forceCheckEvenInServeMode || !isServeMode()) {
+			if (forceCheckEvenInServeMode && !isServeMode()) {
+				console.warn("Trying to fetch an update on serve mode. This will trigger an error from electron-updater.")
+			}
+			autoUpdater.checkForUpdates()
+		}
 	}
 
 	closeWindow() {
@@ -103,6 +126,10 @@ export default class Updater {
 	}
 
 	updateStatus(status, percent) {
+		if ((status == "available" || status == "downloaded" || status == "download-progress") && this.app.pcc) {
+			this.app.sendToPcc("update-available")
+		}
+
 		if (this.win === null) return
 		this.win.webContents.send("update-status", { status, percent })
 	}

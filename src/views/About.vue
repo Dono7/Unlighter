@@ -4,23 +4,37 @@
 
     <p>This application is developped by <Link href="https://github.com/Dono7" label="Donovan T."/> (developper) and <Link href="https://www.behance.net/bourhanewac933" label="Walid B" /> (UI/UX Designer).</p>
     
-    <Button label="Search for update" @click="openUpdaterWindow"/>
+    <Button label="Search for update" @click="openUpdaterWindow" :notif="isUpdateAvailable"/>
+
+    <Version />
   </main>
 </template>
 
 <script>
-import Link from './../components/Link'
-import Button from './../components/Button'
-import { onBeforeMount, onUnmounted, ref } from 'vue'
+import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
+import Link from '@/components/Link'
+import Button from '@/components/Button'
+import Version from '@/components/Version'
 
 export default {
-  components: { Link, Button },
+  components: { Link, Button, Version },
   setup() {
     const openUpdaterWindow = () => {
 			window.unlighter.execModuleMethod({module: 'updater', method: 'openWindow'})
     }
 
-    return { openUpdaterWindow }
+    const isUpdateAvailable = ref(false)
+
+    onMounted(() => {
+      if(document.querySelector('a.router-link-exact-active.notif') !== null) {
+        isUpdateAvailable.value = true
+      }
+      window.unlighter.once('update-available', () => {
+        isUpdateAvailable.value = true
+      })
+    })
+
+    return { openUpdaterWindow, isUpdateAvailable }
   }
 }
 </script>
