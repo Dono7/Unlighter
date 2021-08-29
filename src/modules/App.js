@@ -76,13 +76,22 @@ export default class UnlighterApp {
 			maximizable: false,
 			closable: true,
 			backgroundColor: "#111",
-			resizable: false,
+			resizable: true,
 			webPreferences: {
 				devTools: true,
 				nodeIntegration: true,
 				preload: path.join(__dirname, "ipcPcc.js"),
 			},
 		})
+	}
+
+	blockPccResize() {
+		if (!this.pcc) return
+		const b = this.pcc.getBounds()
+		b.width = 320
+		b.height = 400
+		this.pcc.setBounds(b)
+		this.pcc.setResizable(false)
 	}
 
 	createMonitors() {
@@ -178,6 +187,7 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("ready-to-show", () => {
+			this.blockPccResize()
 			this.setPccOnTop()
 			this.initialised = true
 			this.initShortcuts()
