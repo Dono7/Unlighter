@@ -48,7 +48,7 @@ export default {
 				if(init) {
 					setTimeout(() => {
 						document.body.classList.remove('not-init')
-					}, 2000)
+					}, 1000)
 				}
 				if(showStr) {
 					showStrFun()
@@ -95,7 +95,7 @@ body.filter
 	overflow: hidden
 	background: rgba(0,0,0,0.0)
 	&.not-init
-		transition: all 2000ms
+		transition: all 1000ms
 
 	#window
 		background: transparent
