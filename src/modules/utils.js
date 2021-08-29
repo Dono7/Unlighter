@@ -11,3 +11,7 @@ export const openFileInWindow = (browserWindow, path = "") => {
 
 	browserWindow.loadURL(url)
 }
+
+export const isServeMode = () => {
+	return process.env.WEBPACK_DEV_SERVER_URL
+}

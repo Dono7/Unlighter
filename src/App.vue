@@ -87,6 +87,17 @@ body
       &.minor
         font-size: 11px
         color: #CCC
+  .notif
+    position: relative
+    &::before
+      content: ''
+      position: absolute
+      top: -2px
+      right: -4px
+      height: 4px
+      width: 4px
+      border-radius: 10px
+      background-color: $primary
 
 h1
   margin-bottom: 15px
