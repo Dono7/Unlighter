@@ -43,7 +43,7 @@ export default {
 	width: 100%
 	height: 65px
 	margin-bottom: 24px
-  letter-spacing: 0.6px
+	letter-spacing: 0.6px
 	a 
 		text-decoration: none
 		color: white
