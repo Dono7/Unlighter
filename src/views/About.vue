@@ -6,7 +6,7 @@
     
     <Button label="Search for update" @click="openUpdaterWindow" :notif="isUpdateAvailable"/>
 
-    <Version />
+    <Version prefix="version "/>
   </main>
 </template>
 

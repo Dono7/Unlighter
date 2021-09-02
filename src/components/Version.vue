@@ -8,13 +8,14 @@ import { onBeforeMount, ref } from 'vue'
 export default {
 	props: {
 		absolute: { type: Boolean, default: false },
+		prefix: { type: String, default: 'v' },
 	},
-	setup() {
+	setup(props) {
 		const version = ref(null)
 
 		onBeforeMount(() => {
 			window.unlighter.once('app-version', (event, v) => {
-				version.value = `v${v}`
+				version.value = `${props.prefix}${v}`
 			})
 			window.unlighter.execAppMethod({method: 'sendVersion'})
 		})
