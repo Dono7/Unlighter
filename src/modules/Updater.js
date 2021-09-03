@@ -32,11 +32,11 @@ export default class Updater {
 		autoUpdater.allowDowngrade = false
 		autoUpdater.logger = logger
 
-		autoUpdater.on("checking-for-update", (e) => this.updateStatus("fetching"))
-		autoUpdater.on("update-available", (e) => this.updateStatus("available"))
-		autoUpdater.on("update-not-available", (e) => this.updateStatus("uptodate"))
-		autoUpdater.on("download-progress", (e) => this.updateStatus("downloading", e.transferred == 0 ? 0 : e.percent))
-		autoUpdater.on("update-downloaded", (e) => this.updateStatus("downloaded"))
+		autoUpdater.on("checking-for-update", (e) => this.updateStatus("fetching", e))
+		autoUpdater.on("update-available", (e) => this.updateStatus("available", e))
+		autoUpdater.on("update-not-available", (e) => this.updateStatus("uptodate", e))
+		autoUpdater.on("download-progress", (e) => this.updateStatus("downloading", e))
+		autoUpdater.on("update-downloaded", (e) => this.updateStatus("downloaded", e))
 		autoUpdater.on("error", (e) => this.updateStatus("error"))
 	}
 
@@ -125,9 +125,14 @@ export default class Updater {
 		}
 	}
 
-	updateStatus(status, percent) {
+	updateStatus(status, event) {
+		let percent
+		if (status == "download-progress" && event) {
+			percent = event.transferred == 0 ? 0 : event.percent
+		}
+
 		if ((status == "available" || status == "downloaded" || status == "download-progress") && this.app.pcc) {
-			this.app.sendToPcc("update-available")
+			this.app.sendToPcc("update-available", event.version)
 		}
 
 		if (this.win === null) return

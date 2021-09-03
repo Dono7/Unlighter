@@ -16,6 +16,10 @@ export default {
 			window.unlighter.once('app-version', (event, v) => {
 				store.commit('app/version', v)
 			})
+			
+			window.unlighter.once('update-available', (event, v) => {
+				store.commit('app/updateAvailable', v)
+			})
 		})
 	}
 }
