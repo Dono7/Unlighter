@@ -1,10 +1,10 @@
-const app = {
+export default {
 	namespaced: true,
 	state: () => ({
-		version: "",
+		version: null,
 	}),
 	mutations: {
-		setVersion(state, version) {
+		version(state, version) {
 			state.version = version
 		},
 	},
