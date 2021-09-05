@@ -85,6 +85,7 @@ export default class UnlighterApp {
 			closable: true,
 			backgroundColor: "#111",
 			resizable: true,
+			show: false,
 			webPreferences: {
 				devTools: true,
 				nodeIntegration: true,
@@ -196,6 +197,7 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("ready-to-show", () => {
+			this.pcc.show()
 			this.blockPccResize()
 			this.setPccOnTop()
 			this.initialised = true
