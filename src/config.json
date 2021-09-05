@@ -13,6 +13,7 @@
 		"minimizeOnBlur": true,
 		"showScreenNumber": true,
 		"enableShortcuts": true,
-		"showInTaskbar": true
+		"showInTaskbar": true,
+		"searchUpdateOnStartup": true
 	}
 }
