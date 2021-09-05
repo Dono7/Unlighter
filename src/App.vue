@@ -1,4 +1,5 @@
 <template>
+  <StoreHandler />
   <div id="window" :class="{ 'purple-bg': route.meta.purpleBg, 'no-bg': route.meta.noBg }">
     <TitleBar v-if="!route.meta.hideNavigation"/>
     <NavBar v-if="!route.meta.hideNavigation"/>
@@ -11,13 +12,14 @@
 </template>
 
 <script>
-import TitleBar from './components/TitleBar.vue'
-import NavBar from './components/NavBar.vue'
+import TitleBar from '@/components/TitleBar.vue'
+import NavBar from '@/components/NavBar.vue'
+import StoreHandler from '@/components/StoreHandler'
 import { ref, onBeforeMount } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 export default {
-  components: { TitleBar, NavBar },
+  components: { TitleBar, NavBar, StoreHandler },
   setup() {
     const direction = ref('slide-left')
     const mode = ref('')

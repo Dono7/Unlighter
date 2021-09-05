@@ -1,33 +1,34 @@
 <template>
 	<div class="navbar">
-		<router-link v-for="tab in tabs" :key="tab" href="#" :to="{ name: tab.to }" :class="{notif: tab.notif}">
+		<router-link v-for="tab in tabs" 
+			:key="tab"
+			href="#"
+			:to="{ name: tab.to }"
+			:class="{notif: tab.label == 'About' && !!updateAvailable}"
+		>
 			{{tab.label}}
 		</router-link>
 	</div>
 </template>
 
 <script>
-import { onBeforeMount, ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
 export default {
 	setup() {
+		const store = useStore()
+
 		const tabs = ref([
 			{label: 'Monitors', to: 'Monitors'},
 			{label: 'Preferences', to: 'Preferences'},
-			{label: 'About', to: 'About', notif: false},
+			{label: 'About', to: 'About'},
 			{label: 'Help', to: 'Help'},
 		])
 
-		onBeforeMount(() => {
-			window.unlighter.once('update-available', () => {
-				tabs.value.forEach(t => {
-					if(t.label == 'About') {
-						t.notif = true
-					}
-				})
-			})
-		})
-		return { tabs }
+		const updateAvailable = computed(() => store.state.app.updateAvailable)
+
+		return { tabs, updateAvailable }
 	}
 }
 </script>
@@ -43,7 +44,7 @@ export default {
 	width: 100%
 	height: 65px
 	margin-bottom: 24px
-  letter-spacing: 0.6px
+	letter-spacing: 0.6px
 	a 
 		text-decoration: none
 		color: white

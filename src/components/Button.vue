@@ -1,11 +1,13 @@
 <template>
-	<button :class="{centered, small, notif}" @click="openUrl">
+	<button :class="{centered, small, notif, size}" @click="openUrl" :style="buttonStyle">
 		{{label}}
 		<i v-if="iconClass" :class="iconClass"></i>	
+		<img v-if="iconPath" :src="require(`@/assets/${iconPath}`)" :style="iconStyle" />
 	</button>
 </template>
 
 <script>
+import { computed } from '@vue/reactivity'
 export default {
 	props: {
 		label: { type: String, required: false, default: ''},
@@ -14,6 +16,9 @@ export default {
 		href: { type: String, required: false},
 		small: { type : Boolean, required: false},
 		notif: { type : Boolean, required: false},
+		size: { type: Number, required: false },
+		iconSize: { type: Number, required: false },
+		iconPath: { type: String, required: false },
 	},
 	setup(props) {
 		const openUrl = () => {
@@ -22,7 +27,21 @@ export default {
 			}
 		}
 
-		return { openUrl }
+		const buttonStyle = computed(() => {
+			return !props.size ? {} : {
+				height: props.size + 'px',
+				width: props.size + 'px',
+			}
+		})
+
+		const iconStyle = computed(() => {
+			return !props.iconSize ? {} : {
+				height: props.iconSize + 'px',
+				width: props.iconSize + 'px',
+			}
+		})
+
+		return { openUrl, buttonStyle, iconStyle }
 	}
 }
 </script>
@@ -37,7 +56,7 @@ button
 	margin: 10px 0
 	width: fit-content
 	cursor: pointer
-	transition: all 0.2s ease-in-out
+	transition: all 0.1s ease-in-out
 	font-weight: 500
 	font-size: 12px
 	background: rgba(255, 255, 255, 0)
@@ -48,6 +67,13 @@ button
 	&.small
 		padding: 4px 20px
 	&:hover
-		background: rgba(255, 255, 255, 0.2)
-		border: 2px solid rgba(255, 255, 255, 0)
+		border: 2px solid rgba(255,255,255,0.5)
+	&:active
+		border: 2px solid rgba(255,255,255,1)
+	&.size
+		padding: 0
+		margin: 0
+		display: flex
+		justify-content: center
+		align-items: center
 </style>

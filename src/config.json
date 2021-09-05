@@ -12,6 +12,7 @@
 		"pccOnTop": true,
 		"minimizeOnBlur": true,
 		"showScreenNumber": true,
-		"enableShortcuts": true
+		"enableShortcuts": true,
+		"showInTaskbar": true
 	}
 }

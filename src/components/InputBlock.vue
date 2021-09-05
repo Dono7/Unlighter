@@ -1,5 +1,5 @@
 <template>
-	<div class="input-block">
+	<div class="input-block" :class="{smallmargin}">
 		<div class="input-label" :style="labelMaxWidth ? `max-width: ${labelMaxWidth}px` : ''">{{label}}</div>
 		<Switch v-if="inputType == 'switch'" :value="value" @valuechange="value = !value; $emit('valuechange', value)"/>
 		<NumberInput v-if="inputType == 'number'" :value="value" :min="min" :max="max" @valuechange="(...value) => $emit('valuechange', ...value)" />
@@ -24,6 +24,7 @@ export default {
 			inputType: {type: String, required: true },
 			text: {type: String, required: false },
 			labelMaxWidth: {type: Number, required: false, default: 145},
+			smallmargin: { type: Boolean, required: false },
 	}
 }
 </script>
@@ -34,6 +35,8 @@ export default {
 	align-items: center
 	justify-content: space-between
 	margin-bottom: 15px
+	&.smallmargin
+		margin-bottom: 10px
 	.input-label
 		font-size: 12px
 

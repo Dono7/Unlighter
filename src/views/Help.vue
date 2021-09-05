@@ -1,13 +1,21 @@
 <template>
 	<main class="help">
+    <h1>Multi-Drag</h1>
+
+    <img src="@/assets/gif/multidrag.gif">
+
+    <p class="description">Clic and drag throught multiple monitors bar to synchronise them.</p>
+
 		<h1>Shortcuts</h1>
 
     <InputBlock
       v-for="p in pref"
       :name="p.key"
 			v-bind="p"
+      smallmargin
       @valuechange="(...args) => this.changePref(p.key, ...args)"
     />
+
 	</main>
 </template>
 
@@ -28,3 +36,8 @@ export default {
 	}
 }
 </script>
+
+<style lang="sass" scoped>
+.description
+  margin: 5px 0 20px
+</style>
