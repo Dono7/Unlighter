@@ -56,7 +56,7 @@ button
 	margin: 10px 0
 	width: fit-content
 	cursor: pointer
-	transition: all 0.2s ease-in-out
+	transition: all 0.1s ease-in-out
 	font-weight: 500
 	font-size: 12px
 	background: rgba(255, 255, 255, 0)
@@ -67,8 +67,9 @@ button
 	&.small
 		padding: 4px 20px
 	&:hover
-		background: rgba(255, 255, 255, 0.2)
-		border: 2px solid rgba(255, 255, 255, 0)
+		border: 2px solid rgba(255,255,255,0.5)
+	&:active
+		border: 2px solid rgba(255,255,255,1)
 	&.size
 		padding: 0
 		margin: 0
