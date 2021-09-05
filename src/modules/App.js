@@ -21,6 +21,7 @@ export default class UnlighterApp {
 		this.config = config
 		this.launched = false
 		this.lastMinimize = 0
+		this.lastRestore = 0
 		this.initialised = false
 		this.shortcuts = null
 		this.devtools = null
@@ -203,11 +204,12 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("blur", () => {
-			if (!this.getPref("pccOnTop")) {
-				this.setPccOnTop(false)
-			}
 			if (this.getPref("minimizeOnBlur") && this.initialised) {
-				this.pcc.minimize()
+				const now = new Date()
+				const limit = 250
+				if (Math.abs(now - this.lastRestore) > limit && Math.abs(now - this.lastMinimize) > limit) {
+					this.pcc.minimize()
+				}
 			}
 		})
 
@@ -225,6 +227,8 @@ export default class UnlighterApp {
 			const now = new Date()
 			if (Math.abs(now - this.lastMinimize) <= 180) {
 				this.pcc.minimize()
+			} else {
+				this.lastRestore = new Date()
 			}
 		})
 
