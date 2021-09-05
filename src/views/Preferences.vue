@@ -28,6 +28,7 @@ export default {
       {key: 'showScreenNumber', label: 'Show screen number', value: true, inputType: 'switch'},
       {key: 'minimizeOnBlur', label: 'Automatically minimize', value: true, inputType: 'switch'},
       {key: 'enableShortcuts', label: 'Enable shortcuts', value: true, inputType: 'switch'},
+      {key: 'showInTaskbar', label: 'Show in taskbar', value: true, inputType: 'switch'},
     ])
 
     onBeforeMount(() => {

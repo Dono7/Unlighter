@@ -3,6 +3,7 @@ import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import MonitorsController from "./MonitorsController"
 import Updater from "./Updater"
 import Devtools from "./Devtools"
+import Tray from "./Tray"
 import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import storage from "electron-json-storage"
@@ -23,6 +24,7 @@ export default class UnlighterApp {
 		this.initialised = false
 		this.shortcuts = null
 		this.devtools = null
+		this.tray = null
 	}
 
 	launch() {
@@ -32,6 +34,7 @@ export default class UnlighterApp {
 			this.launched = true
 		}
 		this.createDevtools()
+		this.createTray()
 		this.loadUserPref()
 		this.createPcc()
 		this.createMonitors()
@@ -58,8 +61,12 @@ export default class UnlighterApp {
 		this.devtools = new Devtools()
 	}
 
+	createTray() {
+		this.tray = new Tray(this)
+	}
+
 	createPcc() {
-		const marginRight = this.config.isDevelopment ? 120 + this.devtools.devtoolsFullWidth() : 120
+		const marginRight = this.config.isDevelopment ? 250 + this.devtools.devtoolsFullWidth() : 250
 		const marginBottom = 100
 		const mainScreen = screen.getPrimaryDisplay().bounds
 		const pccBounds = {
@@ -147,6 +154,7 @@ export default class UnlighterApp {
 	initPccEvents() {
 		this.setPccOnTop()
 		this.pcc.on("close", () => {
+			this.tray.destroy()
 			this.app.exit()
 		})
 	}
@@ -191,6 +199,7 @@ export default class UnlighterApp {
 			this.setPccOnTop()
 			this.initialised = true
 			this.initShortcuts()
+			this.tray.init()
 		})
 
 		this.pcc.on("blur", () => {
@@ -276,7 +285,8 @@ export default class UnlighterApp {
 					this.monitors.showOrHideMonitorIndex(value ? "show" : "hide")
 					break
 
-				default:
+				case "showInTaskbar":
+					this.tray.toggleAppInTaskbar(value)
 					break
 			}
 		})
