@@ -1,5 +1,5 @@
 <template>
-	<p class="version" :class="className">{{version}}</p>
+	<p class="version" :class="className">{{prefix + version}}</p>
 </template>
 
 <script>

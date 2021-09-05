@@ -6,7 +6,7 @@
 
     <SearchForUpdate @click="openUpdaterWindow" />
 
-    <Version prefix="version "/>
+    <Version prefix="Current version "/>
   </main>
 </template>
 
