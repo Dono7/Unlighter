@@ -14,6 +14,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "dayjs": "^1.10.6",
     "electron-json-storage": "^4.5.0",
     "electron-log": "^4.4.1",
     "electron-updater": "^4.3.9",
