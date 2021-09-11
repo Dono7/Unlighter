@@ -2,7 +2,7 @@
 	<div id="search-for-update">
 		<div class="update-text">
 			<h4>{{ label }}</h4>
-			<p class="comment">{{ comment }}</p>
+			<p v-if="lastUpdateCheckString" class="comment">{{ comment }}</p>
 		</div>
 		<Button :size="44" :iconPath="iconPath" :iconSize="14" :notif="updateAvailable"/>
 	</div>
