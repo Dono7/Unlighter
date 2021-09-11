@@ -6,7 +6,6 @@ import Devtools from "./Devtools"
 import Tray from "./Tray"
 import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
-import storage from "electron-json-storage"
 import { openFileInWindow } from "./utils"
 import logger from "electron-log"
 import Shortcuts from "./Shortcuts"
@@ -29,33 +28,20 @@ export default class UnlighterApp {
 	}
 
 	launch() {
-		if (this.launched) {
-			return
-		} else {
-			this.launched = true
-		}
+		if (this.launched) return
+		else this.launched = true
+
 		this.createDevtools()
 		this.createTray()
-		this.loadUserPref()
 		this.createPcc()
 		this.createMonitors()
 		this.createLocalServer()
 		this.createUpdater()
-		this.initDefaultPreferences()
 		// this.installVueExtension()
 		this.initPccEvents()
 		this.initPccMonitorsTab()
 		this.initIPC()
 		this.initEvents()
-	}
-
-	loadUserPref() {
-		this.config = {
-			...this.config,
-			preferences: {
-				...this.getPref(),
-			},
-		}
 	}
 
 	createDevtools() {
@@ -127,20 +113,6 @@ export default class UnlighterApp {
 
 	createUpdater() {
 		this.updater = new Updater(this)
-	}
-
-	initDefaultPreferences() {
-		const userPref = this.getPref()
-		if (userPref !== undefined) {
-			for (const [key, value] of Object.entries(this.config.defaultConfig)) {
-				if (userPref[key] === undefined) {
-					userPref[key] = value
-					storage.set("preferences", userPref)
-				}
-			}
-		} else {
-			storage.set("preferences", this.config.defaultConfig)
-		}
 	}
 
 	async installVueExtension() {
@@ -271,32 +243,6 @@ export default class UnlighterApp {
 		if (this.pcc) {
 			this.pcc.webContents.send(channel, data)
 		}
-	}
-
-	getData(key) {
-		return storage.getSync(key)
-	}
-
-	getPref(key = "") {
-		return key == "" ? this.getData("preferences") : this.getData("preferences")[key]
-	}
-
-	setPref(key, value) {
-		let newPref = this.getPref()
-		if (key !== undefined && value !== undefined) {
-			newPref[key] = value
-		}
-		storage.set("preferences", newPref, (error) => {
-			switch (key) {
-				case "showScreenNumber":
-					this.monitors.showOrHideMonitorIndex(value ? "show" : "hide")
-					break
-
-				case "showInTaskbar":
-					this.tray.toggleAppInTaskbar(value)
-					break
-			}
-		})
 	}
 
 	openUrl(url) {
