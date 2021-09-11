@@ -152,15 +152,16 @@ export default class Updater {
 		this.app.sendToPcc("update-checked", dayjs())
 
 		let percent
-		if (status == "download-progress" && event) {
+		if (status == "downloading" && event) {
 			percent = event.transferred == 0 ? 0 : event.percent
 		}
 
-		if ((status == "available" || status == "downloaded" || status == "download-progress") && this.app.pcc) {
+		if ((status == "available" || status == "downloaded" || status == "downloading") && this.app.pcc) {
 			this.app.sendToPcc("update-available", event.version)
 		}
 
 		if (this.win === null) return
+
 		this.win.webContents.send("update-status", { status, percent })
 	}
 
