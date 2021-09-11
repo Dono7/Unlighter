@@ -12,7 +12,6 @@ export default class UnlighterTray {
 	}
 
 	init() {
-		this.create()
 		const shouldShow = this.app.getPref("showInTaskbar")
 		this.showAppInTaskbar(shouldShow)
 	}

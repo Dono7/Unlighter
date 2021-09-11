@@ -1,8 +1,8 @@
 <template>
-	<div class="container">
+	<div id="search-for-update">
 		<div class="update-text">
 			<h4>{{ label }}</h4>
-			<p>{{ comment }}</p>
+			<p class="comment">{{ comment }}</p>
 		</div>
 		<Button :size="44" :iconPath="iconPath" :iconSize="14" :notif="updateAvailable"/>
 	</div>
@@ -18,9 +18,10 @@ export default {
 	setup() {
 		const store = useStore()
  
+		const lastUpdateCheckString = computed(() => store.state.app.lastUpdateCheckString)
 		const updateAvailable = computed(() => store.state.app.updateAvailable)
 		const label = computed(() => updateAvailable.value ? 'Update available' : 'Search for update')
-		const comment = computed(() => updateAvailable.value ? `upgrade to ${updateAvailable.value}` : '')
+		const comment = computed(() => updateAvailable.value ? `upgrade to ${updateAvailable.value}` : `Last check ${lastUpdateCheckString.value}`)
 		const iconPath = computed(() => updateAvailable.value ? 'svg/download.svg' : 'svg/check-update.svg')
 
 		return { updateAvailable, label, comment, iconPath }
@@ -29,7 +30,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.container
+#search-for-update
 	display: flex
 	justify-content: space-between
 	align-items: center
@@ -37,6 +38,6 @@ export default {
 	h4
 		font-size: 16px
 		font-weight: 500
-	p
+	p.comment
 		font-size: 11px
 </style>

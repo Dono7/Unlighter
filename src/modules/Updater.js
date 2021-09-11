@@ -3,11 +3,14 @@ import { openFileInWindow, isServeMode } from "./utils"
 import { autoUpdater } from "electron-updater"
 import path from "path"
 import logger from "electron-log"
+import relativeTime from "dayjs/plugin/relativeTime"
+import dayjs from "dayjs"
 
 export default class Updater {
 	constructor(unlighterApp) {
 		this.app = unlighterApp
 		this.win = null
+		this.lastCheck = null
 
 		this.pos = {
 			width: 320,
@@ -17,6 +20,7 @@ export default class Updater {
 
 		this.configureAutoUpdater()
 		this.autoCheckOnAppStartup()
+		this.updateLastCheckString()
 
 		this.app.pcc.on("move", () => {
 			if (this.win !== null) {
@@ -43,9 +47,26 @@ export default class Updater {
 	autoCheckOnAppStartup() {
 		this.app.pcc.on("ready-to-show", () => {
 			setTimeout(() => {
-				this.checkForUpdates()
+				if (this.app.getPref("searchUpdateOnStartup")) {
+					this.checkForUpdates()
+					this.updateLastCheckString()
+				}
 			}, 5000)
 		})
+	}
+
+	updateLastCheckString() {
+		dayjs.extend(relativeTime)
+		setInterval(() => {
+			this.sendLastCheckToPcc()
+		}, 60000)
+	}
+
+	sendLastCheckToPcc() {
+		if (this.lastCheck) {
+			const str = dayjs().to(this.lastCheck)
+			this.app.sendToPcc("update-lastcheck", str)
+		}
 	}
 
 	openWindow() {
@@ -91,6 +112,8 @@ export default class Updater {
 			if (forceCheckEvenInServeMode && !isServeMode()) {
 				console.warn("Trying to fetch an update on serve mode. This will trigger an error from electron-updater.")
 			}
+			this.lastCheck = dayjs()
+			this.sendLastCheckToPcc()
 			autoUpdater.checkForUpdates()
 		}
 	}
@@ -126,6 +149,8 @@ export default class Updater {
 	}
 
 	updateStatus(status, event) {
+		this.app.sendToPcc("update-checked", dayjs())
+
 		let percent
 		if (status == "download-progress" && event) {
 			percent = event.transferred == 0 ? 0 : event.percent

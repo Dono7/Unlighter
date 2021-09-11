@@ -20,6 +20,10 @@ export default {
 			window.unlighter.once('update-available', (event, v) => {
 				store.commit('app/updateAvailable', v)
 			})
+			
+			window.unlighter.on('update-lastcheck', (event, lastUpdateCheckString) => {
+				store.commit('app/lastUpdateCheckString', lastUpdateCheckString)
+			})
 		})
 	}
 }

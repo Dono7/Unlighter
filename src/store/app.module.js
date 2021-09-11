@@ -3,6 +3,7 @@ export default {
 	state: () => ({
 		version: null,
 		updateAvailable: null,
+		lastUpdateCheckString: null,
 	}),
 	mutations: {
 		version(state, version) {
@@ -10,6 +11,9 @@ export default {
 		},
 		updateAvailable(state, version) {
 			state.updateAvailable = version
+		},
+		lastUpdateCheckString(state, lastUpdateCheckString) {
+			state.lastUpdateCheckString = lastUpdateCheckString
 		},
 	},
 }

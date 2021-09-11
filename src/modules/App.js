@@ -21,6 +21,7 @@ export default class UnlighterApp {
 		this.config = config
 		this.launched = false
 		this.lastMinimize = 0
+		this.lastRestore = 0
 		this.initialised = false
 		this.shortcuts = null
 		this.devtools = null
@@ -66,14 +67,15 @@ export default class UnlighterApp {
 	}
 
 	createPcc() {
-		const marginRight = this.config.isDevelopment ? 250 + this.devtools.devtoolsFullWidth() : 250
-		const marginBottom = 100
-		const mainScreen = screen.getPrimaryDisplay().bounds
+		const margin = 120
+		const marginRight = this.config.isDevelopment ? this.devtools.devtoolsFullWidth() : 0
+		const mainScreen = screen.getPrimaryDisplay()
+		const factor = mainScreen.scaleFactor
 		const pccBounds = {
 			width: 320,
 			height: 400,
-			x: mainScreen.width - 320 - marginRight,
-			y: mainScreen.height - 400 - marginBottom,
+			x: mainScreen.workArea.width * factor - 320 - margin - marginRight,
+			y: mainScreen.workArea.height * factor - 400 - margin,
 		}
 
 		this.pcc = new BrowserWindow({
@@ -84,6 +86,7 @@ export default class UnlighterApp {
 			closable: true,
 			backgroundColor: "#111",
 			resizable: true,
+			show: false,
 			webPreferences: {
 				devTools: true,
 				nodeIntegration: true,
@@ -195,6 +198,7 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("ready-to-show", () => {
+			this.pcc.show()
 			this.blockPccResize()
 			this.setPccOnTop()
 			this.initialised = true
@@ -203,11 +207,12 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("blur", () => {
-			if (!this.getPref("pccOnTop")) {
-				this.setPccOnTop(false)
-			}
 			if (this.getPref("minimizeOnBlur") && this.initialised) {
-				this.pcc.minimize()
+				const now = new Date()
+				const limit = 250
+				if (Math.abs(now - this.lastRestore) > limit && Math.abs(now - this.lastMinimize) > limit) {
+					this.pcc.minimize()
+				}
 			}
 		})
 
@@ -225,6 +230,8 @@ export default class UnlighterApp {
 			const now = new Date()
 			if (Math.abs(now - this.lastMinimize) <= 180) {
 				this.pcc.minimize()
+			} else {
+				this.lastRestore = new Date()
 			}
 		})
 
