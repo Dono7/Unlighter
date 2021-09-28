@@ -4,6 +4,7 @@ import MonitorsController from "./MonitorsController"
 import Updater from "./Updater"
 import Devtools from "./Devtools"
 import Tray from "./Tray"
+import Preferences from "./Preferences"
 import path from "path"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import { openFileInWindow } from "./utils"
@@ -25,18 +26,19 @@ export default class UnlighterApp {
 		this.shortcuts = null
 		this.devtools = null
 		this.tray = null
+		this.prefs = null
 	}
 
 	launch() {
 		if (this.launched) return
 		else this.launched = true
 
-		this.createDevtools()
-		this.createTray()
 		this.createPcc()
-		this.createMonitors()
-		this.createLocalServer()
-		this.createUpdater()
+		this.onPccCreated()
+	}
+
+	onPccCreated() {
+		this.createDependencies()
 		// this.installVueExtension()
 		this.initPccEvents()
 		this.initPccMonitorsTab()
@@ -44,12 +46,13 @@ export default class UnlighterApp {
 		this.initEvents()
 	}
 
-	createDevtools() {
+	createDependencies() {
 		this.devtools = new Devtools()
-	}
-
-	createTray() {
 		this.tray = new Tray(this)
+		this.updater = new Updater(this)
+		this.prefs = new Preferences(this)
+		this.createMonitors()
+		this.createLocalServer()
 	}
 
 	createPcc() {
@@ -109,10 +112,6 @@ export default class UnlighterApp {
 		if (this.config.isDevelopment) this.devtools.openDetachedDevTools(this.pcc)
 
 		if (this.monitors) this.monitors.loadFilterPage()
-	}
-
-	createUpdater() {
-		this.updater = new Updater(this)
 	}
 
 	async installVueExtension() {
@@ -179,7 +178,7 @@ export default class UnlighterApp {
 		})
 
 		this.pcc.on("blur", () => {
-			if (this.getPref("minimizeOnBlur") && this.initialised) {
+			if (this.prefs.getPref("minimizeOnBlur") && this.initialised) {
 				const now = new Date()
 				const limit = 250
 				if (Math.abs(now - this.lastRestore) > limit && Math.abs(now - this.lastMinimize) > limit) {
@@ -236,7 +235,7 @@ export default class UnlighterApp {
 			this.initPccMonitorsTab()
 		}
 
-		if (code == "preferences-get") this.sendToPcc("preferences-get", this.getPref())
+		if (code == "preferences-get") this.sendToPcc("preferences-get", this.prefs.getPref())
 	}
 
 	sendToPcc(channel, data) {

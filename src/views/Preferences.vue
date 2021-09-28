@@ -20,7 +20,7 @@ export default {
   name: 'Preferences',
   setup(props) {
     const changePref = (key, value) => {
-			window.unlighter.execAppMethod({method: 'setPref', args: [key, value]})
+			window.unlighter.execModuleMethod({module: 'prefs', method: 'setPref', args: [key, value]})
     }
 
     const pref = ref([

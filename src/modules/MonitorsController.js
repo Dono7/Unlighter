@@ -63,7 +63,7 @@ export default class MonitorsController {
 	}
 
 	shortcutTriggered(action, interval) {
-		if (!this.app.getPref("enableShortcuts")) return
+		if (!this.app.prefs.getPref("enableShortcuts")) return
 
 		const monitorsStr = this.monitors.map((m) => ({ str: m.str, time: new Date() }))
 		const newStr = monitorsStr.map((m) => {
@@ -79,7 +79,7 @@ export default class MonitorsController {
 	}
 
 	showOrHideMonitorIndex(action) {
-		if (action !== "show" || (action === "show" && this.app.getPref("showScreenNumber"))) {
+		if (action !== "show" || (action === "show" && this.app.prefs.getPref("showScreenNumber"))) {
 			this.monitors.forEach((monitor) => {
 				monitor.win.webContents.send(`${action}-index`)
 			})
@@ -87,7 +87,7 @@ export default class MonitorsController {
 	}
 
 	updateShowOrHideIndex() {
-		const action = this.app.getPref("showScreenNumber") ? "show" : "hide"
+		const action = this.app.prefs.getPref("showScreenNumber") ? "show" : "hide"
 		this.showOrHideMonitorIndex(action)
 	}
 

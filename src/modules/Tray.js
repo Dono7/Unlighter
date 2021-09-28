@@ -12,7 +12,7 @@ export default class UnlighterTray {
 	}
 
 	init() {
-		const shouldShow = this.app.getPref("showInTaskbar")
+		const shouldShow = this.app.prefs.getPref("showInTaskbar")
 		this.showAppInTaskbar(shouldShow)
 	}
 
@@ -96,9 +96,9 @@ export default class UnlighterTray {
 				type: "separator",
 			},
 			{
-				label: this.app.getPref("showInTaskbar") ? "Hide Unlighter from taskbar" : "Show Unlighter in taskbar",
+				label: this.app.prefs.getPref("showInTaskbar") ? "Hide Unlighter from taskbar" : "Show Unlighter in taskbar",
 				click: () => {
-					this.app.setPref("showInTaskbar", !this.app.getPref("showInTaskbar"))
+					this.app.prefs.setPref("showInTaskbar", !this.app.prefs.getPref("showInTaskbar"))
 				},
 			},
 			{
