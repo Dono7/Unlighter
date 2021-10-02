@@ -1,3 +1,9 @@
+import { shell } from "electron"
+
+export const openUrl = (url) => {
+	shell.openExternal(url)
+}
+
 /* This method should never be called before the local server is created in the UnlighterApp */
 export const openFileInWindow = (browserWindow, path = "") => {
 	if (!browserWindow) {

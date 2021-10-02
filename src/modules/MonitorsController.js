@@ -7,6 +7,8 @@ export default class MonitorsController {
 		this.app = unlighterApp
 		this.monitors = displays.map((display, index) => new Monitor(this.app, display, index))
 		this.lastErrorTime = 0
+
+		this.initWindows()
 	}
 
 	initWindows() {
@@ -43,7 +45,7 @@ export default class MonitorsController {
 	}
 
 	onAllFiltersLoad() {
-		this.app.initPccMonitorsTab(true)
+		this.app.Pcc.initPccMonitorsTab(true)
 	}
 
 	serializeForPcc() {
@@ -63,7 +65,7 @@ export default class MonitorsController {
 	}
 
 	shortcutTriggered(action, interval) {
-		if (!this.app.prefs.getPref("enableShortcuts")) return
+		if (!this.app.Prefs.getPref("enableShortcuts")) return
 
 		const monitorsStr = this.monitors.map((m) => ({ str: m.str, time: new Date() }))
 		const newStr = monitorsStr.map((m) => {
@@ -75,11 +77,11 @@ export default class MonitorsController {
 		})
 
 		this.updateMonitorsStr(newStr, { init: false, showStr: true })
-		this.app.initPccMonitorsTab(false)
+		this.app.Pcc.initPccMonitorsTab(false)
 	}
 
 	showOrHideMonitorIndex(action) {
-		if (action !== "show" || (action === "show" && this.app.prefs.getPref("showScreenNumber"))) {
+		if (action !== "show" || (action === "show" && this.app.Prefs.getPref("showScreenNumber"))) {
 			this.monitors.forEach((monitor) => {
 				monitor.win.webContents.send(`${action}-index`)
 			})
@@ -87,7 +89,7 @@ export default class MonitorsController {
 	}
 
 	updateShowOrHideIndex() {
-		const action = this.app.prefs.getPref("showScreenNumber") ? "show" : "hide"
+		const action = this.app.Prefs.getPref("showScreenNumber") ? "show" : "hide"
 		this.showOrHideMonitorIndex(action)
 	}
 

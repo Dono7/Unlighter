@@ -1,117 +1,51 @@
 import { BrowserWindow, ipcMain, screen, shell } from "electron"
+// import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
+import { openFileInWindow, isServeMode } from "./utils"
+import logger from "electron-log"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
+
+// Modules
 import MonitorsController from "./MonitorsController"
 import Updater from "./Updater"
 import Devtools from "./Devtools"
 import Tray from "./Tray"
 import Preferences from "./Preferences"
-import path from "path"
-// import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
-import { openFileInWindow } from "./utils"
-import logger from "electron-log"
 import Shortcuts from "./Shortcuts"
+import Pcc from "./Pcc"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
-		this.app = electronApp
-		this.monitors = null
-		this.pcc = null
-		this.loaderCanBeClosed = false
-		this.updater = null
+		this.electron = electronApp
 		this.config = config
-		this.launched = false
-		this.lastMinimize = 0
-		this.lastRestore = 0
 		this.initialised = false
-		this.shortcuts = null
-		this.devtools = null
-		this.tray = null
-		this.prefs = null
-	}
 
-	launch() {
-		if (this.launched) return
-		else this.launched = true
+		// Creating App Modules
+		this.Prefs = new Preferences(this)
+		this.Devtools = new Devtools(this)
+		this.Shortcuts = new Shortcuts(this)
+		this.Tray = new Tray(this)
+		this.Pcc = new Pcc(this)
+		this.Monitors = new MonitorsController(this, screen.getAllDisplays())
+		this.updater = new Updater(this)
 
-		this.createPcc()
-		this.onPccCreated()
-	}
-
-	onPccCreated() {
-		this.createDependencies()
+		this.createLocalServer()
 		// this.installVueExtension()
-		this.initPccEvents()
-		this.initPccMonitorsTab()
 		this.initIPC()
 		this.initEvents()
 	}
 
-	createDependencies() {
-		this.devtools = new Devtools()
-		this.tray = new Tray(this)
-		this.updater = new Updater(this)
-		this.prefs = new Preferences(this)
-		this.createMonitors()
-		this.createLocalServer()
-	}
-
-	createPcc() {
-		const margin = 120
-		const marginRight = this.config.isDevelopment ? this.devtools.devtoolsFullWidth() : 0
-		const mainScreen = screen.getPrimaryDisplay()
-		const factor = mainScreen.scaleFactor
-		const pccBounds = {
-			width: 320,
-			height: 400,
-			x: mainScreen.workArea.width * factor - 320 - margin - marginRight,
-			y: mainScreen.workArea.height * factor - 400 - margin,
-		}
-
-		this.pcc = new BrowserWindow({
-			...pccBounds,
-			title: "Unlighter",
-			frame: false,
-			maximizable: false,
-			closable: true,
-			backgroundColor: "#111",
-			resizable: true,
-			show: false,
-			webPreferences: {
-				devTools: true,
-				nodeIntegration: true,
-				preload: path.join(__dirname, "ipcPcc.js"),
-			},
-		})
-	}
-
-	blockPccResize() {
-		if (!this.pcc) return
-		const b = this.pcc.getBounds()
-		b.width = 320
-		b.height = 400
-		this.pcc.setBounds(b)
-		this.pcc.setResizable(false)
-	}
-
-	createMonitors() {
-		this.monitors = new MonitorsController(this, screen.getAllDisplays())
-		this.monitors.initWindows()
-	}
-
 	async createLocalServer() {
-		if (this.pcc === null) {
-			throw new Error("The local server cannot run before PCC is created.")
-		}
-
-		if (!process.env.WEBPACK_DEV_SERVER_URL) {
+		if (!isServeMode()) {
 			createProtocol("app")
 		}
 
-		openFileInWindow(this.pcc, "loading")
+		openFileInWindow(this.Pcc.win, "loading")
 
-		if (this.config.isDevelopment) this.devtools.openDetachedDevTools(this.pcc)
+		if (this.config.isDevelopment) this.Devtools.openDetachedDevTools(this.Pcc.win)
 
-		if (this.monitors) this.monitors.loadFilterPage()
+		if (this.Monitors) this.Monitors.loadFilterPage()
+
+		this.Pcc.initPccMonitorsTab()
 	}
 
 	async installVueExtension() {
@@ -123,19 +57,6 @@ export default class UnlighterApp {
 		// 		console.error("Vue Devtools failed to install:", e.toString())
 		// 	}
 		// }
-	}
-
-	initPccEvents() {
-		this.setPccOnTop()
-		this.pcc.on("close", () => {
-			this.tray.destroy()
-			this.app.exit()
-		})
-	}
-
-	initPccMonitorsTab(sendStrAfterInit = true) {
-		const serializedMonitors = this.monitors.serializeForPcc()
-		if (serializedMonitors.length) this.sendToPcc("init-pcc", { monitors: serializedMonitors, sendStrAfterInit })
 	}
 
 	initIPC() {
@@ -158,108 +79,34 @@ export default class UnlighterApp {
 	}
 
 	initEvents() {
-		this.app.on("window-all-closed", () => {
-			if (process.platform !== "darwin") {
-				this.app.quit()
-			}
-		})
-
-		this.app.on("activate", () => {
-			if (BrowserWindow.getAllWindows().length === 0) createWindow()
-		})
-
-		this.pcc.on("ready-to-show", () => {
-			this.pcc.show()
-			this.blockPccResize()
-			this.setPccOnTop()
+		this.Pcc.onPccReadyToShow(() => {
 			this.initialised = true
-			this.initShortcuts()
-			this.tray.init()
+			this.Shortcuts.bindShortcuts()
+			this.Tray.init()
 		})
 
-		this.pcc.on("blur", () => {
-			if (this.prefs.getPref("minimizeOnBlur") && this.initialised) {
-				const now = new Date()
-				const limit = 250
-				if (Math.abs(now - this.lastRestore) > limit && Math.abs(now - this.lastMinimize) > limit) {
-					this.pcc.minimize()
-				}
+		this.electron.on("window-all-closed", () => {
+			if (process.platform !== "darwin") {
+				this.electron.quit()
 			}
 		})
 
-		this.pcc.on("focus", () => {
-			this.setPccOnTop()
-		})
-
-		this.pcc.on("minimize", () => {
-			this.monitors.showOrHideMonitorIndex("hide")
-			this.lastMinimize = new Date()
-		})
-
-		this.pcc.on("restore", () => {
-			this.monitors.showOrHideMonitorIndex("show")
-			const now = new Date()
-			if (Math.abs(now - this.lastMinimize) <= 180) {
-				this.pcc.minimize()
-			} else {
-				this.lastRestore = new Date()
-			}
+		this.electron.on("activate", () => {
+			if (BrowserWindow.getAllWindows().length === 0) createWindow()
 		})
 
 		if (this.config.isDevelopment) {
 			if (process.platform === "win32") {
 				process.on("message", (data) => {
 					if (data === "graceful-exit") {
-						this.app.quit()
+						this.electron.quit()
 					}
 				})
 			} else {
 				process.on("SIGTERM", () => {
-					this.app.quit()
+					this.electron.quit()
 				})
 			}
 		}
-	}
-
-	initShortcuts() {
-		this.shortcuts = new Shortcuts(this)
-		this.shortcuts.bindShortcuts()
-	}
-
-	setPccOnTop(onTop = true) {
-		onTop ? this.pcc.setAlwaysOnTop(true, "screen") : this.pcc.setAlwaysOnTop(false, "normal")
-	}
-
-	sendToPccFromCode(code) {
-		if (code == "ask-for-init-pcc") {
-			this.initPccMonitorsTab()
-		}
-
-		if (code == "preferences-get") this.sendToPcc("preferences-get", this.prefs.getPref())
-	}
-
-	sendToPcc(channel, data) {
-		if (this.pcc) {
-			this.pcc.webContents.send(channel, data)
-		}
-	}
-
-	openUrl(url) {
-		shell.openExternal(url)
-	}
-
-	pccLog(msg) {
-		if (this.pcc !== null) {
-			this.sendToPcc("log", msg)
-		}
-	}
-
-	log(msg) {
-		console.log(msg)
-	}
-
-	sendVersion() {
-		const version = this.app.getVersion()
-		this.sendToPcc("app-version", version)
 	}
 }

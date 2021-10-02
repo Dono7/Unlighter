@@ -21,12 +21,6 @@ export default class Updater {
 		this.configureAutoUpdater()
 		this.autoCheckOnAppStartup()
 		this.updateLastCheckString()
-
-		this.app.pcc.on("move", () => {
-			if (this.win !== null) {
-				this.win.setBounds(this.getRefreshedBounds())
-			}
-		})
 	}
 
 	configureAutoUpdater() {
@@ -45,9 +39,9 @@ export default class Updater {
 	}
 
 	autoCheckOnAppStartup() {
-		this.app.pcc.on("ready-to-show", () => {
+		this.app.Pcc.onPccReadyToShow(() => {
 			setTimeout(() => {
-				if (this.app.prefs.getPref("searchUpdateOnStartup")) {
+				if (this.app.Prefs.getPref("searchUpdateOnStartup")) {
 					this.checkForUpdates()
 					this.updateLastCheckString()
 				}
@@ -65,12 +59,13 @@ export default class Updater {
 	sendLastCheckToPcc() {
 		if (this.lastCheck) {
 			const str = dayjs().to(this.lastCheck)
-			this.app.sendToPcc("update-lastcheck", str)
+			this.app.Pcc.send("update-lastcheck", str)
 		}
 	}
 
 	openWindow() {
-		if (this.app.pcc === null) return
+		if (this.app.Pcc.win === null) return
+
 		if (this.win !== null) {
 			this.closeWindow()
 			return
@@ -84,7 +79,7 @@ export default class Updater {
 			skipTaskbar: true,
 			title: "Unlighter Updater",
 			frame: false,
-			parent: this.app.pcc,
+			parent: this.app.Pcc.win,
 			focusable: false,
 			webPreferences: {
 				devTools: this.app.config.isDevelopment,
@@ -95,7 +90,7 @@ export default class Updater {
 
 		openFileInWindow(this.win, "updater")
 
-		if (this.app.config.isDevelopment) this.app.devtools.openDetachedDevTools(this.win)
+		if (this.app.config.isDevelopment) this.app.Devtools.openDetachedDevTools(this.win)
 
 		this.win.once("ready-to-show", () => {
 			this.allowAutoUpdateAndCheckForUpdate()
@@ -134,8 +129,14 @@ export default class Updater {
 		}
 	}
 
+	resizeUpdaterWindow() {
+		if (this.win !== null) {
+			this.win.setBounds(this.getRefreshedBounds())
+		}
+	}
+
 	getRefreshedBounds() {
-		const pccBounds = this.app.pcc.getBounds()
+		const pccBounds = this.app.Pcc.win.getBounds()
 
 		return {
 			width: this.pos.width,
@@ -149,15 +150,15 @@ export default class Updater {
 	}
 
 	updateStatus(status, event) {
-		this.app.sendToPcc("update-checked", dayjs())
+		this.app.Pcc.send("update-checked", dayjs())
 
 		let percent
 		if (status == "downloading" && event) {
 			percent = event.transferred == 0 ? 0 : event.percent
 		}
 
-		if ((status == "available" || status == "downloaded" || status == "downloading") && this.app.pcc) {
-			this.app.sendToPcc("update-available", event.version)
+		if ((status == "available" || status == "downloaded" || status == "downloading") && this.app.Pcc) {
+			this.app.Pcc.send("update-available", event.version)
 		}
 
 		if (this.win === null) return

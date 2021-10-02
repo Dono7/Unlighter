@@ -8,5 +8,4 @@ protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: tru
 
 app.on("ready", async () => {
 	const App = new UnlighterApp(app, config)
-	App.launch()
 })

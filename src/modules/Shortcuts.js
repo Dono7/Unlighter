@@ -8,10 +8,10 @@ export default class Shortcuts {
 
 	bindShortcuts() {
 		globalShortcut.register("Alt+F2", () => {
-			this.app.monitors.shortcutTriggered("decrease", 5)
+			this.app.Monitors.shortcutTriggered("decrease", 5)
 		})
 		globalShortcut.register("Alt+F3", () => {
-			this.app.monitors.shortcutTriggered("increase", 5)
+			this.app.Monitors.shortcutTriggered("increase", 5)
 		})
 		this.areShortcutsBinded = true
 	}

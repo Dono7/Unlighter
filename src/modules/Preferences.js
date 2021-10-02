@@ -26,11 +26,11 @@ export default class Preferences {
 
 	onPrefChange(key, value) {
 		if (key === "showScreenNumber") {
-			this.app.monitors.showOrHideMonitorIndex(value ? "show" : "hide")
+			this.app.Monitors.showOrHideMonitorIndex(value ? "show" : "hide")
 		}
 
 		if (key === "showInTaskbar") {
-			this.app.tray.toggleAppInTaskbar(value)
+			this.app.Tray.toggleAppInTaskbar(value)
 		}
 	}
 
