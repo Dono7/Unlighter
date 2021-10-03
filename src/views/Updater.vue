@@ -68,11 +68,11 @@ export default {
 		})
 
 		const quitAndInstall = () => {
-			window.unlighter.execModuleMethod({module: 'updater', method: 'quitAndInstall'})
+			window.unlighter.execModuleMethod({module: 'Updater', method: 'quitAndInstall'})
 		}
 
 		const closeUpdateWindow = () => {
-			window.unlighter.execModuleMethod({module: 'updater', method: 'closeWindow'})
+			window.unlighter.execModuleMethod({module: 'Updater', method: 'closeWindow'})
 		}
 
 		onBeforeMount(() => {

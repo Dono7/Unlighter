@@ -11,7 +11,7 @@ export default {
 		const store = useStore()
 
 		onBeforeMount(() => {
-			window.unlighter.execAppMethod({method: 'sendVersion'})
+			window.unlighter.execModuleMethod({module: 'Pcc', method: 'sendVersion'})
 
 			window.unlighter.once('app-version', (event, v) => {
 				store.commit('app/version', v)

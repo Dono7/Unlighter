@@ -1,4 +1,4 @@
-![GitHub all releases](https://img.shields.io/github/downloads/Dono7/Unlighter/total?color=%23656ecf&logoColor=%23111&label=total%20downloads)
+![GitHub all releases](https://img.shields.io/endpoint?url=https%3A%2F%2Fus-central1-unlighter-api.cloudfunctions.net%2Fapi%2Fshields%2Fdownload_count)
 ![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/Dono7/Unlighter?include_prereleases&label=lastest%20release&color=%23656ecf)
 
 

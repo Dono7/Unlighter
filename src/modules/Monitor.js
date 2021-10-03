@@ -4,7 +4,7 @@ import path from "path"
 export default class Monitor {
 	constructor(unlighterApp, display, index) {
 		this.app = unlighterApp
-		this.str = this.app.getPref("screenStrength")
+		this.str = this.app.Prefs.getPref("screenStrength")
 		this.lastStrUpdate = new Date()
 		this.name = ""
 		this.index = index
@@ -37,10 +37,10 @@ export default class Monitor {
 		} else {
 			this.win.setIgnoreMouseEvents(true)
 			this.win.setAlwaysOnTop(true, "screen")
-			this.app.setPccOnTop()
+			this.app.Pcc.setOnTop()
 		}
 		this.win.once("ready-to-show", () => {
-			this.app.monitors.updateShowOrHideIndex()
+			this.app.Monitors.updateShowOrHideIndex()
 		})
 	}
 
