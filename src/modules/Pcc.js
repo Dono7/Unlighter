@@ -13,19 +13,8 @@ export default class Pcc {
 	}
 
 	createPccWindow() {
-		const margin = 120
-		const marginRight = this.app.config.isDevelopment ? this.app.Devtools.devtoolsFullWidth() : 0
-		const mainScreen = screen.getPrimaryDisplay()
-		const factor = mainScreen.scaleFactor
-		const pccBounds = {
-			width: 320,
-			height: 400,
-			x: mainScreen.workArea.width * factor - 320 - margin - marginRight,
-			y: mainScreen.workArea.height * factor - 400 - margin,
-		}
-
 		this.win = new BrowserWindow({
-			...pccBounds,
+			...this.calculateCornerPccPosition(),
 			title: "Unlighter",
 			frame: false,
 			maximizable: false,
@@ -47,6 +36,25 @@ export default class Pcc {
 			this.initPccEvents()
 			this.runOnPccReady.map((func) => func())
 		})
+	}
+
+	calculateCornerPccPosition() {
+		const margin = 120
+		const marginRight = this.app.config.isDevelopment ? this.app.Devtools.devtoolsFullWidth() : 0
+		const mainScreen = screen.getPrimaryDisplay()
+		return {
+			x: Math.round(mainScreen.workArea.width - 320 - margin - marginRight),
+			y: Math.round(mainScreen.workArea.height - 400 - margin),
+			width: 320,
+			height: 400,
+		}
+	}
+
+	movePccToCorner() {
+		if (this.win) {
+			const bounds = this.calculateCornerPccPosition()
+			this.win.setBounds(bounds)
+		}
 	}
 
 	initPccMonitorsTab(sendStrAfterInit = true) {

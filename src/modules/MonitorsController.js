@@ -110,6 +110,7 @@ export default class MonitorsController {
 			this.monitors = displays.map((display, index) => new Monitor(this.app, display, index))
 			this.initWindows()
 			this.loadFilterPage()
+			this.app.Pcc.movePccToCorner()
 		}, 2000)
 	}
 }
