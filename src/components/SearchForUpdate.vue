@@ -24,7 +24,7 @@ export default {
 		const comment = computed(() => updateAvailable.value ? `upgrade to ${updateAvailable.value}` : `Last check ${lastUpdateCheckString.value}`)
 		const iconPath = computed(() => updateAvailable.value ? 'svg/download.svg' : 'svg/check-update.svg')
 
-		return { updateAvailable, label, comment, iconPath }
+		return { lastUpdateCheckString, updateAvailable, label, comment, iconPath }
 	}
 }
 </script>
