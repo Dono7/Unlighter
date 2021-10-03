@@ -20,7 +20,7 @@ export default {
   name: 'Preferences',
   setup(props) {
     const changePref = (key, value) => {
-			window.unlighter.execModuleMethod({module: 'prefs', method: 'setPref', args: [key, value]})
+			window.unlighter.execModuleMethod({module: 'Prefs', method: 'setPref', args: [key, value]})
     }
 
     const pref = ref([
@@ -41,7 +41,7 @@ export default {
         })
       })
       
-		  window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['preferences-get']})
+		  window.unlighter.execModuleMethod({module: 'Pcc', method: 'sendToPccFromCode', args: ['preferences-get']})
     })
 
     onUnmounted(() => {

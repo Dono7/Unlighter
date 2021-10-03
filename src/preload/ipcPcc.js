@@ -1,9 +1,6 @@
 const { ipcRenderer, contextBridge } = require("electron")
 
 contextBridge.exposeInMainWorld("unlighter", {
-	execAppMethod(data) {
-		ipcRenderer.send("exec-app-method", data)
-	},
 	execModuleMethod(data) {
 		ipcRenderer.send("exec-module-method", data)
 	},
@@ -17,7 +14,7 @@ contextBridge.exposeInMainWorld("unlighter", {
 		ipcRenderer.removeAllListeners(channel)
 	},
 	openUrl(url) {
-		ipcRenderer.send("exec-app-method", { method: "openUrl", args: [url] })
+		ipcRenderer.send("open-url", url)
 	},
 })
 

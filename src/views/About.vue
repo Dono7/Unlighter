@@ -21,7 +21,7 @@ export default {
   components: { Link, Button, Version, SearchForUpdate },
   setup() {
     const openUpdaterWindow = () => {
-			window.unlighter.execModuleMethod({module: 'updater', method: 'openWindow'})
+			window.unlighter.execModuleMethod({module: 'Updater', method: 'openWindow'})
     }
 
     const isUpdateAvailable = ref(false)

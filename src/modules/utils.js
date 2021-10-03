@@ -1,6 +1,6 @@
 import { shell } from "electron"
 
-export const openUrl = (url) => {
+export const openUrlInExternalBrowser = (url) => {
 	shell.openExternal(url)
 }
 

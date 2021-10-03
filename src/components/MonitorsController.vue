@@ -86,11 +86,8 @@ export default {
 		},
 		sendStrToMonitors(init = false) {
 			if(this.initialised) {
-				window.unlighter.execModuleMethod({module: "monitors", method: 'updateMonitorsStr', args: [this.monitorsStr, {init}]})
+				window.unlighter.execModuleMethod({module: "Monitors", method: 'updateMonitorsStr', args: [this.monitorsStr, {init}]})
 			}
-		},
-		close() {
-			window.unlighter.close()
 		},
 		round(number, precision) {
 			const factor = Math.pow(10, precision)
@@ -126,7 +123,7 @@ export default {
 			this.sendStrToMonitors()
 		})
 
-		window.unlighter.execAppMethod({method: 'sendToPccFromCode', args: ['ask-for-init-pcc']})
+		window.unlighter.execModuleMethod({module: 'Pcc', method: 'sendToPccFromCode', args: ['ask-for-init-pcc']})
 		
 		window.addEventListener("mouseup", this.mup)
 		

@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, screen, shell } from "electron"
+import { BrowserWindow, screen } from "electron"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import { openFileInWindow, isServeMode } from "./utils"
 import logger from "electron-log"
@@ -12,6 +12,7 @@ import Tray from "./Tray"
 import Preferences from "./Preferences"
 import Shortcuts from "./Shortcuts"
 import Pcc from "./Pcc"
+import IPC from "./IPC"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
@@ -26,11 +27,11 @@ export default class UnlighterApp {
 		this.Tray = new Tray(this)
 		this.Pcc = new Pcc(this)
 		this.Monitors = new MonitorsController(this, screen.getAllDisplays())
-		this.updater = new Updater(this)
+		this.Updater = new Updater(this)
+		this.IPC = new IPC(this)
 
 		this.createLocalServer()
 		// this.installVueExtension()
-		this.initIPC()
 		this.initEvents()
 	}
 
@@ -57,25 +58,6 @@ export default class UnlighterApp {
 		// 		console.error("Vue Devtools failed to install:", e.toString())
 		// 	}
 		// }
-	}
-
-	initIPC() {
-		ipcMain.on("exec-module-method", (event, data) => {
-			const { module, method, args = [] } = data
-			if (this[module][method]) {
-				this[module][method](...args)
-			} else {
-				logger.log(`exec-module-method: Method ${method} not found in the module ${module}. Args: ${args}`)
-			}
-		})
-		ipcMain.on("exec-app-method", (event, data) => {
-			const { method, args = [] } = data
-			if (this[method]) {
-				this[method](...args)
-			} else {
-				logger.log(`exec-app-method: Method ${method} not found in the app. Args: ${args}`)
-			}
-		})
 	}
 
 	initEvents() {

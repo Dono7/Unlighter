@@ -109,12 +109,12 @@ export default class Pcc {
 	}
 
 	initPccEvents() {
-		this.win.on("close", this.onClose)
-		this.win.on("blur", this.onBlur)
-		this.win.on("focus", this.onFocus)
-		this.win.on("minimize", this.onMinimize)
-		this.win.on("restore", this.onRestore)
-		this.win.on("move", this.onMove)
+		this.win.on("close", () => this.onClose())
+		this.win.on("blur", () => this.onBlur())
+		this.win.on("focus", () => this.onFocus())
+		this.win.on("minimize", () => this.onMinimize())
+		this.win.on("restore", () => this.onRestore())
+		this.win.on("move", () => this.onMove())
 	}
 
 	onClose() {
