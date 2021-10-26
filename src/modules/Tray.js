@@ -96,9 +96,14 @@ export default class UnlighterTray {
 				type: "separator",
 			},
 			{
-				label: this.app.Prefs.getPref("showInTaskbar") ? "Hide Unlighter from taskbar" : "Show Unlighter in taskbar",
+				label: this.app.Prefs.getPref("showInTaskbar")
+					? "Hide Unlighter from taskbar"
+					: "Show Unlighter in taskbar",
 				click: () => {
-					this.app.Prefs.setPref("showInTaskbar", !this.app.Prefs.getPref("showInTaskbar"))
+					this.app.Prefs.setPref(
+						"showInTaskbar",
+						!this.app.Prefs.getPref("showInTaskbar"),
+					)
 				},
 			},
 			{

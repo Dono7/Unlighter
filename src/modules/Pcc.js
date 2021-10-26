@@ -40,7 +40,9 @@ export default class Pcc {
 
 	calculateCornerPccPosition() {
 		const margin = 120
-		const marginRight = this.app.config.isDevelopment ? this.app.Devtools.devtoolsFullWidth() : 0
+		const marginRight = this.app.config.isDevelopment
+			? this.app.Devtools.devtoolsFullWidth()
+			: 0
 		const mainScreen = screen.getPrimaryDisplay()
 		return {
 			x: Math.round(mainScreen.workArea.width - 320 - margin - marginRight),
@@ -59,7 +61,8 @@ export default class Pcc {
 
 	initPccMonitorsTab(sendStrAfterInit = true) {
 		const serializedMonitors = this.app.Monitors.serializeForPcc()
-		if (serializedMonitors.length) this.send("init-pcc", { monitors: serializedMonitors, sendStrAfterInit })
+		if (serializedMonitors.length)
+			this.send("init-pcc", { monitors: serializedMonitors, sendStrAfterInit })
 	}
 
 	onPccReadyToShow(callback) {
@@ -76,7 +79,9 @@ export default class Pcc {
 	}
 
 	setOnTop(onTop = true) {
-		onTop ? this.win.setAlwaysOnTop(true, "screen") : this.win.setAlwaysOnTop(false, "normal")
+		onTop
+			? this.win.setAlwaysOnTop(true, "screen")
+			: this.win.setAlwaysOnTop(false, "normal")
 	}
 
 	send(channel, data) {
@@ -134,7 +139,10 @@ export default class Pcc {
 		if (this.app.Prefs.getPref("minimizeOnBlur") && this.app.initialised) {
 			const now = new Date()
 			const limit = 250
-			if (Math.abs(now - this.lastRestore) > limit && Math.abs(now - this.lastMinimize) > limit) {
+			if (
+				Math.abs(now - this.lastRestore) > limit &&
+				Math.abs(now - this.lastMinimize) > limit
+			) {
 				this.win.minimize()
 			}
 		}

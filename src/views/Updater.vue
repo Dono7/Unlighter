@@ -1,66 +1,71 @@
 <template>
 	<div class="content">
 		<div v-if="states[status].showBar" class="progressbar-container">
-			<div class="progressbar" :style="{width: percent + '%'}"></div>
+			<div class="progressbar" :style="{ width: percent + '%' }"></div>
 		</div>
 
-		<p>{{states[status].text}}</p>
+		<p>{{ states[status].text }}</p>
 
 		<div class="infos">
-			<Button v-if="states[status].showDownloadBtn" iconClass="fas fa-download" small @click="quitAndInstall"/>
+			<Button
+				v-if="states[status].showDownloadBtn"
+				iconClass="fas fa-download"
+				small
+				@click="quitAndInstall"
+			/>
 			<i v-if="states[status].showSpinner" class="fas fa-spinner fa-pulse"></i>
-			<p v-if="states[status].showBar" class="percent">{{Math.round(percent)}}%</p>
-			<div class="close"  @click="closeUpdateWindow">
-				<img src="@/assets/svg/close.svg">
+			<p v-if="states[status].showBar" class="percent">{{ Math.round(percent) }}%</p>
+			<div class="close" @click="closeUpdateWindow">
+				<img src="@/assets/svg/close.svg" />
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { computed, onBeforeMount, onUnmounted, ref } from 'vue'
-import Button from '@/components/Button'
+import { computed, onBeforeMount, onUnmounted, ref } from "vue"
+import Button from "@/components/Button"
 
 export default {
 	components: { Button },
 	setup() {
 		const percent = ref(0)
-		const text = ref('Looking for an update')
-		const iconClass = ref('icon')
-		const status = ref('fetching')
+		const text = ref("Looking for an update")
+		const iconClass = ref("icon")
+		const status = ref("fetching")
 		const states = ref({
 			fetching: {
-				text: 'Looking for an update...',
+				text: "Looking for an update...",
 				showSpinner: true,
 				showBar: false,
 				showDownloadBtn: false,
 			},
 			available: {
-				text: 'New version found....',
+				text: "New version found....",
 				showSpinner: true,
 				showBar: false,
 				showDownloadBtn: false,
 			},
 			downloading: {
-				text: 'Downloading the update...',
+				text: "Downloading the update...",
 				showSpinner: false,
 				showBar: true,
 				showDownloadBtn: false,
 			},
 			downloaded: {
-				text: 'Ready to be installed.',
+				text: "Ready to be installed.",
 				showSpinner: false,
 				showBar: false,
 				showDownloadBtn: true,
 			},
 			uptodate: {
-				text: 'Already up to date.',
+				text: "Already up to date.",
 				showSpinner: false,
 				showBar: false,
 				showDownloadBtn: false,
 			},
 			error: {
-				text: 'Unable to find an update.',
+				text: "Unable to find an update.",
 				showSpinner: false,
 				showBar: false,
 				showDownloadBtn: false,
@@ -68,26 +73,26 @@ export default {
 		})
 
 		const quitAndInstall = () => {
-			window.unlighter.execModuleMethod({module: 'Updater', method: 'quitAndInstall'})
+			window.unlighter.execModuleMethod({ module: "Updater", method: "quitAndInstall" })
 		}
 
 		const closeUpdateWindow = () => {
-			window.unlighter.execModuleMethod({module: 'Updater', method: 'closeWindow'})
+			window.unlighter.execModuleMethod({ module: "Updater", method: "closeWindow" })
 		}
 
 		onBeforeMount(() => {
-			window.unlighter.on('update-status', (e, updateData) => {
+			window.unlighter.on("update-status", (e, updateData) => {
 				percent.value = updateData.percent
 				status.value = updateData.status
 			})
 		})
 
 		onUnmounted(() => {
-			window.unlighter.removeListener('update-status')
+			window.unlighter.removeListener("update-status")
 		})
 
 		return { percent, text, iconClass, states, status, closeUpdateWindow, quitAndInstall }
-	}
+	},
 }
 </script>
 
@@ -141,6 +146,4 @@ export default {
 			bottom: 0
 			width: 5%
 			background-color: $secondary
-
-
 </style>

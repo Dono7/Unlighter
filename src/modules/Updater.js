@@ -105,7 +105,9 @@ export default class Updater {
 	checkForUpdates(forceCheckEvenInServeMode = false) {
 		if (forceCheckEvenInServeMode || !isServeMode()) {
 			if (forceCheckEvenInServeMode && !isServeMode()) {
-				console.warn("Trying to fetch an update on serve mode. This will trigger an error from electron-updater.")
+				console.warn(
+					"Trying to fetch an update on serve mode. This will trigger an error from electron-updater.",
+				)
 			}
 			this.lastCheck = dayjs()
 			this.sendLastCheckToPcc()
@@ -157,7 +159,10 @@ export default class Updater {
 			percent = event.transferred == 0 ? 0 : event.percent
 		}
 
-		if ((status == "available" || status == "downloaded" || status == "downloading") && this.app.Pcc) {
+		if (
+			(status == "available" || status == "downloaded" || status == "downloading") &&
+			this.app.Pcc
+		) {
 			this.app.Pcc.send("update-available", event.version)
 		}
 

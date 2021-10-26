@@ -1,26 +1,26 @@
 <template>
 	<div class="monitors-controller" :style="{ padding: `0 ${win.deadMargin}px` }">
-		<div 
+		<div
 			v-for="(screen, index) in monitors"
 			:key="index"
 			class="monitor-container"
-			:class="{active: screen.isActive}"
+			:class="{ active: screen.isActive }"
 			@click="updateScreen(screen)"
 			@mousedown="mdown(screen)"
 			@mouseenter="menter(screen)"
 		>
-
 			<div class="progressbar" v-bind:style="{ width: screen.str + '%' }"></div>
-			<div class="monitor-name">{{ screen.name ? `${screen.name}` : `Monitor ${index + 1}` }}</div>
-			<div class="pourcentage">{{Math.round(screen.str)}}</div>
+			<div class="monitor-name">
+				{{ screen.name ? `${screen.name}` : `Monitor ${index + 1}` }}
+			</div>
+			<div class="pourcentage">{{ Math.round(screen.str) }}</div>
 		</div>
-		
 	</div>
 </template>
 
 <script>
 export default {
-  name: 'MonitorsController',
+	name: "MonitorsController",
 	data() {
 		return {
 			mouse: {
@@ -33,13 +33,13 @@ export default {
 				deadMargin: 0,
 			},
 			monitors: [
-				{ id: 1, index: 0, str: 0, barPosition: 0, name: 'Loading...', isActive: false },
+				{ id: 1, index: 0, str: 0, barPosition: 0, name: "Loading...", isActive: false },
 			],
-			initialised: false
+			initialised: false,
 		}
 	},
 	methods: {
-		init({monitors, sendStrAfterInit}) {
+		init({ monitors, sendStrAfterInit }) {
 			this.monitors = monitors.map((monitor, index) => {
 				return {
 					id: monitor.id,
@@ -51,11 +51,11 @@ export default {
 				}
 			})
 			this.initialised = true
-			if(sendStrAfterInit) this.sendStrToMonitors(true)
+			if (sendStrAfterInit) this.sendStrToMonitors(true)
 		},
 		barPositionFromStr(str) {
 			const interval = this.win.w - 2 * this.win.deadMargin
-			return this.round(interval / 100 * str + this.win.deadMargin, 1)
+			return this.round((interval / 100) * str + this.win.deadMargin, 1)
 		},
 		mdown(screen) {
 			screen.isActive = true
@@ -80,25 +80,34 @@ export default {
 			if (screen.isActive) {
 				const relative = this.xRelative
 				screen.str = relative
-				screen.barPosition = relative < 1 ? 0 : relative > 99 ? this.win.w - this.win.deadMargin : this.mouse.x
+				screen.barPosition =
+					relative < 1
+						? 0
+						: relative > 99
+						? this.win.w - this.win.deadMargin
+						: this.mouse.x
 				this.sendStrToMonitors()
 			}
 		},
 		sendStrToMonitors(init = false) {
-			if(this.initialised) {
-				window.unlighter.execModuleMethod({module: "Monitors", method: 'updateMonitorsStr', args: [this.monitorsStr, {init}]})
+			if (this.initialised) {
+				window.unlighter.execModuleMethod({
+					module: "Monitors",
+					method: "updateMonitorsStr",
+					args: [this.monitorsStr, { init }],
+				})
 			}
 		},
 		round(number, precision) {
 			const factor = Math.pow(10, precision)
 			return Math.round(number * factor) / factor
-		}
+		},
 	},
 	computed: {
 		xRelative() {
 			const intervalLength = this.win.w - 2 * this.win.deadMargin
 			const factor = intervalLength / 100
-			const x = this.round( ( this.mouse.x - this.win.deadMargin ) / factor ,2)
+			const x = this.round((this.mouse.x - this.win.deadMargin) / factor, 2)
 			return x < 1 ? 0 : x > 99 ? 100 : x
 		},
 		isSomeoneActive() {
@@ -109,32 +118,36 @@ export default {
 		},
 		monitorsStr() {
 			const now = new Date()
-			return this.monitors.map(monitor => ({
+			return this.monitors.map((monitor) => ({
 				str: monitor.str,
-				time: now
+				time: now,
 			}))
-		}
+		},
 	},
 	mounted() {
-		window.unlighter.on('init-pcc', (event, data) => {
+		window.unlighter.on("init-pcc", (event, data) => {
 			this.init(data)
 		})
-		window.unlighter.on('ask-for-monitors-str', () => {
+		window.unlighter.on("ask-for-monitors-str", () => {
 			this.sendStrToMonitors()
 		})
 
-		window.unlighter.execModuleMethod({module: 'Pcc', method: 'sendToPccFromCode', args: ['ask-for-init-pcc']})
-		
+		window.unlighter.execModuleMethod({
+			module: "Pcc",
+			method: "sendToPccFromCode",
+			args: ["ask-for-init-pcc"],
+		})
+
 		window.addEventListener("mouseup", this.mup)
-		
+
 		window.addEventListener("mousemove", this.mmove)
 	},
 	unmounted() {
-		window.unlighter.removeListener('init-pcc')
-		window.unlighter.removeListener('ask-for-monitors-str')
+		window.unlighter.removeListener("init-pcc")
+		window.unlighter.removeListener("ask-for-monitors-str")
 		window.removeEventListener("mouseup", this.mup)
 		window.removeEventListener("mousemove", this.mmove)
-	}
+	},
 }
 </script>
 
@@ -185,5 +198,4 @@ $border-size: 2px
 			width: 100%
 			height: $border-size
 			background: rgba(255,255,255,0.1)
-
 </style>

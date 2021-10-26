@@ -1,24 +1,27 @@
 <template>
 	<div class="title-bar">
-		<div class="title"><img id="icon" src="@/assets/svg/icon.svg" alt="Unlighter logo icno">Unlighter</div>
+		<div class="title">
+			<img id="icon" src="@/assets/svg/icon.svg" alt="Unlighter logo icno" />Unlighter
+		</div>
 		<div class="actions">
-			<div class="minimize" @click="minimize"><img src="@/assets/svg/minimize.svg"></div>
-			<div class="close" @click="quit"><img src="@/assets/svg/close.svg"></div>
+			<div class="minimize" @click="minimize">
+				<img src="@/assets/svg/minimize.svg" />
+			</div>
+			<div class="close" @click="quit"><img src="@/assets/svg/close.svg" /></div>
 		</div>
 	</div>
-	
 </template>
 
 <script>
 export default {
 	methods: {
 		quit() {
-			window.unlighter.execModuleMethod({module: 'electron', method: 'exit'})
+			window.unlighter.execModuleMethod({ module: "electron", method: "exit" })
 		},
 		minimize() {
-			window.unlighter.execModuleMethod({module: 'Pcc', method: 'minimize'})
-		}
-	}
+			window.unlighter.execModuleMethod({ module: "Pcc", method: "minimize" })
+		},
+	},
 }
 </script>
 
@@ -46,7 +49,7 @@ $btnHeight: 40px
 		-webkit-app-region: no-drag
 		display: flex
 		margin-right: ($height - $btnHeight) / 2
-		> div 
+		> div
 			position: relative
 			display: flex
 			justify-content: center
@@ -59,6 +62,4 @@ $btnHeight: 40px
 				background-color: rgba(255,255,255,0.10)
 			&.close:hover
 				background-color: rgba(255,100,100,0.20)
-
-
 </style>

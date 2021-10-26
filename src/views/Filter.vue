@@ -1,28 +1,28 @@
 <template>
 	<div id="filter">
-		<h4 v-show="showStrInfos">Unlighter: {{strInfo}}</h4>
-		<h1 v-show="monitorIndex && showIndex" :style="{color}">
-			{{monitorIndex}}
+		<h4 v-show="showStrInfos">Unlighter: {{ strInfo }}</h4>
+		<h1 v-show="monitorIndex && showIndex" :style="{ color }">
+			{{ monitorIndex }}
 		</h1>
 	</div>
 </template>
 
 <script>
-import { onBeforeMount, onUnmounted } from '@vue/runtime-core'
-import { ref } from 'vue'
+import { onBeforeMount, onUnmounted } from "@vue/runtime-core"
+import { ref } from "vue"
 
 export default {
 	setup() {
 		const monitorIndex = ref(null)
 		const showIndex = ref(false)
-		const color = ref('rgba(250,250,250,0.9)')
+		const color = ref("rgba(250,250,250,0.9)")
 		const strInfo = ref(0)
 		const showStrInfos = ref(false)
 		const showStrTimeout = ref(null)
 
 		const updateStr = (str) => {
 			const textColor = Math.max(0.3, Math.min(1 - str / 100, 1))
-			document.body.style.background = `rgba(0,0,0,${str / 100 * 0.95})`
+			document.body.style.background = `rgba(0,0,0,${(str / 100) * 0.95})`
 			color.value = `rgba(250,250,250,${textColor})`
 			strInfo.value = str
 		}
@@ -34,52 +34,52 @@ export default {
 
 		const showStrFun = () => {
 			showStrInfos.value = true
-			if(showStrTimeout.value) {
+			if (showStrTimeout.value) {
 				clearTimeout(showStrTimeout.value)
 			}
 			showStrTimeout.value = setTimeout(hideStr, 1200)
 		}
 
 		onBeforeMount(() => {
-			document.body.classList.add('filter')
-			document.body.classList.add('not-init')
+			document.body.classList.add("filter")
+			document.body.classList.add("not-init")
 
-			window.unlighter.on('update-str', (e, {str, init, showStr}) => {
-				if(init) {
+			window.unlighter.on("update-str", (e, { str, init, showStr }) => {
+				if (init) {
 					setTimeout(() => {
-						document.body.classList.remove('not-init')
+						document.body.classList.remove("not-init")
 					}, 1000)
 				}
-				if(showStr) {
+				if (showStr) {
 					showStrFun()
 				} else {
-					 hideStr()
-				 }
+					hideStr()
+				}
 				updateStr(str)
 			})
 
-			window.unlighter.on('update-index', (e, index) => {
+			window.unlighter.on("update-index", (e, index) => {
 				monitorIndex.value = index + 1
 			})
 
-			window.unlighter.on('show-index', () => {
+			window.unlighter.on("show-index", () => {
 				showIndex.value = true
 			})
 
-			window.unlighter.on('hide-index', () => {
+			window.unlighter.on("hide-index", () => {
 				showIndex.value = false
 			})
 		})
 
 		onUnmounted(() => {
-      window.unlighter.removeListener('update-str')
-      window.unlighter.removeListener('update-index')
-      window.unlighter.removeListener('show-index')
-      window.unlighter.removeListener('hide-index')
+			window.unlighter.removeListener("update-str")
+			window.unlighter.removeListener("update-index")
+			window.unlighter.removeListener("show-index")
+			window.unlighter.removeListener("hide-index")
 		})
 
 		return { monitorIndex, showIndex, color, strInfo, showStrInfos }
-	}
+	},
 }
 </script>
 

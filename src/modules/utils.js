@@ -7,7 +7,9 @@ export const openUrlInExternalBrowser = (url) => {
 /* This method should never be called before the local server is created in the UnlighterApp */
 export const openFileInWindow = (browserWindow, path = "") => {
 	if (!browserWindow) {
-		console.error(`Cannot open the path ${path} in the window because the window does not exist.`)
+		console.error(
+			`Cannot open the path ${path} in the window because the window does not exist.`,
+		)
 		return
 	}
 
