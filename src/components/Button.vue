@@ -1,48 +1,52 @@
 <template>
-	<button :class="{centered, small, notif, size}" @click="openUrl" :style="buttonStyle">
-		{{label}}
-		<i v-if="iconClass" :class="iconClass"></i>	
+	<button :class="{ centered, small, notif, size }" @click="openUrl" :style="buttonStyle">
+		{{ label }}
+		<i v-if="iconClass" :class="iconClass"></i>
 		<img v-if="iconPath" :src="require(`@/assets/${iconPath}`)" :style="iconStyle" />
 	</button>
 </template>
 
 <script>
-import { computed } from '@vue/reactivity'
+import { computed } from "vue"
 export default {
 	props: {
-		label: { type: String, required: false, default: ''},
-		iconClass: { type: String, required: false, default: ''},
-		centered: { type: Boolean, required: false, default: false},
-		href: { type: String, required: false},
-		small: { type : Boolean, required: false},
-		notif: { type : Boolean, required: false},
+		label: { type: String, required: false, default: "" },
+		iconClass: { type: String, required: false, default: "" },
+		centered: { type: Boolean, required: false, default: false },
+		href: { type: String, required: false },
+		small: { type: Boolean, required: false },
+		notif: { type: Boolean, required: false },
 		size: { type: Number, required: false },
 		iconSize: { type: Number, required: false },
 		iconPath: { type: String, required: false },
 	},
 	setup(props) {
 		const openUrl = () => {
-			if(props.href) {
+			if (props.href) {
 				window.unlighter.openUrl(props.href)
 			}
 		}
 
 		const buttonStyle = computed(() => {
-			return !props.size ? {} : {
-				height: props.size + 'px',
-				width: props.size + 'px',
-			}
+			return !props.size
+				? {}
+				: {
+						height: props.size + "px",
+						width: props.size + "px",
+				  }
 		})
 
 		const iconStyle = computed(() => {
-			return !props.iconSize ? {} : {
-				height: props.iconSize + 'px',
-				width: props.iconSize + 'px',
-			}
+			return !props.iconSize
+				? {}
+				: {
+						height: props.iconSize + "px",
+						width: props.iconSize + "px",
+				  }
 		})
 
 		return { openUrl, buttonStyle, iconStyle }
-	}
+	},
 }
 </script>
 

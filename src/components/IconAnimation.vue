@@ -1,7 +1,7 @@
 <template>
 	<div class="logo-animation-container" ref="container">
 		<div class="icon">
-			<img src="@/assets/svg/icon-rays.svg" class="rays">
+			<img src="@/assets/svg/icon-rays.svg" class="rays" />
 			<div class="sun-mask">
 				<div class="sun"></div>
 			</div>
@@ -11,25 +11,25 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref } from "vue"
 export default {
-	emits: ['animation-end'],
+	emits: ["animation-end"],
 	setup(props, { emit }) {
-			const container = ref()
-			const delayBeforeClose = 1000
+		const container = ref()
+		const delayBeforeClose = 1000
 
 		onMounted(() => {
-			container.value.addEventListener('animationend', (event) => {
-				if(event.target == container.value) {
+			container.value.addEventListener("animationend", (event) => {
+				if (event.target == container.value) {
 					setTimeout(() => {
-							emit('animation-end')
-						}, delayBeforeClose)
-					}
-				})
+						emit("animation-end")
+					}, delayBeforeClose)
+				}
+			})
 		})
 
 		return { container }
-	}
+	},
 }
 </script>
 
@@ -127,5 +127,4 @@ $anim-param3: 0.35s $anim-fun1 ($anim-delay + 0.9s + 0.2s) 1 forwards
 		top: 16px
 	100%
 		top: 0px
-
 </style>

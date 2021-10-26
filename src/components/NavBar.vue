@@ -1,35 +1,36 @@
 <template>
 	<div class="navbar">
-		<router-link v-for="tab in tabs" 
+		<router-link
+			v-for="tab in tabs"
 			:key="tab"
 			href="#"
 			:to="{ name: tab.to }"
-			:class="{notif: tab.label == 'About' && !!updateAvailable}"
+			:class="{ notif: tab.label == 'About' && !!updateAvailable }"
 		>
-			{{tab.label}}
+			{{ tab.label }}
 		</router-link>
 	</div>
 </template>
 
 <script>
-import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { ref, computed } from "vue"
+import { useStore } from "vuex"
 
 export default {
 	setup() {
 		const store = useStore()
 
 		const tabs = ref([
-			{label: 'Monitors', to: 'Monitors'},
-			{label: 'Preferences', to: 'Preferences'},
-			{label: 'About', to: 'About'},
-			{label: 'Help', to: 'Help'},
+			{ label: "Monitors", to: "Monitors" },
+			{ label: "Preferences", to: "Preferences" },
+			{ label: "About", to: "About" },
+			{ label: "Help", to: "Help" },
 		])
 
 		const updateAvailable = computed(() => store.state.app.updateAvailable)
 
 		return { tabs, updateAvailable }
-	}
+	},
 }
 </script>
 
@@ -45,7 +46,7 @@ export default {
 	height: 65px
 	margin-bottom: 24px
 	letter-spacing: 0.6px
-	a 
+	a
 		text-decoration: none
 		color: white
 		transition: all 0.1s
@@ -55,6 +56,4 @@ export default {
 		position: relative
 		&:hover, &.router-link-exact-active
 			color: $primary
-
-
 </style>

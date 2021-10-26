@@ -14,7 +14,12 @@ export default class Updater {
 	openDetachedDevTools(win) {
 		if (!win) return
 
-		const devtools = new BrowserWindow({ frame: false, parent: win, height: win.getBounds().height, width: this.width })
+		const devtools = new BrowserWindow({
+			frame: false,
+			parent: win,
+			height: win.getBounds().height,
+			width: this.width,
+		})
 		win.webContents.setDevToolsWebContents(devtools.webContents)
 		win.webContents.openDevTools({ mode: "detach" })
 
@@ -22,7 +27,10 @@ export default class Updater {
 			const winBounds = win.getBounds()
 			const scr = screen.getDisplayMatching(winBounds)
 			const factor = scr.scaleFactor
-			const scrBounds = { w: scr.workArea.width * factor, h: scr.workArea.height * factor }
+			const scrBounds = {
+				w: scr.workArea.width * factor,
+				h: scr.workArea.height * factor,
+			}
 
 			const devBounds = { width: this.width, height: winBounds.height }
 			devBounds.x =

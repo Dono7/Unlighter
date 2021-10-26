@@ -1,5 +1,5 @@
 <template>
-	<div class="switch-bg" :class="{'switch-on': value}" @click="$emit('valuechange')">
+	<div class="switch-bg" :class="{ 'switch-on': value }" @click="$emit('valuechange')">
 		<div class="switch-circle"></div>
 	</div>
 </template>
@@ -7,8 +7,8 @@
 <script>
 export default {
 	props: {
-		value: { type: Boolean, required: true }
-	}
+		value: { type: Boolean, required: true },
+	},
 }
 </script>
 

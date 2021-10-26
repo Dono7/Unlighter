@@ -5,7 +5,9 @@ import { screen } from "electron"
 export default class MonitorsController {
 	constructor(unlighterApp, displays) {
 		this.app = unlighterApp
-		this.monitors = displays.map((display, index) => new Monitor(this.app, display, index))
+		this.monitors = displays.map(
+			(display, index) => new Monitor(this.app, display, index),
+		)
 		this.lastErrorTime = 0
 
 		this.initWindows()
@@ -69,9 +71,11 @@ export default class MonitorsController {
 
 		const monitorsStr = this.monitors.map((m) => ({ str: m.str, time: new Date() }))
 		const newStr = monitorsStr.map((m) => {
-			if (action == "increase") m.str = Math.min(Math.round((m.str + interval) * 100) / 100, 100)
+			if (action == "increase")
+				m.str = Math.min(Math.round((m.str + interval) * 100) / 100, 100)
 
-			if (action == "decrease") m.str = Math.max(Math.round((m.str - interval) * 100) / 100, 0)
+			if (action == "decrease")
+				m.str = Math.max(Math.round((m.str - interval) * 100) / 100, 0)
 
 			return m
 		})
@@ -81,7 +85,10 @@ export default class MonitorsController {
 	}
 
 	showOrHideMonitorIndex(action) {
-		if (action !== "show" || (action === "show" && this.app.Prefs.getPref("showScreenNumber"))) {
+		if (
+			action !== "show" ||
+			(action === "show" && this.app.Prefs.getPref("showScreenNumber"))
+		) {
 			this.monitors.forEach((monitor) => {
 				monitor.win.webContents.send(`${action}-index`)
 			})
@@ -107,7 +114,9 @@ export default class MonitorsController {
 
 		setTimeout(() => {
 			const displays = screen.getAllDisplays()
-			this.monitors = displays.map((display, index) => new Monitor(this.app, display, index))
+			this.monitors = displays.map(
+				(display, index) => new Monitor(this.app, display, index),
+			)
 			this.initWindows()
 			this.loadFilterPage()
 			this.app.Pcc.movePccToCorner()

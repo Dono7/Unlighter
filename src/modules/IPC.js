@@ -11,7 +11,9 @@ export default class IPC {
 			if (this.app[module][method]) {
 				this.app[module][method](...args)
 			} else {
-				logger.log(`exec-module-method: Method ${method} not found in the module ${module}. Args: ${args}`)
+				logger.log(
+					`exec-module-method: Method ${method} not found in the module ${module}. Args: ${args}`,
+				)
 			}
 		})
 
