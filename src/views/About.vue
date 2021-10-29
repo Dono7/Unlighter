@@ -1,15 +1,16 @@
 <template>
 	<main class="about">
 		<p>
-			Unlighter is a free and open-source project. You can download the latest version
-			from the <Link href="https://github.com/Dono7/Unlighter" label="Github Project." />.
+			Unlighter is a an open-source project. The source-code is available on
+			<Link href="https://github.com/Dono7/Unlighter" label="Github" />. You can download
+			or learn more about Unlighter on the website
+			<Link href="https://unlighter.app/" label="unlighter.app" />.
 		</p>
 
 		<p>
 			This application is developped by
-			<Link href="https://github.com/Dono7" label="Donovan T." /> (developper) and
-			<Link href="https://www.behance.net/bourhanewac933" label="Walid B" /> (UI/UX
-			Designer).
+			<Link href="https://github.com/Dono7" label="Donovan T." /> and designed by
+			<Link href="https://www.behance.net/bourhanewac933" label="Walid B" />.
 		</p>
 
 		<SearchForUpdate @click="openUpdaterWindow" />
