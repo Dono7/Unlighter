@@ -1,7 +1,7 @@
 {
 	"name": "unlighter",
-	"version": "0.6.0",
-	"description": "Small and free software to reduce screens brightness lower than the minimum. Works with every type of screens.",
+	"version": "1.0.0",
+	"description": "Free software made to reduce your screens brightness. Works with every type of screens.",
 	"author": "Donovan Trinh",
 	"scripts": {
 		"serve": "vue-cli-service serve",
