@@ -3,6 +3,8 @@ import storage from "electron-json-storage"
 export default class Preferences {
 	constructor(unlighterApp) {
 		this.app = unlighterApp
+
+		this.initDefaultPreferences()
 	}
 
 	getData(key) {
@@ -34,26 +36,10 @@ export default class Preferences {
 		}
 	}
 
-	loadUserPref() {
-		this.config = {
-			...this.config,
-			preferences: {
-				...this.getPref(),
-			},
-		}
-	}
-
 	initDefaultPreferences() {
+		const defaultConfig = this.app.config.defaultConfig
 		const userPref = this.getPref()
-		if (userPref !== undefined) {
-			for (const [key, value] of Object.entries(this.config.defaultConfig)) {
-				if (userPref[key] === undefined) {
-					userPref[key] = value
-					storage.set("preferences", userPref)
-				}
-			}
-		} else {
-			storage.set("preferences", this.config.defaultConfig)
-		}
+		const newPref = { ...defaultConfig, ...userPref }
+		storage.set("preferences", newPref)
 	}
 }
