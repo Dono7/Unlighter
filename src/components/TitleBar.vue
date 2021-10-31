@@ -1,3 +1,12 @@
+<script setup>
+const quit = () => {
+	window.unlighter.execModuleMethod({ module: "electron", method: "exit" })
+}
+const minimize = () => {
+	window.unlighter.execModuleMethod({ module: "Pcc", method: "minimize" })
+}
+</script>
+
 <template>
 	<div class="title-bar">
 		<div class="title">
@@ -11,19 +20,6 @@
 		</div>
 	</div>
 </template>
-
-<script>
-export default {
-	methods: {
-		quit() {
-			window.unlighter.execModuleMethod({ module: "electron", method: "exit" })
-		},
-		minimize() {
-			window.unlighter.execModuleMethod({ module: "Pcc", method: "minimize" })
-		},
-	},
-}
-</script>
 
 <style lang="sass" scoped>
 $height: 60px

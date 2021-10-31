@@ -1,3 +1,68 @@
+<script setup>
+import { onBeforeMount, onUnmounted, ref } from "vue"
+import Button from "@/components/Button"
+
+const percent = ref(0)
+const status = ref("fetching")
+const states = ref({
+	fetching: {
+		text: "Looking for an update...",
+		showSpinner: true,
+		showBar: false,
+		showDownloadBtn: false,
+	},
+	available: {
+		text: "New version found....",
+		showSpinner: true,
+		showBar: false,
+		showDownloadBtn: false,
+	},
+	downloading: {
+		text: "Downloading the update...",
+		showSpinner: false,
+		showBar: true,
+		showDownloadBtn: false,
+	},
+	downloaded: {
+		text: "Ready to be installed.",
+		showSpinner: false,
+		showBar: false,
+		showDownloadBtn: true,
+	},
+	uptodate: {
+		text: "Already up to date.",
+		showSpinner: false,
+		showBar: false,
+		showDownloadBtn: false,
+	},
+	error: {
+		text: "Unable to find an update.",
+		showSpinner: false,
+		showBar: false,
+		showDownloadBtn: false,
+	},
+})
+
+const quitAndInstall = () => {
+	window.unlighter.execModuleMethod({ module: "Updater", method: "quitAndInstall" })
+}
+
+const closeUpdateWindow = () => {
+	window.unlighter.execModuleMethod({ module: "Updater", method: "closeWindow" })
+}
+
+onBeforeMount(() => {
+	window.unlighter.on("update-status", (e, updateData) => {
+		percent.value = updateData.percent
+		status.value = updateData.status
+	})
+})
+
+onUnmounted(() => {
+	window.unlighter.removeListener("update-status")
+})
+</script>
+
 <template>
 	<div class="content">
 		<div v-if="states[status].showBar" class="progressbar-container">
@@ -21,80 +86,6 @@
 		</div>
 	</div>
 </template>
-
-<script>
-import { computed, onBeforeMount, onUnmounted, ref } from "vue"
-import Button from "@/components/Button"
-
-export default {
-	components: { Button },
-	setup() {
-		const percent = ref(0)
-		const text = ref("Looking for an update")
-		const iconClass = ref("icon")
-		const status = ref("fetching")
-		const states = ref({
-			fetching: {
-				text: "Looking for an update...",
-				showSpinner: true,
-				showBar: false,
-				showDownloadBtn: false,
-			},
-			available: {
-				text: "New version found....",
-				showSpinner: true,
-				showBar: false,
-				showDownloadBtn: false,
-			},
-			downloading: {
-				text: "Downloading the update...",
-				showSpinner: false,
-				showBar: true,
-				showDownloadBtn: false,
-			},
-			downloaded: {
-				text: "Ready to be installed.",
-				showSpinner: false,
-				showBar: false,
-				showDownloadBtn: true,
-			},
-			uptodate: {
-				text: "Already up to date.",
-				showSpinner: false,
-				showBar: false,
-				showDownloadBtn: false,
-			},
-			error: {
-				text: "Unable to find an update.",
-				showSpinner: false,
-				showBar: false,
-				showDownloadBtn: false,
-			},
-		})
-
-		const quitAndInstall = () => {
-			window.unlighter.execModuleMethod({ module: "Updater", method: "quitAndInstall" })
-		}
-
-		const closeUpdateWindow = () => {
-			window.unlighter.execModuleMethod({ module: "Updater", method: "closeWindow" })
-		}
-
-		onBeforeMount(() => {
-			window.unlighter.on("update-status", (e, updateData) => {
-				percent.value = updateData.percent
-				status.value = updateData.status
-			})
-		})
-
-		onUnmounted(() => {
-			window.unlighter.removeListener("update-status")
-		})
-
-		return { percent, text, iconClass, states, status, closeUpdateWindow, quitAndInstall }
-	},
-}
-</script>
 
 <style scoped lang="sass">
 @import '@/assets/sass/variables.sass'

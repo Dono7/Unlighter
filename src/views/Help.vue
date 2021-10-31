@@ -1,3 +1,23 @@
+<script setup>
+import { ref } from "vue"
+import InputBlock from "./../components/InputBlock"
+
+const pref = ref([
+	{
+		key: "decrease",
+		label: "Decrease filters by 5",
+		inputType: "showString",
+		text: "Alt+F2",
+	},
+	{
+		key: "increase",
+		label: "Increase filters by 5",
+		inputType: "showString",
+		text: "Alt+F3",
+	},
+])
+</script>
+
 <template>
 	<main class="help">
 		<h1>Multi-Drag</h1>
@@ -19,33 +39,6 @@
 		/>
 	</main>
 </template>
-
-<script>
-import { ref } from "vue"
-import InputBlock from "./../components/InputBlock"
-
-export default {
-	components: { InputBlock },
-	setup() {
-		const pref = ref([
-			{
-				key: "decrease",
-				label: "Decrease filters by 5",
-				inputType: "showString",
-				text: "Alt+F2",
-			},
-			{
-				key: "increase",
-				label: "Increase filters by 5",
-				inputType: "showString",
-				text: "Alt+F3",
-			},
-		])
-
-		return { pref }
-	},
-}
-</script>
 
 <style lang="sass" scoped>
 .description

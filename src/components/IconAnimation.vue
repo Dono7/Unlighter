@@ -1,3 +1,22 @@
+<script setup>
+import { onMounted, ref } from "vue"
+
+const emit = defineEmits(["animation-end"])
+
+const container = ref()
+const delayBeforeClose = 1000
+
+onMounted(() => {
+	container.value.addEventListener("animationend", (event) => {
+		if (event.target == container.value) {
+			setTimeout(() => {
+				emit("animation-end")
+			}, delayBeforeClose)
+		}
+	})
+})
+</script>
+
 <template>
 	<div class="logo-animation-container" ref="container">
 		<div class="icon">
@@ -9,29 +28,6 @@
 		<h1>Unlighter</h1>
 	</div>
 </template>
-
-<script>
-import { onMounted, ref } from "vue"
-export default {
-	emits: ["animation-end"],
-	setup(props, { emit }) {
-		const container = ref()
-		const delayBeforeClose = 1000
-
-		onMounted(() => {
-			container.value.addEventListener("animationend", (event) => {
-				if (event.target == container.value) {
-					setTimeout(() => {
-						emit("animation-end")
-					}, delayBeforeClose)
-				}
-			})
-		})
-
-		return { container }
-	},
-}
-</script>
 
 <style scoped lang="sass">
 @import '@/assets/sass/variables.sass'

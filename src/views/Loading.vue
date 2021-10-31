@@ -1,3 +1,44 @@
+<script setup>
+import { onBeforeMount, onMounted, onUnmounted, ref } from "vue"
+import { useRouter } from "vue-router"
+import IconAnimation from "@/components/IconAnimation"
+import Version from "@/components/Version"
+
+const isPccInit = ref(false)
+const isCloseAsked = ref(false)
+const isRedirected = ref(false)
+const router = useRouter()
+
+const closeLoader = () => {
+	if (isPccInit.value) goToHome()
+	else isCloseAsked.value = true
+}
+
+const pccInited = () => {
+	if (isCloseAsked.value) goToHome()
+	else isPccInit.value = true
+}
+
+const goToHome = () => {
+	if (isRedirected.value) return
+
+	isRedirected.value = true
+	router.replace({ name: "Monitors" })
+}
+
+onBeforeMount(() => {
+	window.unlighter.once("init-pcc", pccInited)
+	document.body.addEventListener("click", closeLoader)
+})
+
+// Security redirection to avoid being blocked in animation
+onMounted(() => {
+	setTimeout(() => {
+		goToHome()
+	}, 3000)
+})
+</script>
+
 <template>
 	<div class="loading-container">
 		<div class="loading-animation">
@@ -6,54 +47,6 @@
 		<Version absolute />
 	</div>
 </template>
-
-<script>
-import { onBeforeMount, onMounted, onUnmounted, ref } from "vue"
-import { useRouter } from "vue-router"
-import IconAnimation from "@/components/IconAnimation"
-import Version from "@/components/Version"
-
-export default {
-	components: { IconAnimation, Version },
-	setup() {
-		const isPccInit = ref(false)
-		const isCloseAsked = ref(false)
-		const isRedirected = ref(false)
-		const router = useRouter()
-
-		const closeLoader = () => {
-			if (isPccInit.value) goToHome()
-			else isCloseAsked.value = true
-		}
-
-		const pccInited = () => {
-			if (isCloseAsked.value) goToHome()
-			else isPccInit.value = true
-		}
-
-		const goToHome = () => {
-			if (isRedirected.value) return
-
-			isRedirected.value = true
-			router.replace({ name: "Monitors" })
-		}
-
-		onBeforeMount(() => {
-			window.unlighter.once("init-pcc", pccInited)
-			document.body.addEventListener("click", closeLoader)
-		})
-
-		// Security redirection to avoid being blocked in animation
-		onMounted(() => {
-			setTimeout(() => {
-				goToHome()
-			}, 3000)
-		})
-
-		return { closeLoader }
-	},
-}
-</script>
 
 <style scoped lang="sass">
 .loading-container

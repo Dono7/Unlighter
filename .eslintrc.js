@@ -6,4 +6,10 @@ module.exports = {
 	rules: {
 		"no-unused-vars": ["warning"],
 	},
+	globals: {
+		defineProps: "readonly",
+		defineEmits: "readonly",
+		defineExpose: "readonly",
+		withDefaults: "readonly",
+	},
 }
