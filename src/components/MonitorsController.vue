@@ -1,5 +1,130 @@
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from "vue"
+
+// Variables
+const initialised = ref(false)
+const mouse = ref({ x: 0, y: 0 })
+const win = ref({ w: 320, h: 400 })
+const monitors = ref([
+	{ id: 1, index: 0, str: 0, barPosition: 0, name: "Loading...", isActive: false },
+])
+
+// Computed
+const xRelative = computed(() => {
+	const factor = win.value.w / 100
+	const x = round(mouse.value.x / factor, 2)
+	return x < 1 ? 0 : x > 99 ? 100 : x
+})
+
+const isSomeoneActive = computed(() => {
+	return monitors.value.some((screen) => screen.isActive)
+})
+
+const monitorsStr = computed(() => {
+	return monitors.value.map((monitor) => ({
+		str: monitor.str,
+		time: new Date(),
+	}))
+})
+
+// Methods
+
+const init = ({ monitors: m, sendStrAfterInit }) => {
+	monitors.value = m.map((monitor, index) => {
+		return {
+			id: monitor.id,
+			index: index,
+			str: monitor.str,
+			barPosition: barPositionFromStr(monitor.str),
+			name: monitor.name,
+			isActive: false,
+		}
+	})
+	initialised.value = true
+	if (sendStrAfterInit) sendStrToMonitors(true)
+}
+
+const barPositionFromStr = (str) => {
+	return round((win.value.w / 100) * str, 1)
+}
+
+const mdown = (screen) => {
+	screen.isActive = true
+	updateScreen(screen)
+}
+
+const mup = () => {
+	monitors.value.forEach((screen) => (screen.isActive = false))
+}
+
+const menter = (screen) => {
+	if (isSomeoneActive.value) {
+		screen.isActive = true
+	}
+}
+
+const mmove = (event) => {
+	mouse.value.x = event.clientX
+	mouse.value.y = event.clientY
+	if (isSomeoneActive.value) {
+		monitors.value.forEach((screen) => updateScreen(screen))
+	}
+}
+
+const updateScreen = (screen) => {
+	if (screen.isActive) {
+		screen.str = xRelative.value
+		screen.barPosition =
+			screen.str < 1 ? 0 : screen.str > 99 ? win.value.w : mouse.value.x
+		sendStrToMonitors()
+	}
+}
+
+const sendStrToMonitors = (init = false) => {
+	if (initialised.value) {
+		window.unlighter.execModuleMethod({
+			module: "Monitors",
+			method: "updateMonitorsStr",
+			args: [monitorsStr.value, { init }],
+		})
+	}
+}
+
+const round = (number, precision) => {
+	const factor = Math.pow(10, precision)
+	return Math.round(number * factor) / factor
+}
+
+// Lifecycle event
+
+onMounted(() => {
+	window.unlighter.on("init-pcc", (event, data) => {
+		init(data)
+	})
+	window.unlighter.on("ask-for-monitors-str", () => {
+		sendStrToMonitors()
+	})
+
+	window.unlighter.execModuleMethod({
+		module: "Pcc",
+		method: "sendToPccFromCode",
+		args: ["ask-for-init-pcc"],
+	})
+
+	window.addEventListener("mouseup", mup)
+	window.addEventListener("mousemove", mmove)
+})
+
+onUnmounted(() => {
+	window.unlighter.removeListener("init-pcc")
+	window.unlighter.removeListener("ask-for-monitors-str")
+	window.removeEventListener("mouseup", mup)
+	window.removeEventListener("mousemove", mmove)
+})
+</script>
+
 <template>
-	<div class="monitors-controller" :style="{ padding: `0 ${win.deadMargin}px` }">
+	<div class="monitors-controller">
 		<div
 			v-for="(screen, index) in monitors"
 			:key="index"
@@ -18,139 +143,6 @@
 	</div>
 </template>
 
-<script>
-export default {
-	name: "MonitorsController",
-	data() {
-		return {
-			mouse: {
-				x: 0,
-				y: 0,
-			},
-			win: {
-				w: 320,
-				h: 400,
-				deadMargin: 0,
-			},
-			monitors: [
-				{ id: 1, index: 0, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-			],
-			initialised: false,
-		}
-	},
-	methods: {
-		init({ monitors, sendStrAfterInit }) {
-			this.monitors = monitors.map((monitor, index) => {
-				return {
-					id: monitor.id,
-					index: index,
-					str: monitor.str,
-					barPosition: this.barPositionFromStr(monitor.str),
-					name: monitor.name,
-					isActive: false,
-				}
-			})
-			this.initialised = true
-			if (sendStrAfterInit) this.sendStrToMonitors(true)
-		},
-		barPositionFromStr(str) {
-			const interval = this.win.w - 2 * this.win.deadMargin
-			return this.round((interval / 100) * str + this.win.deadMargin, 1)
-		},
-		mdown(screen) {
-			screen.isActive = true
-			this.updateScreen(screen)
-		},
-		mup() {
-			this.monitors.forEach((screen) => (screen.isActive = false))
-		},
-		menter(screen) {
-			if (this.isSomeoneActive) {
-				screen.isActive = true
-			}
-		},
-		mmove(event) {
-			this.mouse.x = event.clientX
-			this.mouse.y = event.clientY
-			if (this.isSomeoneActive) {
-				this.monitors.forEach((screen) => this.updateScreen(screen))
-			}
-		},
-		updateScreen(screen) {
-			if (screen.isActive) {
-				const relative = this.xRelative
-				screen.str = relative
-				screen.barPosition =
-					relative < 1
-						? 0
-						: relative > 99
-						? this.win.w - this.win.deadMargin
-						: this.mouse.x
-				this.sendStrToMonitors()
-			}
-		},
-		sendStrToMonitors(init = false) {
-			if (this.initialised) {
-				window.unlighter.execModuleMethod({
-					module: "Monitors",
-					method: "updateMonitorsStr",
-					args: [this.monitorsStr, { init }],
-				})
-			}
-		},
-		round(number, precision) {
-			const factor = Math.pow(10, precision)
-			return Math.round(number * factor) / factor
-		},
-	},
-	computed: {
-		xRelative() {
-			const intervalLength = this.win.w - 2 * this.win.deadMargin
-			const factor = intervalLength / 100
-			const x = this.round((this.mouse.x - this.win.deadMargin) / factor, 2)
-			return x < 1 ? 0 : x > 99 ? 100 : x
-		},
-		isSomeoneActive() {
-			return this.monitors.some((screen) => screen.isActive)
-		},
-		howManyActives() {
-			return this.monitors.reduce((acc, curr) => acc + (curr.isActive ? 1 : 0), 0)
-		},
-		monitorsStr() {
-			const now = new Date()
-			return this.monitors.map((monitor) => ({
-				str: monitor.str,
-				time: now,
-			}))
-		},
-	},
-	mounted() {
-		window.unlighter.on("init-pcc", (event, data) => {
-			this.init(data)
-		})
-		window.unlighter.on("ask-for-monitors-str", () => {
-			this.sendStrToMonitors()
-		})
-
-		window.unlighter.execModuleMethod({
-			module: "Pcc",
-			method: "sendToPccFromCode",
-			args: ["ask-for-init-pcc"],
-		})
-
-		window.addEventListener("mouseup", this.mup)
-
-		window.addEventListener("mousemove", this.mmove)
-	},
-	unmounted() {
-		window.unlighter.removeListener("init-pcc")
-		window.unlighter.removeListener("ask-for-monitors-str")
-		window.removeEventListener("mouseup", this.mup)
-		window.removeEventListener("mousemove", this.mmove)
-	},
-}
-</script>
-
 <style lang="sass" scoped>
 @import '@/assets/sass/variables.sass'
 
@@ -159,6 +151,7 @@ $border-size: 2px
 	display: flex
 	flex-direction: column
 	gap: 8px
+	padding: 0
 	.monitor-container
 		position: relative
 		display: flex
