@@ -22,11 +22,8 @@ const minimize = () => {
 </template>
 
 <style lang="sass" scoped>
-$height: 60px
-$btnHeight: 40px
-
 .title-bar
-	height: $height
+	height: $titlebar-height
 	width: 100%
 	display: flex
 	justify-content: space-between
@@ -44,14 +41,14 @@ $btnHeight: 40px
 	.actions
 		-webkit-app-region: no-drag
 		display: flex
-		margin-right: ($height - $btnHeight) / 2
+		margin-right: ($titlebar-height - $titlebar-btn-height) / 2
 		> div
 			position: relative
 			display: flex
 			justify-content: center
 			align-items: center
-			height: $btnHeight
-			width: $btnHeight
+			height: $titlebar-btn-height
+			width: $titlebar-btn-height
 			transition: all 0.15s
 			cursor: pointer
 			&:hover

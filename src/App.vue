@@ -46,8 +46,6 @@ onBeforeMount(() => {
 </template>
 
 <style lang="sass">
-@import '@/assets/sass/variables.sass'
-
 *
   margin: 0
   padding: 0

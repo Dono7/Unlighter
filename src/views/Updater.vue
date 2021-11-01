@@ -88,8 +88,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="sass">
-@import '@/assets/sass/variables.sass'
-
 .content
 	display: flex
 	justify-content: space-between

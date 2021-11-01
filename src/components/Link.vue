@@ -16,8 +16,6 @@ const openUrl = () => {
 </template>
 
 <style scoped lang="sass">
-@import '@/assets/sass/variables.sass'
-
 a
 	color: $primary
 </style>

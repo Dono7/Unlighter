@@ -78,8 +78,6 @@ onUnmounted(() => {
 </template>
 
 <style lang="sass">
-@import '@/assets/sass/variables.sass'
-
 body.filter
 	width: 100%
 	min-height: 100vh

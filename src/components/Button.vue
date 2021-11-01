@@ -47,8 +47,6 @@ const iconStyle = computed(() => {
 </template>
 
 <style lang="sass">
-$purple: #7587FF
-
 button
 	border-radius: 100px
 	color: white

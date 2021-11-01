@@ -139,8 +139,6 @@ onUnmounted(() => {
 </template>
 
 <style lang="sass" scoped>
-@import '@/assets/sass/variables.sass'
-
 .monitors-controller
 	display: flex
 	flex-direction: column

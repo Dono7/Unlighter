@@ -29,8 +29,6 @@ const updateAvailable = computed(() => store.state.app.updateAvailable)
 </template>
 
 <style lang="sass">
-@import '@/assets/sass/variables.sass'
-
 .navbar
 	display: flex
 	justify-content: space-between

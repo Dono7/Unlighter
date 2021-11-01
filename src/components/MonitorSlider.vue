@@ -16,9 +16,6 @@ defineProps({
 </template>
 
 <style lang="sass" scoped>
-@import '@/assets/sass/variables.sass'
-
-$border-size: 2px
 .monitor-container
 	position: relative
 	display: flex
@@ -45,7 +42,7 @@ $border-size: 2px
 			left: 0
 			bottom: 0
 			width: 100%
-			height: $border-size
+			height: $slider-border-size
 			background: $primary
 	&.active
 		.progressbar
@@ -56,6 +53,6 @@ $border-size: 2px
 		left: 0
 		bottom: 0
 		width: 100%
-		height: $border-size
+		height: $slider-border-size
 		background: rgba(255,255,255,0.1)
 </style>
