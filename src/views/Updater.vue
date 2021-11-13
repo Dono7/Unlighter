@@ -74,11 +74,15 @@ onUnmounted(() => {
 		<div class="infos">
 			<Button
 				v-if="states[status].showDownloadBtn"
-				iconClass="fas fa-download"
+				iconPath="svg/download.svg"
 				small
 				@click="quitAndInstall"
 			/>
-			<i v-if="states[status].showSpinner" class="fas fa-spinner fa-pulse"></i>
+			<img
+				v-if="states[status].showSpinner"
+				src="@/assets/svg/spinner.svg"
+				class="spin"
+			/>
 			<p v-if="states[status].showBar" class="percent">{{ Math.round(percent) }}%</p>
 			<div class="close" @click="closeUpdateWindow">
 				<img src="@/assets/svg/close.svg" />
@@ -87,7 +91,7 @@ onUnmounted(() => {
 	</div>
 </template>
 
-<style scoped lang="sass">
+<style lang="sass" scoped>
 .content
 	display: flex
 	justify-content: space-between
@@ -101,6 +105,10 @@ onUnmounted(() => {
 		display: flex
 		align-items: center
 		z-index: 10
+		.spin
+			height: 12px
+			transform: rotate(0deg)
+			animation: spin 1.5s linear 0s infinite none
 		.close
 			display: flex
 			justify-content: center
@@ -135,4 +143,10 @@ onUnmounted(() => {
 			bottom: 0
 			width: 5%
 			background-color: $secondary
+
+@keyframes spin
+	0%
+		transform: rotate(0deg)
+	100%
+		transform: rotate(360deg)
 </style>

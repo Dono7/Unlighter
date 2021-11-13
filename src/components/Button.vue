@@ -48,6 +48,7 @@ const iconStyle = computed(() => {
 
 <style lang="sass">
 button
+	display: flex
 	border-radius: 100px
 	color: white
 	padding: 10px 20px
@@ -63,7 +64,7 @@ button
 	&.centered
 		margin: auto
 	&.small
-		padding: 4px 20px
+		padding: 8px 20px
 	&:hover
 		border: 2px solid rgba(255,255,255,0.5)
 	&:active
