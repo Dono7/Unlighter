@@ -77,6 +77,10 @@ export default class UnlighterApp {
 			if (BrowserWindow.getAllWindows().length === 0) createWindow()
 		})
 
+		this.electron.on("second-instance", () => {
+			this.Pcc.restore()
+		})
+
 		if (this.config.isDevelopment) {
 			if (process.platform === "win32") {
 				process.on("message", (data) => {
