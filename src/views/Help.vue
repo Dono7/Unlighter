@@ -30,13 +30,7 @@ const pref = ref([
 
 		<h1>Shortcuts</h1>
 
-		<InputBlock
-			v-for="p in pref"
-			:name="p.key"
-			v-bind="p"
-			smallmargin
-			@valuechange="(...args) => this.changePref(p.key, ...args)"
-		/>
+		<InputBlock v-for="p in pref" :name="p.key" v-bind="p" smallmargin />
 	</main>
 </template>
 

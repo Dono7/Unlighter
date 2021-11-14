@@ -78,7 +78,7 @@ onUnmounted(() => {
 			v-for="p in pref"
 			:name="p.key"
 			v-bind="p"
-			@valuechange="(...args) => this.changePref(p.key, ...args)"
+			@valuechange="(...args) => changePref(p.key, ...args)"
 		/>
 	</main>
 </template>
