@@ -1,6 +1,7 @@
 import Monitor from "./Monitor"
 import { openFileInWindow } from "./utils"
 import { screen } from "electron"
+import logger from "electron-log"
 
 export default class MonitorsController {
 	constructor(unlighterApp, displays) {
@@ -58,7 +59,12 @@ export default class MonitorsController {
 		if (monitorsStr.length !== this.monitors.length) {
 			if (new Date() - this.lastErrorTime > 10000) {
 				this.lastErrorTime = new Date()
-				throw new Error("Number of monitors in PCC and in the app are not the same.")
+				logger.log(
+					"Number of monitors in PCC and in the app are not the same. Reloading filters.",
+				)
+				setTimeout(() => {
+					this.reloadFilters()
+				}, 200)
 			}
 		}
 		this.monitors.forEach((monitor, index) => {
