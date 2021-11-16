@@ -1,3 +1,19 @@
+<script setup>
+import { ref, computed } from "vue"
+import { useStore } from "vuex"
+
+const store = useStore()
+
+const tabs = ref([
+	{ label: "Monitors", to: "Monitors" },
+	{ label: "Preferences", to: "Preferences" },
+	{ label: "About", to: "About" },
+	{ label: "Help", to: "Help" },
+])
+
+const updateAvailable = computed(() => store.state.app.updateAvailable)
+</script>
+
 <template>
 	<div class="navbar">
 		<router-link
@@ -12,31 +28,7 @@
 	</div>
 </template>
 
-<script>
-import { ref, computed } from "vue"
-import { useStore } from "vuex"
-
-export default {
-	setup() {
-		const store = useStore()
-
-		const tabs = ref([
-			{ label: "Monitors", to: "Monitors" },
-			{ label: "Preferences", to: "Preferences" },
-			{ label: "About", to: "About" },
-			{ label: "Help", to: "Help" },
-		])
-
-		const updateAvailable = computed(() => store.state.app.updateAvailable)
-
-		return { tabs, updateAvailable }
-	},
-}
-</script>
-
 <style lang="sass">
-@import '@/assets/sass/variables.sass'
-
 .navbar
 	display: flex
 	justify-content: space-between

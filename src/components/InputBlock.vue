@@ -1,3 +1,21 @@
+<script setup>
+import Switch from "./input/Switch"
+import NumberInput from "./input/NumberInput"
+import ShowString from "./input/ShowString"
+
+defineProps({
+	value: { type: [Boolean, Number], required: false },
+	min: { type: Number, required: false },
+	max: { type: Number, required: false },
+	name: { type: String, required: true },
+	label: { type: String, required: true },
+	inputType: { type: String, required: true },
+	text: { type: String, required: false },
+	labelMaxWidth: { type: Number, required: false, default: 145 },
+	smallmargin: { type: Boolean, required: false },
+})
+</script>
+
 <template>
 	<div class="input-block" :class="{ smallmargin }">
 		<div
@@ -26,27 +44,6 @@
 		<ShowString v-if="inputType == 'showString'" :text="text" />
 	</div>
 </template>
-
-<script>
-import Switch from "./input/Switch"
-import NumberInput from "./input/NumberInput"
-import ShowString from "./input/ShowString"
-
-export default {
-	components: { Switch, NumberInput, ShowString },
-	props: {
-		value: { type: [Boolean, Number], required: false },
-		min: { type: Number, required: false },
-		max: { type: Number, required: false },
-		name: { type: String, required: true },
-		label: { type: String, required: true },
-		inputType: { type: String, required: true },
-		text: { type: String, required: false },
-		labelMaxWidth: { type: Number, required: false, default: 145 },
-		smallmargin: { type: Boolean, required: false },
-	},
-}
-</script>
 
 <style lang="sass">
 .input-block

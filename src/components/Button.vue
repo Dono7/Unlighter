@@ -1,3 +1,43 @@
+<script setup>
+import { computed } from "vue"
+
+const props = defineProps({
+	label: { type: String, required: false, default: "" },
+	iconClass: { type: String, required: false, default: "" },
+	centered: { type: Boolean, required: false, default: false },
+	href: { type: String, required: false },
+	small: { type: Boolean, required: false },
+	notif: { type: Boolean, required: false },
+	size: { type: Number, required: false },
+	iconSize: { type: Number, required: false },
+	iconPath: { type: String, required: false },
+})
+
+const openUrl = () => {
+	if (props.href) {
+		window.unlighter.openUrl(props.href)
+	}
+}
+
+const buttonStyle = computed(() => {
+	return !props.size
+		? {}
+		: {
+				height: props.size + "px",
+				width: props.size + "px",
+		  }
+})
+
+const iconStyle = computed(() => {
+	return !props.iconSize
+		? {}
+		: {
+				height: props.iconSize + "px",
+				width: props.iconSize + "px",
+		  }
+})
+</script>
+
 <template>
 	<button :class="{ centered, small, notif, size }" @click="openUrl" :style="buttonStyle">
 		{{ label }}
@@ -6,54 +46,9 @@
 	</button>
 </template>
 
-<script>
-import { computed } from "vue"
-export default {
-	props: {
-		label: { type: String, required: false, default: "" },
-		iconClass: { type: String, required: false, default: "" },
-		centered: { type: Boolean, required: false, default: false },
-		href: { type: String, required: false },
-		small: { type: Boolean, required: false },
-		notif: { type: Boolean, required: false },
-		size: { type: Number, required: false },
-		iconSize: { type: Number, required: false },
-		iconPath: { type: String, required: false },
-	},
-	setup(props) {
-		const openUrl = () => {
-			if (props.href) {
-				window.unlighter.openUrl(props.href)
-			}
-		}
-
-		const buttonStyle = computed(() => {
-			return !props.size
-				? {}
-				: {
-						height: props.size + "px",
-						width: props.size + "px",
-				  }
-		})
-
-		const iconStyle = computed(() => {
-			return !props.iconSize
-				? {}
-				: {
-						height: props.iconSize + "px",
-						width: props.iconSize + "px",
-				  }
-		})
-
-		return { openUrl, buttonStyle, iconStyle }
-	},
-}
-</script>
-
 <style lang="sass">
-$purple: #7587FF
-
 button
+	display: flex
 	border-radius: 100px
 	color: white
 	padding: 10px 20px
@@ -69,7 +64,7 @@ button
 	&.centered
 		margin: auto
 	&.small
-		padding: 4px 20px
+		padding: 8px 20px
 	&:hover
 		border: 2px solid rgba(255,255,255,0.5)
 	&:active

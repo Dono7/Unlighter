@@ -1,42 +1,35 @@
+<script setup>
+import { computed, onMounted, ref } from "vue"
+import { useStore } from "vuex"
+const store = useStore()
+
+const props = defineProps({
+	absolute: { type: Boolean, default: false },
+	prefix: { type: String, default: "v" },
+})
+
+const mounted = ref(false)
+const version = computed(() => store.state.app.version)
+
+onMounted(() => {
+	if (props.absolute) {
+		setTimeout(() => {
+			mounted.value = true
+		}, 1000)
+	} else {
+		mounted.value = true
+	}
+})
+
+const className = computed(() => [
+	props.absolute ? "version-absolute" : "",
+	!!version && mounted.value ? "display" : "",
+])
+</script>
+
 <template>
 	<p class="version" :class="className">{{ prefix + version }}</p>
 </template>
-
-<script>
-import { computed, onMounted, ref } from "vue"
-import { useStore } from "vuex"
-
-export default {
-	props: {
-		absolute: { type: Boolean, default: false },
-		prefix: { type: String, default: "v" },
-	},
-	setup(props) {
-		const store = useStore()
-
-		const mounted = ref(false)
-
-		onMounted(() => {
-			if (props.absolute) {
-				setTimeout(() => {
-					mounted.value = true
-				}, 1000)
-			} else {
-				mounted.value = true
-			}
-		})
-
-		const version = computed(() => store.state.app.version)
-
-		const className = computed(() => [
-			props.absolute ? "version-absolute" : "",
-			!!version && mounted.value ? "display" : "",
-		])
-
-		return { version, className }
-	},
-}
-</script>
 
 <style scoped lang="sass">
 p.version

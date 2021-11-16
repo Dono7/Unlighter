@@ -1,3 +1,25 @@
+<script setup>
+import { onMounted, ref } from "vue"
+import Link from "@/components/Link"
+import Version from "@/components/Version"
+import SearchForUpdate from "@/components/SearchForUpdate"
+
+const openUpdaterWindow = () => {
+	window.unlighter.execModuleMethod({ module: "Updater", method: "openWindow" })
+}
+
+const isUpdateAvailable = ref(false)
+
+onMounted(() => {
+	if (document.querySelector("a.router-link-exact-active.notif") !== null) {
+		isUpdateAvailable.value = true
+	}
+	window.unlighter.once("update-available", () => {
+		isUpdateAvailable.value = true
+	})
+})
+</script>
+
 <template>
 	<main class="about">
 		<p>
@@ -18,36 +40,6 @@
 		<Version prefix="Current version " />
 	</main>
 </template>
-
-<script>
-import { onMounted, ref } from "vue"
-import Link from "@/components/Link"
-import Button from "@/components/Button"
-import Version from "@/components/Version"
-import SearchForUpdate from "@/components/SearchForUpdate"
-
-export default {
-	components: { Link, Button, Version, SearchForUpdate },
-	setup() {
-		const openUpdaterWindow = () => {
-			window.unlighter.execModuleMethod({ module: "Updater", method: "openWindow" })
-		}
-
-		const isUpdateAvailable = ref(false)
-
-		onMounted(() => {
-			if (document.querySelector("a.router-link-exact-active.notif") !== null) {
-				isUpdateAvailable.value = true
-			}
-			window.unlighter.once("update-available", () => {
-				isUpdateAvailable.value = true
-			})
-		})
-
-		return { openUpdaterWindow, isUpdateAvailable }
-	},
-}
-</script>
 
 <style lang="sass">
 .about

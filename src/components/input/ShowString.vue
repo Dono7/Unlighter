@@ -1,14 +1,12 @@
+<script setup>
+defineProps({
+	text: { type: String, default: "" },
+})
+</script>
+
 <template>
 	<p>{{ text }}</p>
 </template>
-
-<script>
-export default {
-	props: {
-		text: { type: String, default: "" },
-	},
-}
-</script>
 
 <style lang="sass" scoped>
 p

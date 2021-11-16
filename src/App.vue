@@ -1,3 +1,34 @@
+<script setup>
+import TitleBar from "@/components/TitleBar.vue"
+import NavBar from "@/components/NavBar.vue"
+import StoreHandler from "@/components/StoreHandler"
+import { ref, onBeforeMount } from "vue"
+import { useRouter, useRoute } from "vue-router"
+
+const direction = ref("slide-left")
+const mode = ref("")
+const router = useRouter()
+const route = useRoute()
+
+router.beforeEach((to, from) => {
+	direction.value =
+		from.name === undefined
+			? ""
+			: from.meta.fadeTransition || to.meta.fadeTransition
+			? "fade"
+			: to.meta.transitionIndex < from.meta.transitionIndex
+			? "slide-left"
+			: "slide-right"
+	mode.value = from.meta.fadeTransition || to.meta.fadeTransition ? "" : ""
+})
+
+onBeforeMount(() => {
+	window.unlighter.on("go-to", (event, name) => {
+		router.replace({ name })
+	})
+})
+</script>
+
 <template>
 	<StoreHandler />
 	<div
@@ -14,47 +45,7 @@
 	</div>
 </template>
 
-<script>
-import TitleBar from "@/components/TitleBar.vue"
-import NavBar from "@/components/NavBar.vue"
-import StoreHandler from "@/components/StoreHandler"
-import { ref, onBeforeMount } from "vue"
-import { useRouter, useRoute } from "vue-router"
-
-export default {
-	components: { TitleBar, NavBar, StoreHandler },
-	setup() {
-		const direction = ref("slide-left")
-		const mode = ref("")
-		const router = useRouter()
-		const route = useRoute()
-
-		router.beforeEach((to, from) => {
-			direction.value =
-				from.name === undefined
-					? ""
-					: from.meta.fadeTransition || to.meta.fadeTransition
-					? "fade"
-					: to.meta.transitionIndex < from.meta.transitionIndex
-					? "slide-left"
-					: "slide-right"
-			mode.value = from.meta.fadeTransition || to.meta.fadeTransition ? "" : ""
-		})
-
-		onBeforeMount(() => {
-			window.unlighter.on("go-to", (event, name) => {
-				router.replace({ name })
-			})
-		})
-
-		return { direction, mode, route }
-	},
-}
-</script>
-
 <style lang="sass">
-@import '@/assets/sass/variables.sass'
-
 *
   margin: 0
   padding: 0

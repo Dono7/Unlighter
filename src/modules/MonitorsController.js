@@ -1,6 +1,7 @@
 import Monitor from "./Monitor"
 import { openFileInWindow } from "./utils"
 import { screen } from "electron"
+import logger from "electron-log"
 
 export default class MonitorsController {
 	constructor(unlighterApp, displays) {
@@ -9,6 +10,7 @@ export default class MonitorsController {
 			(display, index) => new Monitor(this.app, display, index),
 		)
 		this.lastErrorTime = 0
+		this.mountedFilterPages = 0
 
 		this.initWindows()
 	}
@@ -34,19 +36,29 @@ export default class MonitorsController {
 		this.monitors.forEach((monitor) => {
 			openFileInWindow(monitor.win, "filter")
 			monitor.win.webContents.once("did-finish-load", () => {
-				this.onFilterLoad(monitor)
+				this.onFilterLoaded(monitor)
 				if (filterLoaded++ == this.monitors.length - 1) {
-					this.onAllFiltersLoad()
+					this.onAllFiltersLoaded()
 				}
 			})
 		})
 	}
 
-	onFilterLoad(monitor) {
+	onFilterLoaded(monitor) {
 		monitor.loadIndex()
 	}
 
-	onAllFiltersLoad() {
+	onFilterMounted() {
+		this.mountedFilterPages++
+		if (this.mountedFilterPages >= this.monitors.length) {
+			this.mountedFilterPages = this.mountedFilterPages - this.monitors.length
+			this.onAllFiltersMounted()
+		}
+	}
+
+	onAllFiltersLoaded() {}
+
+	onAllFiltersMounted() {
 		this.app.Pcc.initPccMonitorsTab(true)
 	}
 
@@ -58,7 +70,12 @@ export default class MonitorsController {
 		if (monitorsStr.length !== this.monitors.length) {
 			if (new Date() - this.lastErrorTime > 10000) {
 				this.lastErrorTime = new Date()
-				throw new Error("Number of monitors in PCC and in the app are not the same.")
+				logger.log(
+					"Number of monitors in PCC and in the app are not the same. Reloading filters.",
+				)
+				setTimeout(() => {
+					this.reloadFilters()
+				}, 200)
 			}
 		}
 		this.monitors.forEach((monitor, index) => {

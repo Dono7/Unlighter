@@ -16,28 +16,27 @@
 	},
 	"main": "background.js",
 	"dependencies": {
-		"dayjs": "^1.10.6",
+		"dayjs": "^1.10.7",
 		"electron-json-storage": "^4.5.0",
 		"electron-log": "^4.4.1",
 		"electron-updater": "^4.3.9",
-		"vue": "^3.2.8",
-		"vue-router": "^4.0.10",
+		"vue": "^3.2.20",
+		"vue-cli-plugin-electron-builder": "^2.1.1",
+		"vue-router": "^4.0.12",
 		"vuex": "^4.0.2"
 	},
 	"devDependencies": {
 		"@vue/cli-plugin-babel": "~4.5.13",
 		"@vue/cli-plugin-router": "~4.5.13",
 		"@vue/cli-service": "~4.5.13",
-		"@vue/compiler-sfc": "^3.1.5",
-		"electron": "^13.1.7",
+		"electron": "^15.3.0",
 		"electron-devtools-installer": "^3.2.0",
 		"eslint": "^8.1.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-vue": "^7.20.0",
 		"node-sass": "^4.14.1",
 		"prettier": "^2.4.1",
-		"sass-loader": "^8.0.2",
-		"vue-cli-plugin-electron-builder": "2.0.0-rc.6"
+		"sass-loader": "^8.0.2"
 	},
 	"bugs": {
 		"url": "https://github.com/Dono7/Unlighter/issues"
