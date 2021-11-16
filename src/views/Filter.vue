@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, onUnmounted } from "@vue/runtime-core"
+import { onBeforeMount, onMounted, onUnmounted } from "vue"
 import { ref } from "vue"
 
 const monitorIndex = ref(null)
@@ -57,6 +57,13 @@ onBeforeMount(() => {
 
 	window.unlighter.on("hide-index", () => {
 		showIndex.value = false
+	})
+})
+
+onMounted(() => {
+	window.unlighter.execModuleMethod({
+		module: "Monitors",
+		method: "onFilterMounted",
 	})
 })
 
