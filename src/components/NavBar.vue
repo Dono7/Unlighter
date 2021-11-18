@@ -36,7 +36,6 @@ const updateAvailable = computed(() => store.state.app.updateAvailable)
 	align-items: center
 	width: 100%
 	height: 65px
-	margin-bottom: 24px
 	letter-spacing: 0.6px
 	a
 		text-decoration: none

@@ -8,6 +8,9 @@ const mouse = ref({ x: 0, y: 0 })
 const win = ref({ w: 320, h: 400 })
 const monitors = ref([
 	{ id: 1, index: 0, str: 0, barPosition: 0, name: "Loading...", isActive: false },
+	{ id: 2, index: 1, str: 0, barPosition: 0, name: "Loading...", isActive: false },
+	{ id: 3, index: 2, str: 0, barPosition: 0, name: "Loading...", isActive: false },
+	{ id: 4, index: 3, str: 0, barPosition: 0, name: "Loading...", isActive: false },
 ])
 
 // Computed
@@ -22,23 +25,27 @@ const isSomeoneActive = computed(() => {
 })
 
 const monitorsStr = computed(() => {
-	return monitors.value.map((monitor) => ({
-		str: monitor.str,
-		time: new Date(),
-	}))
+	return monitors.value
+		.filter((monitor) => monitor.isDetected)
+		.map((monitor) => ({
+			str: monitor.str,
+			time: new Date(),
+		}))
 })
 
 // Methods
 
 const init = ({ monitors: m, sendStrAfterInit }) => {
-	monitors.value = m.map((monitor, index) => {
+	monitors.value = monitors.value.map((monitor, index) => {
+		const mtmp = m[index]
 		return {
-			id: monitor.id,
+			id: mtmp?.id ?? monitor.id,
 			index: index,
-			str: monitor.str,
-			barPosition: barPositionFromStr(monitor.str),
-			name: monitor.name,
+			str: mtmp?.str ?? monitor.str,
+			barPosition: barPositionFromStr(mtmp?.str ?? monitor.str),
+			name: mtmp?.name ?? "Monitor " + (index + 1),
 			isActive: false,
+			isDetected: !!mtmp?.id,
 		}
 	})
 	initialised.value = true
