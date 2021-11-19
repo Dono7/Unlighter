@@ -9,6 +9,8 @@ export default class Pcc {
 		this.lastMinimize = 0
 		this.lastRestore = 0
 
+		this.pccHeight = 416
+
 		this.createPccWindow()
 	}
 
@@ -46,9 +48,9 @@ export default class Pcc {
 		const mainScreen = screen.getPrimaryDisplay()
 		return {
 			x: Math.round(mainScreen.workArea.width - 320 - margin - marginRight),
-			y: Math.round(mainScreen.workArea.height - 400 - margin),
+			y: Math.round(mainScreen.workArea.height - this.pccHeight - margin),
 			width: 320,
-			height: 400,
+			height: this.pccHeight,
 		}
 	}
 
@@ -73,7 +75,7 @@ export default class Pcc {
 		if (!this.win) return
 		const b = this.win.getBounds()
 		b.width = 320
-		b.height = 400
+		b.height = this.pccHeight
 		this.win.setBounds(b)
 		this.win.setResizable(false)
 	}

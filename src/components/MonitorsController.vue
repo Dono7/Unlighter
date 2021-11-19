@@ -5,7 +5,7 @@ import MonitorSlider from "./MonitorSlider.vue"
 // Variables
 const initialised = ref(false)
 const mouse = ref({ x: 0, y: 0 })
-const win = ref({ w: 320, h: 400 })
+const win = ref({ w: 320, h: 416 })
 const monitors = ref([
 	{ id: 1, index: 0, str: 0, barPosition: 0, name: "Loading...", isActive: false },
 	{ id: 2, index: 1, str: 0, barPosition: 0, name: "Loading...", isActive: false },
@@ -149,6 +149,6 @@ onUnmounted(() => {
 .monitors-controller
 	display: flex
 	flex-direction: column
-	gap: 8px
+	gap: 1px
 	padding: 0
 </style>
