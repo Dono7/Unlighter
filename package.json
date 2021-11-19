@@ -1,6 +1,6 @@
 {
 	"name": "unlighter",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Free software made to reduce your screens brightness. Works with every type of screens.",
 	"author": "Donovan Trinh",
 	"scripts": {
