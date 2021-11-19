@@ -23,7 +23,7 @@ const goToHome = () => {
 	if (isRedirected.value) return
 
 	isRedirected.value = true
-	router.replace({ name: "Monitors" })
+	router.replace({ name: "Pcc" })
 }
 
 onBeforeMount(() => {
