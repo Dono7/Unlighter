@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue"
-import InputBlock from "./../components/InputBlock"
+import InputBlock from "@/components/InputBlock"
 
 const pref = ref([
 	{

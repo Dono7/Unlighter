@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeMount, onUnmounted, ref } from "vue"
-import InputBlock from "./../components/InputBlock"
+import InputBlock from "@/components/InputBlock"
 
 const changePref = (key, value) => {
 	window.unlighter.execModuleMethod({

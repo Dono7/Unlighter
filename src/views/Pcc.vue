@@ -1,7 +1,7 @@
 <script setup>
-import TitleBar from "../components/TitleBar.vue"
-import IconBanner from "../components/IconBanner.vue"
-import MonitorsController from "../components/MonitorsController.vue"
+import TitleBar from "@/components/TitleBar.vue"
+import IconBanner from "@/components/IconBanner.vue"
+import MonitorsController from "@/components/MonitorsController.vue"
 import Loading from "./Loading.vue"
 import Menu from "./Menu.vue"
 import { computed, ref } from "vue"

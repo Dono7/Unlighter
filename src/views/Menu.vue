@@ -1,11 +1,30 @@
 <script setup>
-import NavBar from "../components/NavBar.vue"
+import NavBar from "@/components/NavBar.vue"
+import { useRouter } from "vue-router"
+import { useStore } from "vuex"
+import { onMounted } from "vue"
+
+const router = useRouter()
+const store = useStore()
+const initialRouteName = store.state.menu.lastRouteNameOpened
+
+router.afterEach((to) => {
+	if (to.matched[0].name === "Pcc" && to.matched.length === 2) {
+		store.commit("menu/menuRouteOpened", to.name)
+	}
+})
+
+onMounted(() => {
+	router.push({ name: initialRouteName })
+})
 </script>
 
 <template>
 	<div class="menu-container">
 		<NavBar />
-		<router-view></router-view>
+		<div class="menu-content">
+			<router-view></router-view>
+		</div>
 	</div>
 </template>
 
@@ -20,4 +39,6 @@ import NavBar from "../components/NavBar.vue"
 	background: $background
 	overflow: hidden
 	z-index: 5
+	.menu-content
+		padding: 0 28px
 </style>
