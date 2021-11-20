@@ -2,6 +2,10 @@ import { createRouter, createWebHistory } from "vue-router"
 import Pcc from "@/views/Pcc.vue"
 import Updater from "@/views/Updater.vue"
 import Filter from "@/views/Filter.vue"
+import Preferences from "@/views/menu/Preferences.vue"
+import Update from "@/views/menu/Update.vue"
+import About from "@/views/menu/About.vue"
+import Help from "@/views/menu/Help.vue"
 
 const routes = [
 	{
@@ -11,15 +15,23 @@ const routes = [
 		children: [
 			{
 				path: "preferences",
+				name: "Preferences",
+				component: Preferences,
 			},
 			{
 				path: "update",
+				name: "Update",
+				component: Update,
 			},
 			{
 				path: "about",
+				name: "About",
+				component: About,
 			},
 			{
 				path: "help",
+				name: "Help",
+				component: Help,
 			},
 		],
 	},

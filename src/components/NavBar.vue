@@ -5,8 +5,8 @@ import { useStore } from "vuex"
 const store = useStore()
 
 const tabs = ref([
-	{ label: "Monitors", to: "Monitors" },
 	{ label: "Preferences", to: "Preferences" },
+	{ label: "Update", to: "Update" },
 	{ label: "About", to: "About" },
 	{ label: "Help", to: "Help" },
 ])
@@ -15,7 +15,7 @@ const updateAvailable = computed(() => store.state.app.updateAvailable)
 </script>
 
 <template>
-	<div class="navbar">
+	<nav>
 		<router-link
 			v-for="tab in tabs"
 			:key="tab"
@@ -25,14 +25,14 @@ const updateAvailable = computed(() => store.state.app.updateAvailable)
 		>
 			{{ tab.label }}
 		</router-link>
-	</div>
+	</nav>
 </template>
 
-<style lang="sass">
-.navbar
+<style lang="sass" scoped>
+nav
 	display: flex
 	justify-content: space-between
-	padding: 0 30px
+	padding: 28px
 	align-items: center
 	width: 100%
 	height: 65px
@@ -43,8 +43,9 @@ const updateAvailable = computed(() => store.state.app.updateAvailable)
 		transition: all 0.1s
 		font-weight: 500
 		letter-spacing: 0
-		font-size: 12px
+		font-size: 11px
 		position: relative
+		opacity: 0.3
 		&:hover, &.router-link-exact-active
-			color: $primary
+			opacity: 1
 </style>
