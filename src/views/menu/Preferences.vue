@@ -43,12 +43,6 @@ const pref = ref([
 		value: true,
 		inputType: "switch",
 	},
-	{
-		key: "searchUpdateOnStartup",
-		label: "Check for an update when app starts",
-		value: true,
-		inputType: "switch",
-	},
 ])
 
 onBeforeMount(() => {
