@@ -1,15 +1,19 @@
 <script setup>
+import { useStore } from "vuex"
+const store = useStore()
+
 const quit = () => {
 	window.unlighter.execModuleMethod({ module: "electron", method: "exit" })
 }
 const minimize = () => {
 	window.unlighter.execModuleMethod({ module: "Pcc", method: "minimize" })
 }
+const toggleMenu = () => store.commit("menu/toggleMenu")
 </script>
 
 <template>
 	<div class="title-bar">
-		<div class="menu-opener">
+		<div class="menu-opener" @click="toggleMenu">
 			<img src="@/assets/svg/dots.svg" alt="menu-opener-icon" />
 		</div>
 		<div class="actions">

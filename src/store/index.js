@@ -1,6 +1,7 @@
 import { createLogger, createStore } from "vuex"
 
 import app from "./app.module"
+import menu from "./menu.module"
 
 export default createStore({
 	plugins: [createLogger()],
@@ -9,5 +10,6 @@ export default createStore({
 	actions: {},
 	modules: {
 		app,
+		menu,
 	},
 })
