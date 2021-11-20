@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router"
 import Pcc from "@/views/Pcc.vue"
 import Updater from "@/views/Updater.vue"
 import Filter from "@/views/Filter.vue"
-import Loading from "@/views/Loading.vue"
 
 const routes = [
 	{
@@ -23,11 +22,6 @@ const routes = [
 				path: "help",
 			},
 		],
-	},
-	{
-		path: "/loading",
-		name: "Loading",
-		component: Loading,
 	},
 	{
 		path: "/updater",

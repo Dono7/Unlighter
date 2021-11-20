@@ -95,9 +95,6 @@ body.filter
 	background: rgba(0,0,0,0.0)
 	&.not-init
 		transition: all 1000ms
-
-	#window
-		background: transparent
 #filter
 	padding: 30px
 	h4

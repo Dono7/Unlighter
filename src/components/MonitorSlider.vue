@@ -44,9 +44,9 @@ defineProps({
 			top: 0
 			bottom: 0
 			right: 0
-			width: 80px
+			width: 100px
 			opacity: 0
-			transition: opacity 0.2s ease
+			transition: opacity 0.3s ease
 			background: linear-gradient(90deg, rgba(150, 164, 255, 0) 0%, rgba(150, 164, 255, 0.2) 100%)
 	&:hover
 		.progressbar::before

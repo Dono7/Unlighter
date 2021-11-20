@@ -40,7 +40,7 @@ export default class UnlighterApp {
 			createProtocol("app")
 		}
 
-		openFileInWindow(this.Pcc.win, "loading")
+		openFileInWindow(this.Pcc.win)
 
 		if (this.config.isDevelopment) this.Devtools.openDetachedDevTools(this.Pcc.win)
 
