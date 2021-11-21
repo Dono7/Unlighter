@@ -24,15 +24,15 @@ onMounted(() => {
 	<main class="about">
 		<p>
 			Unlighter is a an open-source project. The source-code is available on
-			<Link href="https://github.com/Dono7/Unlighter" label="Github" />. You can download
-			or learn more about Unlighter on the website
-			<Link href="https://unlighter.app/" label="unlighter.app" />.
+			<Link href="https://github.com/Dono7/Unlighter">Github</Link>. You can download or
+			learn more about Unlighter on the website
+			<Link href="https://unlighter.app/">unlighter.app</Link>.
 		</p>
 
 		<p>
 			This application is developped by
-			<Link href="https://github.com/Dono7" label="Donovan T." /> and designed by
-			<Link href="https://www.behance.net/bourhanewac933" label="Walid B" />.
+			<Link href="https://github.com/Dono7">Donovan T.</Link> and designed by
+			<Link href="https://www.behance.net/bourhanewac933">Walid B</Link>.
 		</p>
 
 		<SearchForUpdate @click="openUpdaterWindow" />

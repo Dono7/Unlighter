@@ -1,6 +1,5 @@
 <script setup>
 const props = defineProps({
-	label: { type: String, required: false, default: "" },
 	href: { type: String, required: false, default: "#" },
 })
 
@@ -12,7 +11,9 @@ const openUrl = () => {
 </script>
 
 <template>
-	<a :href="href" @click.prevent="openUrl">{{ label }}</a>
+	<a :href="href" @click.prevent="openUrl">
+		<slot></slot>
+	</a>
 </template>
 
 <style scoped lang="sass">
