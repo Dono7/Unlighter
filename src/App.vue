@@ -23,6 +23,7 @@ onBeforeMount(() => {
 	padding: 0
 	box-sizing: border-box
 	user-select: none
+	font-family: 'Poppins'
 
 body
 	position: relative
@@ -38,4 +39,11 @@ h1
 	margin-bottom: 15px
 	font-weight: 500
 	font-size: 20px
+
+h2
+	font-size: 13px
+	margin-bottom: 15px
+
+p
+	font-size: 11px
 </style>
