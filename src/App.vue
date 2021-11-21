@@ -41,8 +41,9 @@ h1
 	font-size: 20px
 
 h2
-	font-size: 13px
+	font-size: 16px
 	margin-bottom: 15px
+	font-weight: 500
 
 p
 	font-size: 11px
