@@ -13,21 +13,17 @@ const changePref = (key, value) => {
 const pref = ref([
 	{
 		key: "screenStrength",
-		label: "Default filters strength on start",
+		label: "Default filters strength",
+		comment: "When app starts",
 		value: 9,
 		inputType: "number",
 		min: 0,
 		max: 100,
 	},
 	{
-		key: "showScreenNumber",
-		label: "Show screen number",
-		value: true,
-		inputType: "switch",
-	},
-	{
 		key: "minimizeOnBlur",
 		label: "Automatically minimize",
+		comment: "When click outside",
 		value: true,
 		inputType: "switch",
 	},
@@ -40,6 +36,12 @@ const pref = ref([
 	{
 		key: "showInTaskbar",
 		label: "Show in taskbar",
+		value: true,
+		inputType: "switch",
+	},
+	{
+		key: "showScreenNumber",
+		label: "Show screen number",
 		value: true,
 		inputType: "switch",
 	},
