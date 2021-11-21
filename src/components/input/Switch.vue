@@ -16,7 +16,7 @@ defineProps({
 	height: 20px
 	padding: 2px
 	border-radius: 20px
-	border: 1px solid $switch-border-color
+	border: 1px solid $input-border-color
 	cursor: pointer
 	transition: all 0.2s ease
 	.switch-circle
@@ -26,7 +26,7 @@ defineProps({
 		height: 14px
 		width: 14px
 		border-radius: 20px
-		background-color: $switch-border-color
+		background-color: $input-border-color
 	&.switch-on
 		.switch-circle
 			left: 19px

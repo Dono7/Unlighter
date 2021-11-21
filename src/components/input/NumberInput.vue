@@ -1,30 +1,30 @@
 <script setup>
+import { ref } from "vue"
+
 const props = defineProps({
 	value: { type: Number, required: true },
 	min: { type: Number, required: false },
 	max: { type: Number, required: false },
 })
 
+const v = ref(props.value)
+
 const emit = defineEmits(["valuechange"])
 
 const onValueChange = () => {
-	if (props.min && +props.value < props.min) {
-		props.value = props.min
+	if (props.min !== undefined && props.max !== undefined) {
+		v.value = Math.min(props.max, Math.max(props.min, v.value))
 	}
-	if (props.max && +props.value > props.max) {
-		props.value = props.max
-	}
-	if (props.value == "" || (props.value.length > 1 && +props.value == 0)) {
-		props.value = 0
-	}
-	emit("valuechange", +props.value)
+	emit("valuechange", v.value)
 }
 </script>
 
 <template>
 	<input
-		type="text"
-		v-model="value"
+		type="number"
+		v-model.number="v"
+		:min="min"
+		:max="max"
 		@change="onValueChange"
 		@keypress.enter="$event.target.blur()"
 	/>
@@ -33,14 +33,18 @@ const onValueChange = () => {
 <style lang="sass">
 input
 	text-align: center
-	width: 34px
-	height: 24px
-	border: none
+	width: 64px
+	height: 38px
 	color: white
-	border-radius: 4px
+	background: transparent
+	border-radius: 100px
+	border: 1px solid $input-border-color
 	transition: all 0.2s ease
-	background-color: rgba(255,255,255,0.1)
 	&:focus, &:hover
-		background-color: rgba(255,255,255,0.3)
 		outline: none
+		border-color: $input-border-color-focus
+
+	// Hide ugly arrows
+	&::-webkit-outer-spin-button, &::-webkit-inner-spin-button
+		-webkit-appearance: none
 </style>
