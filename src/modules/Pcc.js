@@ -106,9 +106,19 @@ export default class Pcc {
 		}
 	}
 
+	onStoreReady() {
+		this.sendVersion()
+		this.sendMonitorsList()
+	}
+
+	sendMonitorsList() {
+		const serializedMonitors = this.app.Monitors.serializeForPcc()
+		if (serializedMonitors.length) this.send("set-monitors-list", serializedMonitors)
+	}
+
 	sendVersion() {
 		const version = this.app.electron.getVersion()
-		this.send("app-version", version)
+		this.send("set-app-version", version)
 	}
 
 	restore() {

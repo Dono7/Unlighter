@@ -1,17 +1,15 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue"
+import { useStore } from "vuex"
 import MonitorSlider from "./MonitorSlider.vue"
+const store = useStore()
 
 // Variables
 const initialised = ref(false)
 const mouse = ref({ x: 0, y: 0 })
 const win = ref({ w: 320, h: 416 })
-const monitors = ref([
-	{ id: 1, index: 0, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-	{ id: 2, index: 1, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-	{ id: 3, index: 2, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-	{ id: 4, index: 3, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-])
+
+const monitors = computed(() => store.state.monitors.list)
 
 // Computed
 const xRelative = computed(() => {
