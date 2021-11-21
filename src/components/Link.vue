@@ -16,7 +16,7 @@ const openUrl = () => {
 	</a>
 </template>
 
-<style scoped lang="sass">
+<style lang="sass" scoped>
 a
 	color: $primary
 </style>

@@ -41,7 +41,7 @@ onMounted(() => {
 	</main>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .about
   display: flex
   flex-direction: column

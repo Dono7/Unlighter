@@ -23,5 +23,3 @@ onBeforeMount(() => {
 <template>
 	<div class="store-handler"></div>
 </template>
-
-<style></style>

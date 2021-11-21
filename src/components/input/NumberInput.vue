@@ -30,7 +30,7 @@ const onValueChange = () => {
 	/>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 input
 	text-align: center
 	width: 64px

@@ -10,6 +10,8 @@ const changePref = (key, value) => {
 	})
 }
 
+const showChangesSaved = true // Should be imported from Store/preferences
+
 const pref = ref([
 	{
 		key: "screenStrength",
@@ -76,7 +78,20 @@ onUnmounted(() => {
 			v-bind="p"
 			@valuechange="(...args) => changePref(p.key, ...args)"
 		/>
+
+		<transition name="fade">
+			<div v-if="showChangesSaved" class="changes-saved">
+				<img src="@/assets/svg/checked.svg" alt="Checked changes saved" />
+				You changes have been saved.
+			</div>
+		</transition>
 	</main>
 </template>
 
-<style lang="sass"></style>
+<style lang="sass" scoped>
+.changes-saved
+	position: absolute
+	bottom: 28px
+	color: $valid
+	font-size: 11px
+</style>

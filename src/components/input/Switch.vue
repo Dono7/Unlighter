@@ -10,7 +10,7 @@ defineProps({
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .switch-bg
 	width: 40px
 	height: 20px

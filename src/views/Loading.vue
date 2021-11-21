@@ -48,7 +48,7 @@ onMounted(() => {
 	</div>
 </template>
 
-<style scoped lang="sass">
+<style lang="sass" scoped>
 .loading-container
 	position: absolute
 	top: 0

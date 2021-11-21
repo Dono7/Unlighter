@@ -47,8 +47,9 @@ defineProps({
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .input-block
+	box-sizing: border-box
 	display: flex
 	align-items: center
 	justify-content: space-between

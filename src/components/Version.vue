@@ -31,7 +31,7 @@ const className = computed(() => [
 	<p class="version" :class="className">{{ prefix + version }}</p>
 </template>
 
-<style scoped lang="sass">
+<style lang="sass" scoped>
 p.version
 	font-size: 12px
 	color: white

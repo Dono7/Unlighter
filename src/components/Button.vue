@@ -45,7 +45,7 @@ const iconStyle = computed(() => {
 	</button>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 button
 	display: flex
 	border-radius: 100px
