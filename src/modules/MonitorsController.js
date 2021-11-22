@@ -66,6 +66,12 @@ export default class MonitorsController {
 		return this.monitors.map((monitor) => monitor.serialize())
 	}
 
+	synchronizeStoreMutationWithFilter(mutation) {
+		this.monitors.forEach((monitor) => {
+			monitor.synchronizeStoreMutation(mutation)
+		})
+	}
+
 	updateMonitorsStr(monitorsStr, { init = false, showStr = false }) {
 		if (monitorsStr.length !== this.monitors.length) {
 			if (new Date() - this.lastErrorTime > 10000) {

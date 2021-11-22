@@ -57,7 +57,7 @@ export default {
 		isSomeoneActive(state) {
 			return state.list.some((monitor) => monitor.isActive)
 		},
-		listt(state) {
+		getList(state) {
 			return state.list
 		},
 		lastRelativeMouseXPosition(state) {
@@ -65,13 +65,19 @@ export default {
 			const x = round(state.lastMouseXPosition / factor, 2)
 			return x < 1 ? 0 : x > 99 ? 100 : x
 		},
-		strengthListForFilters(state) {
+		listForFilters(state) {
 			return state.list
 				.filter((monitor) => monitor.isDetected)
-				.map((monitor) => ({
-					str: monitor.str,
-					time: new Date(),
-				}))
+				.map((monitor) => {
+					const str = monitor.str
+					const textOpacity = Math.max(0.3, Math.min(1 - str / 100, 1))
+					const bgOpacity = (str / 100) * 0.95
+					return {
+						str,
+						textColor: `rgba(250,250,250,${textOpacity})`,
+						bgc: `rgba(0,0,0,${bgOpacity})`,
+					}
+				})
 		},
 	},
 }

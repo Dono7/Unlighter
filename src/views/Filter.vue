@@ -1,13 +1,27 @@
 <script setup>
-import { onBeforeMount, onMounted, onUnmounted } from "vue"
-import { ref } from "vue"
+import { ref, onBeforeMount, onMounted, onUnmounted, computed } from "vue"
+import { useStore } from "vuex"
 
+const store = useStore()
 const monitorIndex = ref(null)
+
 const showIndex = ref(false)
 const color = ref("rgba(250,250,250,0.9)")
 const strInfo = ref(0)
 const showStrInfos = ref(false)
 const showStrTimeout = ref(null)
+
+const filterStr = computed(() => {
+	if (monitorIndex.value === null) {
+		return {
+			str: 0,
+			textColor: "white",
+			bgc: "transparent",
+		}
+	} else {
+		return store.getters["monitors/listForFilters"][monitorIndex.value]
+	}
+})
 
 const updateStr = (str) => {
 	const textColor = Math.max(0.3, Math.min(1 - str / 100, 1))
@@ -48,7 +62,7 @@ onBeforeMount(() => {
 	})
 
 	window.unlighter.on("update-index", (e, index) => {
-		monitorIndex.value = index + 1
+		monitorIndex.value = index
 	})
 
 	window.unlighter.on("show-index", () => {
@@ -57,6 +71,10 @@ onBeforeMount(() => {
 
 	window.unlighter.on("hide-index", () => {
 		showIndex.value = false
+	})
+
+	window.unlighter.on("sync-mutation", (event, mutation) => {
+		store.commit(mutation.type, mutation.payload)
 	})
 })
 
@@ -76,10 +94,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div id="filter">
-		<h4 v-show="showStrInfos">Unlighter: {{ strInfo }}</h4>
-		<h1 v-show="monitorIndex && showIndex" :style="{ color }">
-			{{ monitorIndex }}
+	<div id="filter" :style="{ background: filterStr.bgc }">
+		<h4 v-show="showStrInfos">Unlighter: {{ filterStr.str }}</h4>
+		<h1
+			v-show="monitorIndex !== null && showIndex"
+			:style="{ color: filterStr.textColor }"
+		>
+			{{ monitorIndex + 1 }}
 		</h1>
 	</div>
 </template>
@@ -90,12 +111,13 @@ body.filter
 	min-height: 100vh
 	margin: 0
 	height: 0
-	background: transparent
 	overflow: hidden
 	background: rgba(0,0,0,0.0)
 	&.not-init
 		transition: all 1000ms
 #filter
+	width: 100%
+	height: 100%
 	padding: 30px
 	h4
 		padding: 6px 12px

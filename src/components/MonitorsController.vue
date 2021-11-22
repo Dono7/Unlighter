@@ -5,7 +5,7 @@ import MonitorSlider from "./MonitorSlider.vue"
 const store = useStore()
 
 // Computed variables
-const monitorsList = computed(() => store.getters["monitors/listt"])
+const monitorsList = computed(() => store.getters["monitors/getList"])
 const isSomeoneActive = computed(() => store.getters["monitors/isSomeoneActive"])
 const lastMouseXPosition = computed(() => store.state.monitors.lastMouseXPosition)
 const lastRelativeMouseXPosition = computed(
@@ -54,12 +54,11 @@ const updateScreen = (index) => {
 		const newBarPosition =
 			screen.str < 1 ? 0 : screen.str > 99 ? 320 : lastMouseXPosition.value
 		store.commit("monitors/setStrAndBarPos", { newStr, newBarPosition, index })
-		syncFiltersWithList()
+		// syncFiltersWithList()
 	}
 }
 
 const syncFiltersWithList = (forceFiltersInit = false) => {
-	console.log(strengthListForFilters.value)
 	window.unlighter.execModuleMethod({
 		module: "Monitors",
 		method: "updateMonitorsStr",
@@ -69,6 +68,18 @@ const syncFiltersWithList = (forceFiltersInit = false) => {
 
 // Lifecycle event
 onMounted(() => {
+	store.subscribe((mutation) => {
+		const acceptedTypes = ["monitors/list", "monitors/setStrAndBarPos"]
+
+		if (acceptedTypes.includes(mutation.type)) {
+			window.unlighter.execModuleMethod({
+				module: "Monitors",
+				method: "synchronizeStoreMutationWithFilter",
+				args: [mutation],
+			})
+		}
+	})
+
 	window.addEventListener("mouseup", mup)
 	window.addEventListener("mousemove", mmove)
 })
