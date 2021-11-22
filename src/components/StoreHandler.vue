@@ -9,8 +9,8 @@ onBeforeMount(() => {
 	window.unlighter.once("set-app-version", (event, v) => {
 		store.commit("app/version", v)
 	})
-	window.unlighter.once("set-monitors-list", (event, ml) => {
-		store.commit("monitors/list", ml)
+	window.unlighter.once("set-monitors-list", (event, list) => {
+		store.commit("monitors/list", { list })
 	})
 
 	window.unlighter.once("update-available", (event, v) => {

@@ -84,7 +84,7 @@ onUnmounted(() => {
 	</div>
 </template>
 
-<style lang="sass" scoped>
+<style lang="sass">
 body.filter
 	width: 100%
 	min-height: 100vh
