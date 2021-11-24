@@ -6,7 +6,7 @@ import monitors from "./monitors.module"
 
 const loggerOptions = {
 	filter(mutation) {
-		const excludeTypes = ["monitors/lastMouseXPosition", "monitors/setStrAndBarPos"]
+		const excludeTypes = ["monitors/lastMouseXPosition", "monitors/setStr"]
 		return !excludeTypes.includes(mutation.type)
 	},
 }

@@ -3,19 +3,16 @@ import { computed, onMounted, onUnmounted } from "vue"
 import { useStore } from "vuex"
 import MonitorSlider from "./MonitorSlider.vue"
 const store = useStore()
+const windowWidth = 320
 
 // Computed variables
 const monitorsList = computed(() => store.getters["monitors/getList"])
 const isSomeoneActive = computed(() => store.getters["monitors/isSomeoneActive"])
-const lastMouseXPosition = computed(() => store.state.monitors.lastMouseXPosition)
 const lastRelativeMouseXPosition = computed(
 	() => store.getters["monitors/lastRelativeMouseXPosition"],
 )
-const strengthListForFilters = computed(
-	() => store.getters["monitors/strengthListForFilters"],
-)
 
-// Methods
+// Mouse events
 const mdown = (index) => {
 	store.commit("monitors/setActive", index)
 	updateScreen(index)
@@ -40,9 +37,9 @@ const mmove = (event) => {
 
 const storeMousePosition = (x) => {
 	if (
-		(x >= 0 && x <= 100) ||
-		(x < 0 && lastRelativeMouseXPosition !== 0) ||
-		(x > 100 && lastRelativeMouseXPosition !== 100)
+		(x >= 0 && x <= windowWidth) ||
+		(x < 0 && lastRelativeMouseXPosition.value !== 0) ||
+		(x > windowWidth && lastRelativeMouseXPosition.value !== 100)
 	) {
 		store.commit("monitors/lastMouseXPosition", event.clientX)
 	}
@@ -51,25 +48,14 @@ const storeMousePosition = (x) => {
 const updateScreen = (index) => {
 	if (monitorsList.value[index].isActive) {
 		const newStr = lastRelativeMouseXPosition.value
-		const newBarPosition =
-			screen.str < 1 ? 0 : screen.str > 99 ? 320 : lastMouseXPosition.value
-		store.commit("monitors/setStrAndBarPos", { newStr, newBarPosition, index })
-		// syncFiltersWithList()
+		store.commit("monitors/setStr", { newStr, index })
 	}
-}
-
-const syncFiltersWithList = (forceFiltersInit = false) => {
-	window.unlighter.execModuleMethod({
-		module: "Monitors",
-		method: "updateMonitorsStr",
-		args: [strengthListForFilters.value, { init: forceFiltersInit }],
-	})
 }
 
 // Lifecycle event
 onMounted(() => {
 	store.subscribe((mutation) => {
-		const acceptedTypes = ["monitors/list", "monitors/setStrAndBarPos"]
+		const acceptedTypes = ["monitors/list", "monitors/setStr"]
 
 		if (acceptedTypes.includes(mutation.type)) {
 			window.unlighter.execModuleMethod({

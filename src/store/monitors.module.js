@@ -1,22 +1,13 @@
-const round = (number, precision) => {
-	const factor = Math.pow(10, precision)
-	return Math.round(number * factor) / factor
-}
-
-const barPositionFromStr = (str) => {
-	return round((windowWith / 100) * str, 1)
-}
-
 const windowWith = 320
 
 export default {
 	namespaced: true,
 	state: () => ({
 		list: [
-			{ id: 1, index: 0, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-			{ id: 2, index: 1, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-			{ id: 3, index: 2, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-			{ id: 4, index: 3, str: 0, barPosition: 0, name: "Loading...", isActive: false },
+			{ id: 1, index: 0, str: 0, name: "Loading...", isActive: false },
+			{ id: 2, index: 1, str: 0, name: "Loading...", isActive: false },
+			{ id: 3, index: 2, str: 0, name: "Loading...", isActive: false },
+			{ id: 4, index: 3, str: 0, name: "Loading...", isActive: false },
 		],
 		lastMouseXPosition: 0,
 	}),
@@ -30,7 +21,6 @@ export default {
 					id: detectedMonitor?.id ?? monitor.id,
 					index: index,
 					str: detectedMonitor?.str ?? monitor.str,
-					barPosition: barPositionFromStr(detectedMonitor?.str ?? monitor.str),
 					name: detectedMonitor?.name ?? "Monitor " + (index + 1),
 					isActive: false,
 					isDetected: !!detectedMonitor?.id,
@@ -45,9 +35,8 @@ export default {
 		setAllInactive(state) {
 			state.list.forEach((m) => (m.isActive = false))
 		},
-		setStrAndBarPos(state, { newStr, newBarPosition, index }) {
+		setStr(state, { newStr, index }) {
 			state.list[index].str = newStr
-			state.list[index].barPosition = newBarPosition
 		},
 		lastMouseXPosition(state, lastMouseXPosition) {
 			state.lastMouseXPosition = lastMouseXPosition
@@ -62,7 +51,7 @@ export default {
 		},
 		lastRelativeMouseXPosition(state) {
 			const factor = windowWith / 100
-			const x = round(state.lastMouseXPosition / factor, 2)
+			const x = Math.round((state.lastMouseXPosition / factor) * 100) / 100
 			return x < 1 ? 0 : x > 99 ? 100 : x
 		},
 		listForFilters(state) {
