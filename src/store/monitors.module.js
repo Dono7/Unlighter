@@ -1,5 +1,9 @@
 const windowWith = 320
 
+export const clamp = (num, min, max) => {
+	return num > max ? max : num < min ? min : num
+}
+
 export default {
 	namespaced: true,
 	state: () => ({
@@ -40,6 +44,11 @@ export default {
 		},
 		lastMouseXPosition(state, lastMouseXPosition) {
 			state.lastMouseXPosition = lastMouseXPosition
+		},
+		addValueToAll(state, valueToAdd) {
+			state.list.forEach((m) => {
+				m.str = clamp(m.str + valueToAdd, 0, 100)
+			})
 		},
 	},
 	getters: {

@@ -86,6 +86,10 @@ export default class Pcc {
 			: this.win.setAlwaysOnTop(false, "normal")
 	}
 
+	addStrToAllFilters(valueToAdd) {
+		this.send("add-value-to-all-filters", valueToAdd)
+	}
+
 	send(channel, data) {
 		if (this.win) {
 			this.win.webContents.send(channel, data)

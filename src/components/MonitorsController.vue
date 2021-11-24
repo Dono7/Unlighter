@@ -55,7 +55,7 @@ const updateScreen = (index) => {
 // Lifecycle event
 onMounted(() => {
 	store.subscribe((mutation) => {
-		const acceptedTypes = ["monitors/list", "monitors/setStr"]
+		const acceptedTypes = ["monitors/list", "monitors/setStr", "monitors/addValueToAll"]
 
 		if (acceptedTypes.includes(mutation.type)) {
 			window.unlighter.execModuleMethod({

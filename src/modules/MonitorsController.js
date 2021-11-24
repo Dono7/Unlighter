@@ -72,11 +72,6 @@ export default class MonitorsController {
 		})
 	}
 
-	shortcutTriggered(action, interval) {
-		// Should check if enableShortcuts is enable
-		// Then send a message to Store Handler for increase or decrease str
-	}
-
 	showOrHideMonitorIndex(action) {
 		if (
 			action !== "show" ||

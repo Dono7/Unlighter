@@ -20,6 +20,10 @@ onBeforeMount(() => {
 	window.unlighter.on("update-lastcheck", (event, lastUpdateCheckString) => {
 		store.commit("app/lastUpdateCheckString", lastUpdateCheckString)
 	})
+
+	window.unlighter.on("add-value-to-all-filters", (event, valueToAdd) => {
+		store.commit("monitors/addValueToAll", valueToAdd)
+	})
 })
 </script>
 
