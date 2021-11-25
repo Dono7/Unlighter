@@ -1,115 +1,74 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue"
+import { computed, onMounted, onUnmounted } from "vue"
+import { useStore } from "vuex"
 import MonitorSlider from "./MonitorSlider.vue"
+const store = useStore()
+const windowWidth = 320
 
-// Variables
-const initialised = ref(false)
-const mouse = ref({ x: 0, y: 0 })
-const win = ref({ w: 320, h: 400 })
-const monitors = ref([
-	{ id: 1, index: 0, str: 0, barPosition: 0, name: "Loading...", isActive: false },
-])
+// Computed variables
+const monitorsList = computed(() => store.getters["monitors/getList"])
+const isSomeoneActive = computed(() => store.getters["monitors/isSomeoneActive"])
+const lastRelativeMouseXPosition = computed(
+	() => store.getters["monitors/lastRelativeMouseXPosition"],
+)
 
-// Computed
-const xRelative = computed(() => {
-	const factor = win.value.w / 100
-	const x = round(mouse.value.x / factor, 2)
-	return x < 1 ? 0 : x > 99 ? 100 : x
-})
-
-const isSomeoneActive = computed(() => {
-	return monitors.value.some((screen) => screen.isActive)
-})
-
-const monitorsStr = computed(() => {
-	return monitors.value.map((monitor) => ({
-		str: monitor.str,
-		time: new Date(),
-	}))
-})
-
-// Methods
-
-const init = ({ monitors: m, sendStrAfterInit }) => {
-	monitors.value = m.map((monitor, index) => {
-		return {
-			id: monitor.id,
-			index: index,
-			str: monitor.str,
-			barPosition: barPositionFromStr(monitor.str),
-			name: monitor.name,
-			isActive: false,
-		}
-	})
-	initialised.value = true
-	if (sendStrAfterInit) sendStrToMonitors(true)
-}
-
-const barPositionFromStr = (str) => {
-	return round((win.value.w / 100) * str, 1)
-}
-
-const mdown = (screen) => {
-	screen.isActive = true
-	updateScreen(screen)
+// Mouse events
+const mdown = (index) => {
+	store.commit("monitors/setActive", index)
+	updateScreen(index)
 }
 
 const mup = () => {
-	monitors.value.forEach((screen) => (screen.isActive = false))
+	store.commit("monitors/setAllInactive")
 }
 
-const menter = (screen) => {
+const menter = (index) => {
 	if (isSomeoneActive.value) {
-		screen.isActive = true
+		store.commit("monitors/setActive", index)
 	}
 }
 
 const mmove = (event) => {
-	mouse.value.x = event.clientX
-	mouse.value.y = event.clientY
+	storeMousePosition(event.clientX)
 	if (isSomeoneActive.value) {
-		monitors.value.forEach((screen) => updateScreen(screen))
+		monitorsList.value.forEach((screen, index) => updateScreen(index))
 	}
 }
 
-const updateScreen = (screen) => {
-	if (screen.isActive) {
-		screen.str = xRelative.value
-		screen.barPosition =
-			screen.str < 1 ? 0 : screen.str > 99 ? win.value.w : mouse.value.x
-		sendStrToMonitors()
+const storeMousePosition = (x) => {
+	if (
+		(x >= 0 && x <= windowWidth) ||
+		(x < 0 && lastRelativeMouseXPosition.value !== 0) ||
+		(x > windowWidth && lastRelativeMouseXPosition.value !== 100)
+	) {
+		store.commit("monitors/lastMouseXPosition", event.clientX)
 	}
 }
 
-const sendStrToMonitors = (init = false) => {
-	if (initialised.value) {
-		window.unlighter.execModuleMethod({
-			module: "Monitors",
-			method: "updateMonitorsStr",
-			args: [monitorsStr.value, { init }],
-		})
+const updateScreen = (index) => {
+	if (monitorsList.value[index].isActive) {
+		const newStr = lastRelativeMouseXPosition.value
+		store.commit("monitors/setStr", { newStr, index })
 	}
-}
-
-const round = (number, precision) => {
-	const factor = Math.pow(10, precision)
-	return Math.round(number * factor) / factor
 }
 
 // Lifecycle event
-
 onMounted(() => {
-	window.unlighter.on("init-pcc", (event, data) => {
-		init(data)
-	})
-	window.unlighter.on("ask-for-monitors-str", () => {
-		sendStrToMonitors()
+	store.subscribe((mutation) => {
+		const acceptedTypes = ["monitors/list", "monitors/setStr", "monitors/addValueToAll"]
+
+		if (acceptedTypes.includes(mutation.type)) {
+			window.unlighter.execModuleMethod({
+				module: "Monitors",
+				method: "synchronizeStoreMutationWithFilter",
+				args: [mutation],
+			})
+		}
 	})
 
 	window.unlighter.execModuleMethod({
 		module: "Pcc",
-		method: "sendToPccFromCode",
-		args: ["ask-for-init-pcc"],
+		method: "onPccMounted",
 	})
 
 	window.addEventListener("mouseup", mup)
@@ -117,8 +76,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-	window.unlighter.removeListener("init-pcc")
-	window.unlighter.removeListener("ask-for-monitors-str")
 	window.removeEventListener("mouseup", mup)
 	window.removeEventListener("mousemove", mmove)
 })
@@ -127,13 +84,13 @@ onUnmounted(() => {
 <template>
 	<div class="monitors-controller">
 		<MonitorSlider
-			v-for="(screen, index) in monitors"
+			v-for="(screen, index) in monitorsList"
 			:key="index"
 			:index="index"
 			:screen="screen"
-			@click="updateScreen(screen)"
-			@mousedown="mdown(screen)"
-			@mouseenter="menter(screen)"
+			@click="updateScreen(index)"
+			@mousedown="mdown(index)"
+			@mouseenter="menter(index)"
 		/>
 	</div>
 </template>
@@ -142,6 +99,6 @@ onUnmounted(() => {
 .monitors-controller
 	display: flex
 	flex-direction: column
-	gap: 8px
+	gap: 1px
 	padding: 0
 </style>

@@ -56,49 +56,20 @@ export default class MonitorsController {
 		}
 	}
 
-	onAllFiltersLoaded() {}
-
-	onAllFiltersMounted() {
-		this.app.Pcc.initPccMonitorsTab(true)
+	onAllFiltersLoaded() {
+		this.app.eitherPccOrFiltersMounted()
 	}
+
+	onAllFiltersMounted() {}
 
 	serializeForPcc() {
 		return this.monitors.map((monitor) => monitor.serialize())
 	}
 
-	updateMonitorsStr(monitorsStr, { init = false, showStr = false }) {
-		if (monitorsStr.length !== this.monitors.length) {
-			if (new Date() - this.lastErrorTime > 10000) {
-				this.lastErrorTime = new Date()
-				logger.log(
-					"Number of monitors in PCC and in the app are not the same. Reloading filters.",
-				)
-				setTimeout(() => {
-					this.reloadFilters()
-				}, 200)
-			}
-		}
-		this.monitors.forEach((monitor, index) => {
-			monitor.updateStr(monitorsStr[index], { init, showStr })
+	synchronizeStoreMutationWithFilter(mutation) {
+		this.monitors.forEach((monitor) => {
+			monitor.synchronizeStoreMutation(mutation)
 		})
-	}
-
-	shortcutTriggered(action, interval) {
-		if (!this.app.Prefs.getPref("enableShortcuts")) return
-
-		const monitorsStr = this.monitors.map((m) => ({ str: m.str, time: new Date() }))
-		const newStr = monitorsStr.map((m) => {
-			if (action == "increase")
-				m.str = Math.min(Math.round((m.str + interval) * 100) / 100, 100)
-
-			if (action == "decrease")
-				m.str = Math.max(Math.round((m.str - interval) * 100) / 100, 0)
-
-			return m
-		})
-
-		this.updateMonitorsStr(newStr, { init: false, showStr: true })
-		this.app.Pcc.initPccMonitorsTab(false)
 	}
 
 	showOrHideMonitorIndex(action) {

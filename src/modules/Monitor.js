@@ -44,12 +44,8 @@ export default class Monitor {
 		})
 	}
 
-	updateStr(payload, { init, showStr }) {
-		const { str, time } = payload
-		if (time <= this.lastStrUpdate) return
-
-		this.str = str
-		this.win.webContents.send("update-str", { str, init, showStr })
+	synchronizeStoreMutation(mutation) {
+		this.win.webContents.send("sync-mutation", mutation)
 	}
 
 	loadIndex() {

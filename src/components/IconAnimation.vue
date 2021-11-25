@@ -29,7 +29,7 @@ onMounted(() => {
 	</div>
 </template>
 
-<style scoped lang="sass">
+<style lang="sass" scoped>
 $anim-delay: 0.5s
 $anim-fun1: cubic-bezier(0.05, 0.24, 0.35, 1)
 $anim-fun2: cubic-bezier(0.89, 0, 0.84, 0.66)

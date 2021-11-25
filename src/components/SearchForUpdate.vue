@@ -37,7 +37,7 @@ const iconPath = computed(() =>
 	display: flex
 	justify-content: space-between
 	align-items: center
-	margin: 10px 0
+	margin-bottom: 10px
 	h4
 		font-size: 16px
 		font-weight: 500

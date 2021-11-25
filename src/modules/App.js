@@ -40,13 +40,11 @@ export default class UnlighterApp {
 			createProtocol("app")
 		}
 
-		openFileInWindow(this.Pcc.win, "loading")
+		openFileInWindow(this.Pcc.win)
 
 		if (this.config.isDevelopment) this.Devtools.openDetachedDevTools(this.Pcc.win)
 
 		if (this.Monitors) this.Monitors.loadFilterPage()
-
-		this.Pcc.initPccMonitorsTab()
 	}
 
 	async installVueExtension() {
@@ -60,11 +58,27 @@ export default class UnlighterApp {
 		// }
 	}
 
+	eitherPccOrFiltersMounted() {
+		if (this.isPccOrFiltersReady) {
+			this.onPccAndAllFiltersMounted()
+		} else {
+			this.isPccOrFiltersReady = true
+		}
+	}
+
+	onPccAndAllFiltersMounted() {
+		this.Pcc.sendMonitorsList()
+		this.Pcc.sendPrefs()
+	}
+
 	initEvents() {
 		this.Pcc.onPccReadyToShow(() => {
 			this.initialised = true
-			this.Shortcuts.bindShortcuts()
 			this.Tray.init()
+
+			if (this.Prefs.getPref("enableShortcuts")) {
+				this.Shortcuts.bindShortcuts()
+			}
 		})
 
 		this.electron.on("window-all-closed", () => {

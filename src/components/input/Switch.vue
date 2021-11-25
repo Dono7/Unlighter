@@ -10,13 +10,13 @@ defineProps({
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .switch-bg
-	width: 34px
-	height: 18px
+	width: 40px
+	height: 20px
 	padding: 2px
-	border-radius: 18px
-	background-color: rgba(255,255,255,0.1)
+	border-radius: 20px
+	border: 1px solid $input-border-color
 	cursor: pointer
 	transition: all 0.2s ease
 	.switch-circle
@@ -25,11 +25,10 @@ defineProps({
 		transition: inherit
 		height: 14px
 		width: 14px
-		border-radius: 18px
-		background-color: rgba(255,255,255,0.3)
+		border-radius: 20px
+		background-color: $input-border-color
 	&.switch-on
-		background-color: rgba(255,255,255,0.5)
 		.switch-circle
-			left: 16px
-			background-color: rgba(255,255,255,1)
+			left: 19px
+			background-color: white
 </style>

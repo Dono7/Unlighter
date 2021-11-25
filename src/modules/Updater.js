@@ -41,10 +41,8 @@ export default class Updater {
 	autoCheckOnAppStartup() {
 		this.app.Pcc.onPccReadyToShow(() => {
 			setTimeout(() => {
-				if (this.app.Prefs.getPref("searchUpdateOnStartup")) {
-					this.checkForUpdates()
-					this.updateLastCheckString()
-				}
+				this.checkForUpdates()
+				this.updateLastCheckString()
 			}, 5000)
 		})
 	}

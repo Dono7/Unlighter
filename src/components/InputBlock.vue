@@ -9,6 +9,7 @@ defineProps({
 	max: { type: Number, required: false },
 	name: { type: String, required: true },
 	label: { type: String, required: true },
+	comment: { type: String, default: "" },
 	inputType: { type: String, required: true },
 	text: { type: String, required: false },
 	labelMaxWidth: { type: Number, required: false, default: 145 },
@@ -22,7 +23,8 @@ defineProps({
 			class="input-label"
 			:style="labelMaxWidth ? `max-width: ${labelMaxWidth}px` : ''"
 		>
-			{{ label }}
+			<label>{{ label }}</label>
+			<span v-if="comment" class="comment">{{ comment }}</span>
 		</div>
 		<Switch
 			v-if="inputType == 'switch'"
@@ -45,8 +47,9 @@ defineProps({
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .input-block
+	box-sizing: border-box
 	display: flex
 	align-items: center
 	justify-content: space-between
@@ -54,5 +57,8 @@ defineProps({
 	&.smallmargin
 		margin-bottom: 10px
 	.input-label
-		font-size: 12px
+		font-size: 11px
+	.comment
+		display: block
+		opacity: 0.4
 </style>

@@ -2,7 +2,6 @@
 import { computed } from "vue"
 
 const props = defineProps({
-	label: { type: String, required: false, default: "" },
 	iconClass: { type: String, required: false, default: "" },
 	centered: { type: Boolean, required: false, default: false },
 	href: { type: String, required: false },
@@ -40,13 +39,13 @@ const iconStyle = computed(() => {
 
 <template>
 	<button :class="{ centered, small, notif, size }" @click="openUrl" :style="buttonStyle">
-		{{ label }}
+		<slot></slot>
 		<i v-if="iconClass" :class="iconClass"></i>
 		<img v-if="iconPath" :src="require(`@/assets/${iconPath}`)" :style="iconStyle" />
 	</button>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 button
 	display: flex
 	border-radius: 100px

@@ -9,6 +9,8 @@ export default class Pcc {
 		this.lastMinimize = 0
 		this.lastRestore = 0
 
+		this.pccHeight = 416
+
 		this.createPccWindow()
 	}
 
@@ -46,9 +48,9 @@ export default class Pcc {
 		const mainScreen = screen.getPrimaryDisplay()
 		return {
 			x: Math.round(mainScreen.workArea.width - 320 - margin - marginRight),
-			y: Math.round(mainScreen.workArea.height - 400 - margin),
+			y: Math.round(mainScreen.workArea.height - this.pccHeight - margin),
 			width: 320,
-			height: 400,
+			height: this.pccHeight,
 		}
 	}
 
@@ -59,10 +61,10 @@ export default class Pcc {
 		}
 	}
 
-	initPccMonitorsTab(sendStrAfterInit = true) {
-		const serializedMonitors = this.app.Monitors.serializeForPcc()
-		if (serializedMonitors.length)
-			this.send("init-pcc", { monitors: serializedMonitors, sendStrAfterInit })
+	onStoreHandlerMounted() {}
+
+	onPccMounted() {
+		this.app.eitherPccOrFiltersMounted()
 	}
 
 	onPccReadyToShow(callback) {
@@ -73,7 +75,7 @@ export default class Pcc {
 		if (!this.win) return
 		const b = this.win.getBounds()
 		b.width = 320
-		b.height = 400
+		b.height = this.pccHeight
 		this.win.setBounds(b)
 		this.win.setResizable(false)
 	}
@@ -84,18 +86,19 @@ export default class Pcc {
 			: this.win.setAlwaysOnTop(false, "normal")
 	}
 
+	addStrToAllFilters(valueToAdd) {
+		this.send("add-value-to-all-filters", valueToAdd)
+	}
+
 	send(channel, data) {
 		if (this.win) {
 			this.win.webContents.send(channel, data)
 		}
 	}
 
-	sendToPccFromCode(code) {
-		if (code == "ask-for-init-pcc") {
-			this.initPccMonitorsTab()
-		}
-
-		if (code == "preferences-get") this.send("preferences-get", this.app.Prefs.getPref())
+	sendPrefs() {
+		const prefs = this.app.Prefs.getPref()
+		this.send("set-prefs", prefs)
 	}
 
 	log(msg) {
@@ -104,9 +107,18 @@ export default class Pcc {
 		}
 	}
 
+	onStoreReady() {
+		this.sendVersion()
+	}
+
+	sendMonitorsList() {
+		const serializedMonitors = this.app.Monitors.serializeForPcc()
+		if (serializedMonitors.length) this.send("set-monitors-list", serializedMonitors)
+	}
+
 	sendVersion() {
 		const version = this.app.electron.getVersion()
-		this.send("app-version", version)
+		this.send("set-app-version", version)
 	}
 
 	restore() {

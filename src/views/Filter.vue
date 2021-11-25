@@ -1,54 +1,23 @@
 <script setup>
-import { onBeforeMount, onMounted, onUnmounted } from "vue"
-import { ref } from "vue"
+import { ref, onBeforeMount, onMounted, onUnmounted, computed } from "vue"
+import { useStore } from "vuex"
 
-const monitorIndex = ref(null)
-const showIndex = ref(false)
-const color = ref("rgba(250,250,250,0.9)")
-const strInfo = ref(0)
-const showStrInfos = ref(false)
-const showStrTimeout = ref(null)
+const store = useStore()
+const monitorIndex = ref(0)
 
-const updateStr = (str) => {
-	const textColor = Math.max(0.3, Math.min(1 - str / 100, 1))
-	document.body.style.background = `rgba(0,0,0,${(str / 100) * 0.95})`
-	color.value = `rgba(250,250,250,${textColor})`
-	strInfo.value = str
-}
+const showIndex = ref(false) // Should be replaced but a property from the store
+const showStrWhenShortcutTriggered = ref(false)
 
-const hideStr = () => {
-	showStrInfos.value = false
-	showStrTimeout.value = null
-}
-
-const showStrFun = () => {
-	showStrInfos.value = true
-	if (showStrTimeout.value) {
-		clearTimeout(showStrTimeout.value)
-	}
-	showStrTimeout.value = setTimeout(hideStr, 1200)
-}
+const filterStr = computed(
+	() => store.getters["monitors/listForFilters"][monitorIndex.value],
+)
 
 onBeforeMount(() => {
 	document.body.classList.add("filter")
-	document.body.classList.add("not-init")
-
-	window.unlighter.on("update-str", (e, { str, init, showStr }) => {
-		if (init) {
-			setTimeout(() => {
-				document.body.classList.remove("not-init")
-			}, 1000)
-		}
-		if (showStr) {
-			showStrFun()
-		} else {
-			hideStr()
-		}
-		updateStr(str)
-	})
+	// document.body.classList.add("not-init")
 
 	window.unlighter.on("update-index", (e, index) => {
-		monitorIndex.value = index + 1
+		monitorIndex.value = index
 	})
 
 	window.unlighter.on("show-index", () => {
@@ -57,6 +26,10 @@ onBeforeMount(() => {
 
 	window.unlighter.on("hide-index", () => {
 		showIndex.value = false
+	})
+
+	window.unlighter.on("sync-mutation", (event, mutation) => {
+		store.commit(mutation.type, mutation.payload)
 	})
 })
 
@@ -76,10 +49,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div id="filter">
-		<h4 v-show="showStrInfos">Unlighter: {{ strInfo }}</h4>
-		<h1 v-show="monitorIndex && showIndex" :style="{ color }">
-			{{ monitorIndex }}
+	<div id="filter" :style="{ background: filterStr?.bgc ?? `rgba(0,0,0,0.0)` }">
+		<h4 v-show="showStrWhenShortcutTriggered">Unlighter: {{ filterStr?.str ?? `0` }}</h4>
+		<h1
+			v-show="monitorIndex !== null && showIndex"
+			:style="{ color: filterStr?.textColor ?? `white` }"
+		>
+			{{ monitorIndex + 1 }}
 		</h1>
 	</div>
 </template>
@@ -90,15 +66,13 @@ body.filter
 	min-height: 100vh
 	margin: 0
 	height: 0
-	background: transparent
 	overflow: hidden
 	background: rgba(0,0,0,0.0)
 	&.not-init
-		transition: all 1000ms
-
-	#window
-		background: transparent
+		// transition: all 1000ms
 #filter
+	width: 100%
+	height: 100%
 	padding: 30px
 	h4
 		padding: 6px 12px

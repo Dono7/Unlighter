@@ -22,6 +22,7 @@ export default class Preferences {
 		}
 
 		storage.set("preferences", newPref, (error) => {
+			this.app.Pcc.send("pref-changed-confirmation")
 			this.onPrefChange(key, value)
 		})
 	}
@@ -33,6 +34,14 @@ export default class Preferences {
 
 		if (key === "showInTaskbar") {
 			this.app.Tray.toggleAppInTaskbar(value)
+		}
+
+		if (key === "enableShortcuts") {
+			if (value) {
+				this.app.Shortcuts.bindShortcuts()
+			} else {
+				this.app.Shortcuts.unbindShortcuts()
+			}
 		}
 	}
 

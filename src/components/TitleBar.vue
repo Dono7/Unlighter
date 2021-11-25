@@ -1,16 +1,20 @@
 <script setup>
+import { useStore } from "vuex"
+const store = useStore()
+
 const quit = () => {
 	window.unlighter.execModuleMethod({ module: "electron", method: "exit" })
 }
 const minimize = () => {
 	window.unlighter.execModuleMethod({ module: "Pcc", method: "minimize" })
 }
+const toggleMenu = () => store.commit("menu/toggleMenu")
 </script>
 
 <template>
 	<div class="title-bar">
-		<div class="title">
-			<img id="icon" src="@/assets/svg/icon.svg" alt="Unlighter logo icno" />Unlighter
+		<div class="menu-opener" @click="toggleMenu">
+			<img src="@/assets/svg/dots.svg" alt="menu-opener-icon" />
 		</div>
 		<div class="actions">
 			<div class="minimize" @click="minimize">
@@ -30,29 +34,30 @@ const minimize = () => {
 	align-items: center
   letter-spacing: 0.6px
 	-webkit-app-region: drag
-	.title
-		padding-left: 30px
-		display: flex
-		align-items: center
-		#icon
-			height: 30px
-			width: 30px
-			margin-right: 5px
+	border-bottom: $titlebar-border
+	.menu-opener
+		-webkit-app-region: no-drag
+		@include flex-center
+		width: 70px
+		height: inherit
+		background: transparent
+		transition: $titlebar-btn-transition
+		cursor: pointer
+		&:hover
+			background: $titlebar-btn-hover-white
 	.actions
 		-webkit-app-region: no-drag
 		display: flex
-		margin-right: ($titlebar-height - $titlebar-btn-height) / 2
+		height: inherit
 		> div
 			position: relative
-			display: flex
-			justify-content: center
-			align-items: center
-			height: $titlebar-btn-height
-			width: $titlebar-btn-height
-			transition: all 0.15s
+			@include flex-center
+			height: inherit
+			width: 64px
+			transition: $titlebar-btn-transition
 			cursor: pointer
 			&:hover
-				background-color: rgba(255,255,255,0.10)
+				background-color: $titlebar-btn-hover-white
 			&.close:hover
-				background-color: rgba(255,100,100,0.20)
+				background-color: $titlebar-btn-hover-red
 </style>

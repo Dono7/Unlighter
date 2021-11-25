@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue"
-import InputBlock from "./../components/InputBlock"
+import InputBlock from "@/components/InputBlock"
 
 const pref = ref([
 	{
@@ -20,7 +20,7 @@ const pref = ref([
 
 <template>
 	<main class="help">
-		<h1>Multi-Drag</h1>
+		<h2>Multi-Drag</h2>
 
 		<img src="@/assets/gif/multidrag.gif" />
 
@@ -28,7 +28,7 @@ const pref = ref([
 			Clic and drag throught multiple monitors bar to synchronise them.
 		</p>
 
-		<h1>Shortcuts</h1>
+		<h2>Shortcuts</h2>
 
 		<InputBlock v-for="p in pref" :name="p.key" v-bind="p" smallmargin />
 	</main>
@@ -36,5 +36,5 @@ const pref = ref([
 
 <style lang="sass" scoped>
 .description
-  margin: 5px 0 20px
+  margin: 4px 0 16px
 </style>

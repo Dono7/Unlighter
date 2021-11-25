@@ -1,13 +1,24 @@
 <script setup>
-import { onBeforeMount } from "vue"
+import { onBeforeMount, onMounted } from "vue"
 import { useStore } from "vuex"
 const store = useStore()
 
 onBeforeMount(() => {
-	window.unlighter.execModuleMethod({ module: "Pcc", method: "sendVersion" })
+	window.unlighter.execModuleMethod({ module: "Pcc", method: "onStoreReady" })
 
-	window.unlighter.once("app-version", (event, v) => {
+	window.unlighter.once("set-app-version", (event, v) => {
 		store.commit("app/version", v)
+	})
+	window.unlighter.once("set-monitors-list", (event, list) => {
+		store.commit("monitors/list", { list })
+	})
+
+	window.unlighter.on("set-prefs", (event, prefs) => {
+		store.commit("preferences/setPrefs", prefs)
+	})
+
+	window.unlighter.on("pref-changed-confirmation", () => {
+		store.commit("preferences/prefChangedConfirmation")
 	})
 
 	window.unlighter.once("update-available", (event, v) => {
@@ -17,11 +28,20 @@ onBeforeMount(() => {
 	window.unlighter.on("update-lastcheck", (event, lastUpdateCheckString) => {
 		store.commit("app/lastUpdateCheckString", lastUpdateCheckString)
 	})
+
+	window.unlighter.on("add-value-to-all-filters", (event, valueToAdd) => {
+		store.commit("monitors/addValueToAll", valueToAdd)
+	})
+})
+
+onMounted(() => {
+	window.unlighter.execModuleMethod({
+		module: "Pcc",
+		method: "onStoreHandlerMounted",
+	})
 })
 </script>
 
 <template>
 	<div class="store-handler"></div>
 </template>
-
-<style></style>
