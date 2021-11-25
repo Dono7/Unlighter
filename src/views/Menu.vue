@@ -2,11 +2,18 @@
 import NavBar from "@/components/NavBar.vue"
 import { useRouter } from "vue-router"
 import { useStore } from "vuex"
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
 
 const router = useRouter()
 const store = useStore()
 const initialRouteName = store.state.menu.lastRouteNameOpened
+
+const direction = ref("slide-left")
+
+router.beforeEach((to, from) => {
+	direction.value =
+		to.meta.transitionIndex < from.meta.transitionIndex ? "slide-left" : "slide-right"
+})
 
 router.afterEach((to) => {
 	if (to.matched[0].name === "Pcc" && to.matched.length === 2) {
@@ -23,7 +30,11 @@ onMounted(() => {
 	<div class="menu-container">
 		<NavBar />
 		<div class="menu-content">
-			<router-view></router-view>
+			<router-view v-slot="{ Component }">
+				<transition :name="direction">
+					<component :is="Component" />
+				</transition>
+			</router-view>
 		</div>
 	</div>
 </template>
