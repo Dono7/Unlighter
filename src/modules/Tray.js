@@ -25,7 +25,6 @@ export default class UnlighterTray {
 
 	toggleAppInTaskbar(shouldShow) {
 		this.showAppInTaskbar(shouldShow)
-		this.app.Pcc.sendToPccFromCode("preferences-get")
 	}
 
 	reload() {

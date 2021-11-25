@@ -1,86 +1,30 @@
 <script setup>
-import { onBeforeMount, onUnmounted, ref } from "vue"
+import { computed } from "vue"
 import InputBlock from "@/components/InputBlock"
+import { useStore } from "vuex"
+
+const store = useStore()
 
 const changePref = (key, value) => {
-	window.unlighter.execModuleMethod({
-		module: "Prefs",
-		method: "setPref",
-		args: [key, value],
-	})
+	store.commit("preferences/changePref", { key, value })
 }
 
-const showChangesSaved = true // Should be imported from Store/preferences
+const showConfirmation = computed(() => store.state.preferences.showConfirmation)
 
-const pref = ref([
-	{
-		key: "screenStrength",
-		label: "Default filters strength",
-		comment: "When app starts",
-		value: 9,
-		inputType: "number",
-		min: 0,
-		max: 100,
-	},
-	{
-		key: "minimizeOnBlur",
-		label: "Automatically minimize",
-		comment: "When click outside",
-		value: true,
-		inputType: "switch",
-	},
-	{
-		key: "enableShortcuts",
-		label: "Enable shortcuts",
-		value: true,
-		inputType: "switch",
-	},
-	{
-		key: "showInTaskbar",
-		label: "Show in taskbar",
-		value: true,
-		inputType: "switch",
-	},
-	{
-		key: "showScreenNumber",
-		label: "Show screen number",
-		value: true,
-		inputType: "switch",
-	},
-])
-
-onBeforeMount(() => {
-	window.unlighter.on("preferences-get", (event, userPref) => {
-		pref.value.forEach((p) => {
-			if (userPref[p.key] !== undefined) {
-				p.value = userPref[p.key]
-			}
-		})
-	})
-
-	window.unlighter.execModuleMethod({
-		module: "Pcc",
-		method: "sendToPccFromCode",
-		args: ["preferences-get"],
-	})
-})
-
-onUnmounted(() => {
-	window.unlighter.removeListener("preferences-get")
-})
+const prefs = computed(() => store.state.preferences.prefs)
 </script>
 
 <template>
 	<main class="preferences">
 		<InputBlock
-			v-for="p in pref"
+			v-for="p in prefs"
 			:name="p.key"
 			v-bind="p"
 			@valuechange="(...args) => changePref(p.key, ...args)"
 		/>
 
 		<transition name="fade">
-			<div v-if="showChangesSaved" class="changes-saved">
+			<div v-if="showConfirmation" class="changes-saved">
 				<img src="@/assets/svg/checked.svg" alt="Checked changes saved" />
 				You changes have been saved.
 			</div>

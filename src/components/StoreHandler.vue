@@ -13,6 +13,14 @@ onBeforeMount(() => {
 		store.commit("monitors/list", { list })
 	})
 
+	window.unlighter.on("set-prefs", (event, prefs) => {
+		store.commit("preferences/setPrefs", prefs)
+	})
+
+	window.unlighter.on("pref-changed-confirmation", () => {
+		store.commit("preferences/prefChangedConfirmation")
+	})
+
 	window.unlighter.once("update-available", (event, v) => {
 		store.commit("app/updateAvailable", v)
 	})

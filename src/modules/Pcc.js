@@ -96,8 +96,9 @@ export default class Pcc {
 		}
 	}
 
-	sendToPccFromCode(code) {
-		if (code == "preferences-get") this.send("preferences-get", this.app.Prefs.getPref())
+	sendPrefs() {
+		const prefs = this.app.Prefs.getPref()
+		this.send("set-prefs", prefs)
 	}
 
 	log(msg) {

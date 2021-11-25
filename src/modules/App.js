@@ -74,8 +74,11 @@ export default class UnlighterApp {
 	initEvents() {
 		this.Pcc.onPccReadyToShow(() => {
 			this.initialised = true
-			this.Shortcuts.bindShortcuts()
 			this.Tray.init()
+
+			if (this.Prefs.getPref("enableShortcuts")) {
+				this.Shortcuts.bindShortcuts()
+			}
 		})
 
 		this.electron.on("window-all-closed", () => {
