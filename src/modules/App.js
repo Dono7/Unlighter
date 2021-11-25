@@ -45,8 +45,6 @@ export default class UnlighterApp {
 		if (this.config.isDevelopment) this.Devtools.openDetachedDevTools(this.Pcc.win)
 
 		if (this.Monitors) this.Monitors.loadFilterPage()
-
-		this.Pcc.initPccMonitorsTab()
 	}
 
 	async installVueExtension() {
@@ -58,6 +56,19 @@ export default class UnlighterApp {
 		// 		console.error("Vue Devtools failed to install:", e.toString())
 		// 	}
 		// }
+	}
+
+	eitherPccOrFiltersMounted() {
+		if (this.isPccOrFiltersReady) {
+			this.onPccAndAllFiltersMounted()
+		} else {
+			this.isPccOrFiltersReady = true
+		}
+	}
+
+	onPccAndAllFiltersMounted() {
+		this.Pcc.sendMonitorsList()
+		this.Pcc.sendPrefs()
 	}
 
 	initEvents() {

@@ -61,10 +61,10 @@ export default class Pcc {
 		}
 	}
 
-	initPccMonitorsTab(sendStrAfterInit = true) {
-		const serializedMonitors = this.app.Monitors.serializeForPcc()
-		if (serializedMonitors.length)
-			this.send("init-pcc", { monitors: serializedMonitors, sendStrAfterInit })
+	onStoreHandlerMounted() {}
+
+	onPccMounted() {
+		this.app.eitherPccOrFiltersMounted()
 	}
 
 	onPccReadyToShow(callback) {
@@ -97,10 +97,6 @@ export default class Pcc {
 	}
 
 	sendToPccFromCode(code) {
-		if (code == "ask-for-init-pcc") {
-			this.initPccMonitorsTab()
-		}
-
 		if (code == "preferences-get") this.send("preferences-get", this.app.Prefs.getPref())
 	}
 
@@ -112,7 +108,6 @@ export default class Pcc {
 
 	onStoreReady() {
 		this.sendVersion()
-		this.sendMonitorsList()
 	}
 
 	sendMonitorsList() {

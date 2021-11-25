@@ -66,6 +66,11 @@ onMounted(() => {
 		}
 	})
 
+	window.unlighter.execModuleMethod({
+		module: "Pcc",
+		method: "onPccMounted",
+	})
+
 	window.addEventListener("mouseup", mup)
 	window.addEventListener("mousemove", mmove)
 })

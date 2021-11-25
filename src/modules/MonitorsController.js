@@ -56,11 +56,11 @@ export default class MonitorsController {
 		}
 	}
 
-	onAllFiltersLoaded() {}
-
-	onAllFiltersMounted() {
-		this.app.Pcc.initPccMonitorsTab(true)
+	onAllFiltersLoaded() {
+		this.app.eitherPccOrFiltersMounted()
 	}
+
+	onAllFiltersMounted() {}
 
 	serializeForPcc() {
 		return this.monitors.map((monitor) => monitor.serialize())

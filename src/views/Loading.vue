@@ -27,7 +27,7 @@ const closeLoading = () => {
 }
 
 onBeforeMount(() => {
-	window.unlighter.once("init-pcc", pccInited)
+	window.unlighter.once("set-monitors-list", pccInited)
 	document.body.addEventListener("click", closeLoader)
 })
 

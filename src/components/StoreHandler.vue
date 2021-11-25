@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from "vue"
+import { onBeforeMount, onMounted } from "vue"
 import { useStore } from "vuex"
 const store = useStore()
 
@@ -23,6 +23,13 @@ onBeforeMount(() => {
 
 	window.unlighter.on("add-value-to-all-filters", (event, valueToAdd) => {
 		store.commit("monitors/addValueToAll", valueToAdd)
+	})
+})
+
+onMounted(() => {
+	window.unlighter.execModuleMethod({
+		module: "Pcc",
+		method: "onStoreHandlerMounted",
 	})
 })
 </script>
