@@ -41,4 +41,8 @@ onMounted(() => {
 	z-index: 5
 	.menu-content
 		padding: 0 28px
+		max-height: 310px
+		overflow-x: auto
+		&::-webkit-scrollbar
+      display: none
 </style>
