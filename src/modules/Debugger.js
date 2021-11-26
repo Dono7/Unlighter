@@ -49,10 +49,12 @@ export default class Debugger {
 			},
 			disableMutationLogger: {
 				value: false,
+				state: "Not implemented yet",
 				comment: "If true, hide all logs about store mutation in the Pcc Chrome Devtools",
 			},
 			allForOne: {
 				value: false,
+				state: "Not implemented yet",
 				comment:
 					"If true, all sliders are unlocked, but only the first monitor can be changed.",
 			},
