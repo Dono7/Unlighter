@@ -43,9 +43,10 @@ export default class Pcc {
 
 	calculateCornerPccPosition() {
 		const margin = 120
-		const marginRight = this.app.config.isDevelopment
-			? this.app.Devtools.devtoolsFullWidth()
-			: 0
+		const marginRight =
+			this.app.config.isDevelopment || this.app.Debugger.get("enablePccDevtools")
+				? this.app.Devtools.devtoolsFullWidth()
+				: 0
 		const mainScreen = screen.getPrimaryDisplay()
 		return {
 			x: Math.round(mainScreen.workArea.width - 320 - margin - marginRight),
@@ -64,7 +65,7 @@ export default class Pcc {
 
 	registerLocalShortcuts() {
 		this.win.webContents.on("before-input-event", (event, input) => {
-			if (input.control && input.key.toLowerCase() === "d") {
+			if (input.shift && input.control && input.key.toLowerCase() === "d") {
 				this.app.Debugger.openDebugFileInFolder()
 				event.preventDefault()
 			}

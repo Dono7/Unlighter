@@ -14,7 +14,11 @@ export default class Updater {
 
 		this.pos = {
 			width: 320,
-			height: 80 + (this.app.config.isDevelopment ? 130 : 0),
+			height:
+				80 +
+				(this.app.config.isDevelopment || this.app.Debugger.get("enablePccDevtools")
+					? 130
+					: 0),
 			margin: 5,
 		}
 
@@ -71,7 +75,8 @@ export default class Updater {
 
 		this.win = new BrowserWindow({
 			...this.getRefreshedBounds(),
-			resizable: this.app.config.isDevelopment,
+			resizable:
+				this.app.config.isDevelopment || this.app.Debugger.get("enablePccDevtools"),
 			movable: false,
 			maximizable: false,
 			skipTaskbar: true,
@@ -80,7 +85,8 @@ export default class Updater {
 			parent: this.app.Pcc.win,
 			focusable: false,
 			webPreferences: {
-				devTools: this.app.config.isDevelopment,
+				devTools:
+					this.app.config.isDevelopment || this.app.Debugger.get("enablePccDevtools"),
 				nodeIntegration: true,
 				preload: path.join(__dirname, "ipcPcc.js"),
 			},
@@ -88,7 +94,8 @@ export default class Updater {
 
 		openFileInWindow(this.win, "updater")
 
-		if (this.app.config.isDevelopment) this.app.Devtools.openDetachedDevTools(this.win)
+		if (this.app.config.isDevelopment || this.app.Debugger.get("enablePccDevtools"))
+			this.app.Devtools.openDetachedDevTools(this.win)
 
 		this.win.once("ready-to-show", () => {
 			this.allowAutoUpdateAndCheckForUpdate()

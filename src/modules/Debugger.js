@@ -12,10 +12,16 @@ export default class Debugger {
 		this.syncAndStoreDebugSettings()
 	}
 
+	get(key) {
+		return this.settings[key].value
+	}
+
 	syncAndStoreDebugSettings() {
 		const defaultSettings = this.getDefaultDebuggerSettings()
 		const storedSettings = storage.getSync(this.filename)
 		const settings = { ...defaultSettings, ...storedSettings }
+
+		this.settings = settings
 
 		storage.set("debugger", settings, { prettyPrinting: true }, (error) => {
 			if (error) {

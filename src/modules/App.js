@@ -44,7 +44,8 @@ export default class UnlighterApp {
 
 		openFileInWindow(this.Pcc.win)
 
-		if (this.config.isDevelopment) this.Devtools.openDetachedDevTools(this.Pcc.win)
+		if (this.config.isDevelopment || this.Debugger.get("enablePccDevtools"))
+			this.Devtools.openDetachedDevTools(this.Pcc.win)
 
 		if (this.Monitors) this.Monitors.loadFilterPage()
 	}
