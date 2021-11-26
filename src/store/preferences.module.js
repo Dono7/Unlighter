@@ -21,6 +21,7 @@ export default {
 			{
 				key: "enableShortcuts",
 				label: "Enable shortcuts",
+				comment: "Alt+F2 / Alt+F3",
 				value: true,
 				inputType: "switch",
 			},

@@ -26,7 +26,7 @@ const prefs = computed(() => store.state.preferences.prefs)
 		<transition name="fade">
 			<div v-if="showConfirmation" class="changes-saved">
 				<img src="@/assets/svg/checked.svg" alt="Checked changes saved" />
-				You changes have been saved.
+				Changes saved.
 			</div>
 		</transition>
 	</main>

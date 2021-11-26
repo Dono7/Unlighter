@@ -36,15 +36,17 @@ export default class Pcc {
 			this.win.show()
 			this.setOnTop()
 			this.initPccEvents()
+			this.registerLocalShortcuts()
 			this.runOnPccReady.map((func) => func())
 		})
 	}
 
 	calculateCornerPccPosition() {
 		const margin = 120
-		const marginRight = this.app.config.isDevelopment
-			? this.app.Devtools.devtoolsFullWidth()
-			: 0
+		const marginRight =
+			this.app.config.isDevelopment || this.app.Debugger.get("enablePccDevtools")
+				? this.app.Devtools.devtoolsFullWidth()
+				: 0
 		const mainScreen = screen.getPrimaryDisplay()
 		return {
 			x: Math.round(mainScreen.workArea.width - 320 - margin - marginRight),
@@ -59,6 +61,25 @@ export default class Pcc {
 			const bounds = this.calculateCornerPccPosition()
 			this.win.setBounds(bounds)
 		}
+	}
+
+	registerLocalShortcuts() {
+		this.win.webContents.on("before-input-event", (event, input) => {
+			if (input.shift && input.control && input.key.toLowerCase() === "d") {
+				event.preventDefault()
+				this.app.Debugger.openDebugFileInFolder()
+			}
+
+			if (input.shift && input.control && input.key.toLowerCase() === "r") {
+				event.preventDefault()
+				this.app.restart()
+			}
+
+			if (input.shift && input.control && input.key.toLowerCase() === "s") {
+				event.preventDefault()
+				this.app.Debugger.resetDebuggerSettings()
+			}
+		})
 	}
 
 	onStoreHandlerMounted() {}

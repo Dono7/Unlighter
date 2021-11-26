@@ -13,6 +13,7 @@ import Preferences from "./Preferences"
 import Shortcuts from "./Shortcuts"
 import Pcc from "./Pcc"
 import IPC from "./IPC"
+import Debugger from "./Debugger"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
@@ -21,6 +22,7 @@ export default class UnlighterApp {
 		this.initialised = false
 
 		// Creating App Modules
+		this.Debugger = new Debugger(this)
 		this.Prefs = new Preferences(this)
 		this.Devtools = new Devtools(this)
 		this.Shortcuts = new Shortcuts(this)
@@ -42,7 +44,8 @@ export default class UnlighterApp {
 
 		openFileInWindow(this.Pcc.win)
 
-		if (this.config.isDevelopment) this.Devtools.openDetachedDevTools(this.Pcc.win)
+		if (this.config.isDevelopment || this.Debugger.get("enablePccDevtools"))
+			this.Devtools.openDetachedDevTools(this.Pcc.win)
 
 		if (this.Monitors) this.Monitors.loadFilterPage()
 	}
@@ -108,5 +111,10 @@ export default class UnlighterApp {
 				})
 			}
 		}
+	}
+
+	restart() {
+		this.electron.relaunch()
+		this.electron.quit()
 	}
 }

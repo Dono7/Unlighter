@@ -22,8 +22,10 @@ export default class Preferences {
 		}
 
 		storage.set("preferences", newPref, (error) => {
-			this.app.Pcc.send("pref-changed-confirmation")
-			this.onPrefChange(key, value)
+			if (!error) {
+				this.app.Pcc.send("pref-changed-confirmation")
+				this.onPrefChange(key, value)
+			}
 		})
 	}
 
