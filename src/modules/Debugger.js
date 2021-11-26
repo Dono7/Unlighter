@@ -23,16 +23,25 @@ export default class Debugger {
 
 		this.settings = settings
 
+		this.set(settings)
+	}
+
+	resetDebuggerSettings() {
+		const defaultSettings = this.getDefaultDebuggerSettings()
+		this.set(defaultSettings)
+	}
+
+	openDebugFileInFolder() {
+		shell.showItemInFolder(path.join(storage.getDataPath(), `${this.filename}.json`))
+	}
+
+	set(settings) {
 		storage.set("debugger", settings, { prettyPrinting: true }, (error) => {
 			if (error) {
 				logger.error("Debugger : Failed to store settings.")
 				logger.error(error)
 			}
 		})
-	}
-
-	openDebugFileInFolder() {
-		shell.showItemInFolder(path.join(storage.getDataPath(), `${this.filename}.json`))
 	}
 
 	getDefaultDebuggerSettings() {

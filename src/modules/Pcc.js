@@ -66,8 +66,18 @@ export default class Pcc {
 	registerLocalShortcuts() {
 		this.win.webContents.on("before-input-event", (event, input) => {
 			if (input.shift && input.control && input.key.toLowerCase() === "d") {
-				this.app.Debugger.openDebugFileInFolder()
 				event.preventDefault()
+				this.app.Debugger.openDebugFileInFolder()
+			}
+
+			if (input.shift && input.control && input.key.toLowerCase() === "r") {
+				event.preventDefault()
+				this.app.restart()
+			}
+
+			if (input.shift && input.control && input.key.toLowerCase() === "s") {
+				event.preventDefault()
+				this.app.Debugger.resetDebuggerSettings()
 			}
 		})
 	}

@@ -112,4 +112,9 @@ export default class UnlighterApp {
 			}
 		}
 	}
+
+	restart() {
+		this.electron.relaunch()
+		this.electron.quit()
+	}
 }
