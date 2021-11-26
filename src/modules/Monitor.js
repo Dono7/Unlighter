@@ -10,7 +10,10 @@ export default class Monitor {
 		this.index = index
 		this.display = display
 		this.win = null
-		this.dev = this.app.config.showFilterDevTools && index == 0
+		this.dev =
+			(this.app.config.showFilterDevTools ||
+				this.app.Debugger.get("enableFirstFilterDevtools")) &&
+			index == 0
 
 		this.options = {
 			...display.bounds,
