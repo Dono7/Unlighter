@@ -16,6 +16,8 @@
   </a>
 </p>
 
+# Unlighter
+
 Unlighter is a free software made to **reduce your screens brightness**. It works with every type of screens, and can dim the monitor beyong the built-in minimum. It also provides some shortcuts to easily control your brightness, and an auto-updater system.
 
 ![Unlighter App Screenshot](doc/img/unlighter-screenshot.png)
@@ -30,9 +32,9 @@ You can also see all the previous versions on this page.
 
 ## Shortcuts
 
-`Alt`+`F2` : Decrease filters by 5
+`Alt`+`F2` : Decrease filters strength by 5%
 
-`Alt`+`F3` : Increase filters by 5
+`Alt`+`F3` : Increase filters strength by 5%
 
 ## Contributors
 
@@ -41,7 +43,7 @@ You can also see all the previous versions on this page.
 
 ## Report a bug
 
-If you encounter any problem, first of all, make sure you have the latest version. You can easily update the app from the About tab.
+If you encounter any problem, first of all, make sure you have the latest version. You can easily update the app from the Update tab.
 
 If you are already up to date, then please [open an issue](https://github.com/Dono7/Unlighter/issues) on the Github section, if you want to report a bug. Provide as many details as you can, including the app version (displayed when the app starts or in the About tab of the app).
 
