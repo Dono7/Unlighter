@@ -13,6 +13,7 @@ import Preferences from "./Preferences"
 import Shortcuts from "./Shortcuts"
 import Pcc from "./Pcc"
 import IPC from "./IPC"
+import Debugger from "./Debugger"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
@@ -21,6 +22,7 @@ export default class UnlighterApp {
 		this.initialised = false
 
 		// Creating App Modules
+		this.Debugger = new Debugger(this)
 		this.Prefs = new Preferences(this)
 		this.Devtools = new Devtools(this)
 		this.Shortcuts = new Shortcuts(this)
