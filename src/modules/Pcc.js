@@ -36,6 +36,7 @@ export default class Pcc {
 			this.win.show()
 			this.setOnTop()
 			this.initPccEvents()
+			this.registerLocalShortcuts()
 			this.runOnPccReady.map((func) => func())
 		})
 	}
@@ -59,6 +60,15 @@ export default class Pcc {
 			const bounds = this.calculateCornerPccPosition()
 			this.win.setBounds(bounds)
 		}
+	}
+
+	registerLocalShortcuts() {
+		this.win.webContents.on("before-input-event", (event, input) => {
+			if (input.control && input.key.toLowerCase() === "d") {
+				this.app.Debugger.openDebugFileInFolder()
+				event.preventDefault()
+			}
+		})
 	}
 
 	onStoreHandlerMounted() {}

@@ -46,8 +46,9 @@ export default class Debugger {
 				comment: "If true, hide all logs about store mutation in the Pcc Chrome Devtools",
 			},
 			allForOne: {
-				value: true,
-				comment: "All sliders are unlocked, but only the first monitor can be changed.",
+				value: false,
+				comment:
+					"If true, all sliders are unlocked, but only the first monitor can be changed.",
 			},
 		}
 	}
