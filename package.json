@@ -6,13 +6,13 @@
 	"scripts": {
 		"serve": "vue-cli-service serve",
 		"build": "vue-cli-service build",
+		"lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
 		"electron:build": "vue-cli-service electron:build",
 		"electron:serve": "vue-cli-service electron:serve",
+		"format": "prettier .  --write",
 		"postinstall": "electron-builder install-app-deps",
 		"postuninstall": "electron-builder install-app-deps",
-		"release": "vue-cli-service electron:build -p always",
-		"lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
-		"format": "prettier .  --write"
+		"release": "vue-cli-service electron:build -p always"
 	},
 	"main": "background.js",
 	"dependencies": {
@@ -28,6 +28,7 @@
 	"devDependencies": {
 		"@vue/cli-plugin-babel": "~4.5.13",
 		"@vue/cli-plugin-router": "~4.5.13",
+		"@vue/cli-plugin-typescript": "~4.5.0",
 		"@vue/cli-service": "~4.5.13",
 		"electron": "^15.3.0",
 		"electron-devtools-installer": "^3.2.0",
@@ -36,7 +37,8 @@
 		"eslint-plugin-vue": "^7.20.0",
 		"node-sass": "^4.14.1",
 		"prettier": "^2.4.1",
-		"sass-loader": "^8.0.2"
+		"sass-loader": "^8.0.2",
+		"typescript": "~4.1.5"
 	},
 	"bugs": {
 		"url": "https://github.com/Dono7/Unlighter/issues"
