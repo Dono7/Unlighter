@@ -8,7 +8,7 @@ import logger from "electron-log"
 const gotTheLock = app.requestSingleInstanceLock()
 
 if (!gotTheLock) {
-	logger.log("App already running, quitting second instance...")
+	logger.info("App already running, quitting second instance...")
 	app.quit()
 }
 
