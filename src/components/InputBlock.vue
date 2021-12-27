@@ -1,9 +1,9 @@
-<script setup>
-import Switch from "./input/Switch"
-import NumberInput from "./input/NumberInput"
-import ShowString from "./input/ShowString"
+<script setup lang="ts">
+import Switch from "./input/Switch.vue"
+import NumberInput from "./input/NumberInput.vue"
+import ShowString from "./input/ShowString.vue"
 
-defineProps({
+const props = defineProps({
 	value: { type: [Boolean, Number], required: false },
 	min: { type: Number, required: false },
 	max: { type: Number, required: false },
@@ -27,7 +27,7 @@ defineProps({
 			<span v-if="comment" class="comment">{{ comment }}</span>
 		</div>
 		<Switch
-			v-if="inputType == 'switch'"
+			v-if="typeof value === 'boolean' && inputType == 'switch'"
 			:value="value"
 			@valuechange="
 				() => {
@@ -37,7 +37,7 @@ defineProps({
 			"
 		/>
 		<NumberInput
-			v-if="inputType == 'number'"
+			v-if="typeof value === 'number' && inputType === 'number'"
 			:value="value"
 			:min="min"
 			:max="max"

@@ -1,13 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue"
 
-const emit = defineEmits(["animation-end"])
+const emit = defineEmits<{
+	(e: "animation-end"): void
+}>()
 
-const container = ref()
+const container = ref<HTMLDivElement>()
 const delayBeforeClose = 1000
 
 onMounted(() => {
-	container.value.addEventListener("animationend", (event) => {
+	container.value!.addEventListener("animationend", (event) => {
 		if (event.target == container.value) {
 			setTimeout(() => {
 				emit("animation-end")
