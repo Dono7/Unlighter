@@ -21,7 +21,7 @@ export default class Preferences {
 			newPref[key] = value
 		}
 
-		storage.set("preferences", newPref, (error) => {
+		storage.set("preferences", newPref, { prettyPrinting: true }, (error) => {
 			if (!error) {
 				this.app.Pcc.send("pref-changed-confirmation")
 				this.onPrefChange(key, value)
@@ -51,6 +51,6 @@ export default class Preferences {
 		const defaultConfig = this.app.config.defaultConfig
 		const userPref = this.getPref()
 		const newPref = { ...defaultConfig, ...userPref }
-		storage.set("preferences", newPref)
+		storage.set("preferences", newPref, { prettyPrinting: true })
 	}
 }
