@@ -37,6 +37,12 @@ export default {
 				value: true,
 				inputType: "switch",
 			},
+			{
+				key: "launchOnLogin",
+				label: "Launch app on startup",
+				value: false,
+				inputType: "switch",
+			},
 		],
 		showConfirmation: false,
 		showConfirmationTimeout: null,
