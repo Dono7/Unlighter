@@ -45,6 +45,12 @@ export default class Preferences {
 				this.app.Shortcuts.unbindShortcuts()
 			}
 		}
+
+		if (key == "launchOnLogin") {
+			this.app.electron.setLoginItemSettings({
+				openAtLogin: value,
+			})
+		}
 	}
 
 	initDefaultPreferences() {
