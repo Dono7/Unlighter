@@ -1,8 +1,10 @@
+import { perfDisplay } from "./Perf"
 import { BrowserWindow, screen } from "electron"
 import path from "path"
 
 export default class Pcc {
 	constructor(unlighterApp) {
+		perfDisplay("Pcc constructor called")
 		this.app = unlighterApp
 		this.win = null
 		this.runOnPccReady = []
@@ -15,6 +17,7 @@ export default class Pcc {
 	}
 
 	createPccWindow() {
+		perfDisplay("Pcc createPccWindow called")
 		this.win = new BrowserWindow({
 			...this.calculateCornerPccPosition(),
 			title: "Unlighter",
@@ -31,7 +34,12 @@ export default class Pcc {
 			},
 		})
 
+		this.win.on("show", () => {
+			perfDisplay("Pcc now visible")
+		})
+
 		this.win.on("ready-to-show", () => {
+			perfDisplay("Pcc 'ready-to-show' triggered")
 			this.blockPccResize()
 			this.win.show()
 			this.setOnTop()
