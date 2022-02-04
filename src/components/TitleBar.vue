@@ -32,7 +32,7 @@ const toggleMenu = () => store.commit("menu/toggleMenu")
 	display: flex
 	justify-content: space-between
 	align-items: center
-  letter-spacing: 0.6px
+	letter-spacing: 0.6px
 	-webkit-app-region: drag
 	border-bottom: $titlebar-border
 	.menu-opener
