@@ -3,6 +3,12 @@ import SearchForUpdate from "@/components/SearchForUpdate"
 import Version from "@/components/Version.vue"
 import Link from "@/components/Link.vue"
 
+import { useStore } from "vuex"
+import { computed } from "vue"
+
+const store = useStore()
+const isUpToDate = computed(() => store.getters["app/isUpToDate"])
+
 const openUpdaterWindow = () => {
 	window.unlighter.execModuleMethod({ module: "Updater", method: "openWindow" })
 }
@@ -16,6 +22,10 @@ const openUpdaterWindow = () => {
 
 		<div class="current-version">
 			<Version prefix="Current version " />
+			<template v-if="isUpToDate">
+				<img class="version-check" src="@/assets/svg/checked.svg" />
+				<p class="up-to-date">Up to date</p>
+			</template>
 		</div>
 
 		<div class="older-versions">
@@ -35,5 +45,12 @@ main.update
 	> .search-for-update
 		margin-bottom: 20px
 	.current-version
+		display: flex
+		align-items: center
 		margin-bottom: 40px
+		.version-check
+			margin-left: 18px
+			margin-right: 6px
+		.up-to-date
+			color: $valid
 </style>
