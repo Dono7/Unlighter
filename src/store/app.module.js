@@ -7,7 +7,7 @@ export default {
 	}),
 	getters: {
 		isUpToDate(state) {
-			return !!state.updateAvailable && state.lastUpdateCheckString !== null
+			return !state.updateAvailable && state.lastUpdateCheckString !== null
 		},
 	},
 	mutations: {

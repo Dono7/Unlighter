@@ -10,7 +10,10 @@ export default class Updater {
 	constructor(unlighterApp) {
 		this.app = unlighterApp
 		this.win = null
+
+		this.haveUpdaterAlreadyBeenOpened = false
 		this.lastCheck = null
+		this.secondsBeforeCheckAfterStartup = 5
 
 		this.pos = {
 			width: 320,
@@ -47,15 +50,16 @@ export default class Updater {
 			setTimeout(() => {
 				this.checkForUpdates()
 				this.updateLastCheckString()
-			}, 5000)
+			}, 1000 * this.secondsBeforeCheckAfterStartup)
 		})
 	}
 
 	updateLastCheckString() {
 		dayjs.extend(relativeTime)
+		const oneMinute = 60000
 		setInterval(() => {
 			this.sendLastCheckToPcc()
-		}, 60000)
+		}, oneMinute)
 	}
 
 	sendLastCheckToPcc() {
@@ -93,6 +97,7 @@ export default class Updater {
 		})
 
 		openFileInWindow(this.win, "updater")
+		this.haveUpdaterAlreadyBeenOpened = true
 
 		if (this.app.config.isDevelopment || this.app.Debugger.get("enablePccDevtools"))
 			this.app.Devtools.openDetachedDevTools(this.win)
@@ -169,6 +174,9 @@ export default class Updater {
 			this.app.Pcc
 		) {
 			this.app.Pcc.send("update-available", event.version)
+			if (!this.haveUpdaterAlreadyBeenOpened) {
+				this.openWindow()
+			}
 		}
 
 		if (this.win === null) return
