@@ -7,6 +7,11 @@ module.exports = {
 				productName: "Unlighter",
 				win: {
 					target: ["nsis"],
+					certificateSubjectName: "Unlighter",
+					signingHashAlgorithms: ["sha256"],
+					publisherName: "Unlighter",
+					signAndEditExecutable: true,
+					verifyUpdateCodeSignature: true,
 				},
 				nsis: {
 					artifactName: "Unlighter-Setup-${version}.${ext}",
