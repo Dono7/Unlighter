@@ -30,6 +30,19 @@
 .fade-leave-to
 	opacity: 0
 
+// Fade-slow animation (Used for Filters window)
+.fade-filter-enter-active,
+.fade-filter-leave-active
+	transition: opacity 0.8s ease-in-out
+
+.fade-filter-enter-from,
+.fade-filter-leave-to
+	opacity: 0
+
+.fade-filter-enter-to,
+.fade-filter-leave-from
+	opacity: 1
+
 // Menu animation
 .menu-enter-active,
 .menu-leave-active

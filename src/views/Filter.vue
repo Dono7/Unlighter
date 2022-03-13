@@ -4,6 +4,7 @@ import { useStore } from "vuex"
 
 const store = useStore()
 const monitorIndex = ref(0)
+const mounted = ref(false)
 
 const showIndex = ref(false) // Should be replaced but a property from the store
 const showStrWhenShortcutTriggered = ref(false)
@@ -34,6 +35,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
+	mounted.value = true
 	window.unlighter.execModuleMethod({
 		module: "Monitors",
 		method: "onFilterMounted",
@@ -49,15 +51,23 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div id="filter" :style="{ background: filterStr?.bgc ?? `rgba(0,0,0,0.0)` }">
-		<h4 v-show="showStrWhenShortcutTriggered">Unlighter: {{ filterStr?.str ?? `0` }}</h4>
-		<h1
-			v-show="monitorIndex !== null && showIndex"
-			:style="{ color: filterStr?.textColor ?? `white` }"
+	<transition name="fade-filter">
+		<div
+			v-if="mounted"
+			id="filter"
+			:style="{ background: filterStr?.bgc ?? `rgba(0,0,0,0.0)` }"
 		>
-			{{ monitorIndex + 1 }}
-		</h1>
-	</div>
+			<h4 v-show="showStrWhenShortcutTriggered">
+				Unlighter: {{ filterStr?.str ?? `0` }}
+			</h4>
+			<h1
+				v-show="monitorIndex !== null && showIndex"
+				:style="{ color: filterStr?.textColor ?? `white` }"
+			>
+				{{ monitorIndex + 1 }}
+			</h1>
+		</div>
+	</transition>
 </template>
 
 <style lang="sass">
@@ -83,5 +93,5 @@ body.filter
 		font-size: 250px
 		font-weight: bold
 		margin: 0 20px
-		text-shadow: 3px ​3px 8px black
+		text-shadow: 3px 3px 8px black
 </style>
