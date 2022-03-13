@@ -119,7 +119,7 @@ export default class Updater {
 	checkForUpdates(forceCheckEvenInServeMode = false) {
 		if (forceCheckEvenInServeMode || !isServeMode()) {
 			if (forceCheckEvenInServeMode && !isServeMode()) {
-				console.warn(
+				logger.warn(
 					"Trying to fetch an update on serve mode. This will trigger an error from electron-updater.",
 				)
 			}
