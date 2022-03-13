@@ -13,7 +13,7 @@ export default class Updater {
 
 		this.haveUpdaterAlreadyBeenOpened = false
 		this.lastCheck = null
-		this.secondsBeforeCheckAfterStartup = 5
+		this.secondsBeforeCheckAfterStartup = 3
 
 		this.pos = {
 			width: 320,
@@ -88,6 +88,7 @@ export default class Updater {
 			frame: false,
 			parent: this.app.Pcc.win,
 			focusable: false,
+			show: !this.app.Pcc.win.isMinimized(),
 			webPreferences: {
 				devTools:
 					this.app.config.isDevelopment || this.app.Debugger.get("enablePccDevtools"),
@@ -105,6 +106,9 @@ export default class Updater {
 		this.win.once("ready-to-show", () => {
 			this.allowAutoUpdateAndCheckForUpdate()
 		})
+
+		this.win.on("minimize", () => this.win.hide())
+		this.win.on("restore", () => this.win.show())
 	}
 
 	allowAutoUpdateAndCheckForUpdate() {
@@ -142,7 +146,7 @@ export default class Updater {
 	}
 
 	resizeUpdaterWindow() {
-		if (this.win !== null) {
+		if (this.win !== null && this.win.isVisible()) {
 			this.win.setBounds(this.getRefreshedBounds())
 		}
 	}

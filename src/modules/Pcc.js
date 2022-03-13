@@ -196,6 +196,7 @@ export default class Pcc {
 	onMinimize(callback) {
 		this.app.Monitors.showOrHideMonitorIndex("hide")
 		this.lastMinimize = new Date()
+		if (this.app.Updater.win) this.app.Updater.win.minimize()
 	}
 
 	onRestore(callback) {
@@ -205,6 +206,10 @@ export default class Pcc {
 			this.win.minimize()
 		} else {
 			this.lastRestore = new Date()
+			if (this.app.Updater.win) {
+				this.app.Updater.resizeUpdaterWindow()
+				this.app.Updater.win.restore()
+			}
 		}
 	}
 
