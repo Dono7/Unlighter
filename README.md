@@ -24,11 +24,7 @@ Unlighter is a free software made to **reduce your screens brightness**. It work
 
 ## Download
 
-_For the moment, Unlighter is only available on Windows._
-
-You can download the latest version of Unlighter on the [Unlighter Download Page](https://unlighter.app/download). As the Unlighter is still new and does not have a large number of users, you may see different warning while downloading or installing the app.
-
-You can also see all the previous versions on this page.
+You can download the latest version of Unlighter on the [Unlighter Download Page](https://unlighter.app/download).You can also see all the previous versions on this page.
 
 ## Shortcuts
 
@@ -46,6 +42,12 @@ You can also see all the previous versions on this page.
 If you encounter any problem, first of all, make sure you have the latest version. You can easily update the app from the Update tab.
 
 If you are already up to date, then please [open an issue](https://github.com/Dono7/Unlighter/issues) on the Github section, if you want to report a bug. Provide as many details as you can, including the app version (displayed when the app starts or in the About tab of the app).
+
+## Sponsor and support
+
+For users and developers : Unlighter will soon be accepting donations via the Open Collective platform for those who want to support us.
+
+For compagnies : Please feel free to contact us at contact@unlighter.app if you want to become a Sponsor.
 
 ---
 
@@ -72,6 +74,8 @@ yarn electron:serve
 ```
 
 ### Compiles and minifies for production
+
+You may encounter some problems when building the app, since you may not have a Code Signing Certificate.
 
 ```bash
 yarn electron:build
