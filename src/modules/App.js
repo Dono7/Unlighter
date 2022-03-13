@@ -1,3 +1,5 @@
+import { perfDisplay } from "./Perf"
+
 import { BrowserWindow, screen } from "electron"
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer"
 import { openFileInWindow, isServeMode } from "./utils"
@@ -17,6 +19,7 @@ import Debugger from "./Debugger"
 
 export default class UnlighterApp {
 	constructor(electronApp, config) {
+		perfDisplay("UnlighterApp Construtor called")
 		this.electron = electronApp
 		this.config = config
 		this.initialised = false
@@ -31,10 +34,12 @@ export default class UnlighterApp {
 		this.Monitors = new MonitorsController(this, screen.getAllDisplays())
 		this.Updater = new Updater(this)
 		this.IPC = new IPC(this)
+		perfDisplay("Modules created in UnlighterApp")
 
 		this.createLocalServer()
 		// this.installVueExtension()
 		this.initEvents()
+		perfDisplay("Unlighter Constructor ended")
 	}
 
 	async createLocalServer() {
@@ -72,6 +77,7 @@ export default class UnlighterApp {
 	onPccAndAllFiltersMounted() {
 		this.Pcc.sendMonitorsList()
 		this.Pcc.sendPrefs()
+		perfDisplay("Pcc and filters are both mounted (Vue)")
 	}
 
 	initEvents() {

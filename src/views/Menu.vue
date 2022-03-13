@@ -55,5 +55,5 @@ onMounted(() => {
 		max-height: 310px
 		overflow-x: auto
 		&::-webkit-scrollbar
-      display: none
+			display: none
 </style>

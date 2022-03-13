@@ -2,6 +2,7 @@
 	"isDevelopment": false,
 	"loadVueExtension": false,
 	"showFilterDevTools": false,
+	"showPerf": true,
 	"defaultConfig": {
 		"screenStrength": 10,
 		"minimizeOnBlur": true,

@@ -24,7 +24,7 @@ const states = ref({
 		showDownloadBtn: false,
 	},
 	downloaded: {
-		text: "Ready to be installed.",
+		text: "Update ready to be installed.",
 		showSpinner: false,
 		showBar: false,
 		showDownloadBtn: true,

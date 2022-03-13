@@ -5,6 +5,11 @@ export default {
 		updateAvailable: null,
 		lastUpdateCheckString: null,
 	}),
+	getters: {
+		isUpToDate(state) {
+			return !state.updateAvailable && state.lastUpdateCheckString !== null
+		},
+	},
 	mutations: {
 		version(state, version) {
 			state.version = version

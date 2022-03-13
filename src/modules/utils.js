@@ -1,4 +1,5 @@
 import { shell } from "electron"
+import logger from "electron-log"
 
 export const openUrlInExternalBrowser = (url) => {
 	shell.openExternal(url)
@@ -7,7 +8,7 @@ export const openUrlInExternalBrowser = (url) => {
 /* This method should never be called before the local server is created in the UnlighterApp */
 export const openFileInWindow = (browserWindow, path = "") => {
 	if (!browserWindow) {
-		console.error(
+		logger.error(
 			`Cannot open the path ${path} in the window because the window does not exist.`,
 		)
 		return
