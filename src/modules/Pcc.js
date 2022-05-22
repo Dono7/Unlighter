@@ -110,6 +110,9 @@ export default class Pcc {
 	}
 
 	setOnTop(onTop = true) {
+		if (!this.win) {
+			return
+		}
 		onTop
 			? this.win.setAlwaysOnTop(true, "screen")
 			: this.win.setAlwaysOnTop(false, "normal")
