@@ -10,6 +10,7 @@ export default class Pcc {
 		this.runOnPccReady = []
 		this.lastMinimize = 0
 		this.lastRestore = 0
+		this.moveToCornerOnNextRestore = false
 
 		this.pccHeight = 416
 
@@ -66,8 +67,12 @@ export default class Pcc {
 
 	movePccToCorner() {
 		if (this.win) {
-			const bounds = this.calculateCornerPccPosition()
-			this.win.setBounds(bounds)
+			if (this.win.isMinimized()) {
+				this.moveToCornerOnNextRestore = true
+			} else {
+				const bounds = this.calculateCornerPccPosition()
+				this.win.setBounds(bounds)
+			}
 		}
 	}
 
@@ -196,13 +201,17 @@ export default class Pcc {
 		this.setOnTop()
 	}
 
-	onMinimize(callback) {
+	onMinimize() {
 		this.app.Monitors.showOrHideMonitorIndex("hide")
 		this.lastMinimize = new Date()
 		if (this.app.Updater.win) this.app.Updater.win.minimize()
 	}
 
-	onRestore(callback) {
+	onRestore() {
+		if (this.moveToCornerOnNextRestore) {
+			this.moveToCornerOnNextRestore = false
+			this.movePccToCorner()
+		}
 		this.app.Monitors.showOrHideMonitorIndex("show")
 		const now = new Date()
 		if (Math.abs(now - this.lastMinimize) <= 180) {
