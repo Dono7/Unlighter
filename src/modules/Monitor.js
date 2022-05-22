@@ -52,7 +52,7 @@ export default class Monitor {
 	}
 
 	loadIndex() {
-		this.win.webContents.send("update-index", this.index)
+		this.win?.webContents?.send("update-index", this.index)
 	}
 
 	serialize() {
