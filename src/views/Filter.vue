@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, onMounted, onUnmounted, computed } from "vue"
+import { ref, watch, onBeforeMount, onMounted, onUnmounted, computed } from "vue"
 import { useStore } from "vuex"
 
 const store = useStore()
@@ -8,10 +8,28 @@ const mounted = ref(false)
 
 const showIndex = ref(false) // Should be replaced but a property from the store
 const showStrWhenShortcutTriggered = ref(false)
+const showStrTimeout = ref(null)
+const isUsingShortcuts = computed(() => store.state.monitors.isUsingShortcuts)
 
 const filterStr = computed(
 	() => store.getters["monitors/listForFilters"][monitorIndex.value],
 )
+
+// Handle show filter value only when shortcut is pressed
+watch(filterStr, () => {
+	if (isUsingShortcuts.value) {
+		if (showStrTimeout.value) {
+			clearTimeout(showStrTimeout.value)
+		}
+
+		showStrWhenShortcutTriggered.value = true
+		showStrTimeout.value = setTimeout(() => {
+			showStrWhenShortcutTriggered.value = false
+		}, 1000)
+	} else {
+		showStrWhenShortcutTriggered.value = false
+	}
+})
 
 onBeforeMount(() => {
 	document.body.classList.add("filter")
@@ -58,7 +76,8 @@ onUnmounted(() => {
 			:style="{ background: filterStr?.bgc ?? `rgba(0,0,0,0.0)` }"
 		>
 			<h4 v-show="showStrWhenShortcutTriggered">
-				Unlighter: {{ filterStr?.str ?? `0` }}
+				<span>Unlighter:</span>
+				<span>{{ Math.round(filterStr?.str ?? 0) }}</span>
 			</h4>
 			<h1
 				v-show="monitorIndex !== null && showIndex"
@@ -85,10 +104,13 @@ body.filter
 	height: 100%
 	padding: 30px
 	h4
+		display: flex
+		align-items: center
+		justify-content: space-between
 		padding: 6px 12px
 		background: $background
-		width: fit-content
-		opacity: 0.7
+		width: 135px
+		opacity: 0.85
 	h1
 		font-size: 250px
 		font-weight: bold
