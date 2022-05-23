@@ -5,7 +5,7 @@ export default {
 			{
 				key: "screenStrength",
 				label: "Default filters strength",
-				comment: "When app starts",
+				comment: "When the app starts",
 				value: 9,
 				inputType: "number",
 				min: 0,
@@ -14,7 +14,7 @@ export default {
 			{
 				key: "minimizeOnBlur",
 				label: "Automatically minimize",
-				comment: "When click outside",
+				comment: "If click outside of app",
 				value: true,
 				inputType: "switch",
 			},
@@ -28,6 +28,7 @@ export default {
 			{
 				key: "showInTaskbar",
 				label: "Show in taskbar",
+				comment: "When minimized",
 				value: true,
 				inputType: "switch",
 			},

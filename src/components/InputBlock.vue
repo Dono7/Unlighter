@@ -59,6 +59,7 @@ defineProps({
 	.input-label
 		font-size: 11px
 	.comment
+		font-size: 10px
 		display: block
-		opacity: 0.4
+		opacity: 0.5
 </style>
