@@ -4,7 +4,7 @@
 	"showFilterDevTools": false,
 	"showPerf": true,
 	"defaultConfig": {
-		"screenStrength": 10,
+		"screenStrength": 20,
 		"minimizeOnBlur": true,
 		"showScreenNumber": false,
 		"enableShortcuts": true,

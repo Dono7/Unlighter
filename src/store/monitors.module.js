@@ -14,6 +14,7 @@ export default {
 			{ id: 4, index: 3, str: 0, name: "Loading...", isActive: false },
 		],
 		lastMouseXPosition: 0,
+		isUsingShortcuts: false,
 	}),
 	mutations: {
 		list(state, { list }) {
@@ -40,12 +41,14 @@ export default {
 			state.list.forEach((m) => (m.isActive = false))
 		},
 		setStr(state, { newStr, index }) {
+			state.isUsingShortcuts = false
 			state.list[index].str = newStr
 		},
 		lastMouseXPosition(state, lastMouseXPosition) {
 			state.lastMouseXPosition = lastMouseXPosition
 		},
 		addValueToAll(state, valueToAdd) {
+			state.isUsingShortcuts = true
 			state.list.forEach((m) => {
 				m.str = clamp(m.str + valueToAdd, 0, 100)
 			})
@@ -67,7 +70,7 @@ export default {
 			return state.list
 				.filter((monitor) => monitor.isDetected)
 				.map((monitor) => {
-					const str = monitor.str
+					const str = monitor.str.toFixed(2)
 					const textOpacity = Math.max(0.3, Math.min(1 - str / 100, 1))
 					const bgOpacity = (str / 100) * 0.95
 					return {
